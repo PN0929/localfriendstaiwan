@@ -501,39 +501,35 @@
             });
         }
 
-        // 建立體驗卡片
-        function createExperienceCard(exp) {
-            const card = document.createElement('div');
-            card.className = 'experience-card';
-            
-            const emoji = categoryEmojis[exp['主要分類']] || regionEmojis[exp['地區']] || '📍';
-            
-            card.innerHTML = `
-                <div class="image">${emoji}</div>
-                <div class="content">
-                    <div class="title">${exp['體驗名稱(中)']}</div>
-                    ${exp['體驗名稱(英)'] ? `<div class="subtitle">${exp['體驗名稱(英)']}</div>` : ''}
-                    <div class="description">${exp['一句話描述(中)'] || '深度文化體驗'}</div>
-                    <div class="meta">
-                        ${exp['地區'] ? `<span class="tag" onclick="filterByRegion('${exp['地區']}')" title="點擊查看所有${exp['地區']}體驗">📍 ${exp['地區']}</span>` : ''}
-                        ${exp['主要分類'] ? `<span class="tag" onclick="filterByCategory('${exp['主要分類']}')" title="點擊查看所有${exp['主要分類']}體驗">${exp['主要分類']}</span>` : ''}
-                        ${exp['難度'] ? `<span class="tag">⭐ ${exp['難度']}</span>` : ''}
-                    </div>
-                    <div class="meta">
-                        <span class="status">🚧 ${exp['Status'] || '準備中'}</span>
-                    </div>
-                    ${exp['詳細內容Doc'] ? `
-                        <a href="${exp['詳細內容Doc']}" target="_blank" class="btn">
-                            查看詳細資訊 View Details →
-                        </a>
-                    ` : `
-                        <span style="color: #999; font-size: 0.9rem;">詳細資訊準備中...</span>
-                    `}
-                </div>
-            `;
-            
-            return card;
-        }
+// 建立體驗卡片
+function createExperienceCard(exp) {
+    const card = document.createElement('div');
+    card.className = 'experience-card';
+    
+    const emoji = categoryEmojis[exp['主要分類']] || regionEmojis[exp['地區']] || '📍';
+    
+    card.innerHTML = `
+        <div class="image">${emoji}</div>
+        <div class="content">
+            <div class="title">${exp['體驗名稱(中)']}</div>
+            ${exp['體驗名稱(英)'] ? `<div class="subtitle">${exp['體驗名稱(英)']}</div>` : ''}
+            <div class="description">${exp['一句話描述(中)'] || '深度文化體驗'}</div>
+            <div class="meta">
+                ${exp['地區'] ? `<span class="tag" onclick="filterByRegion('${exp['地區']}')" title="點擊查看所有${exp['地區']}體驗">📍 ${exp['地區']}</span>` : ''}
+                ${exp['主要分類'] ? `<span class="tag" onclick="filterByCategory('${exp['主要分類']}')" title="點擊查看所有${exp['主要分類']}體驗">${exp['主要分類']}</span>` : ''}
+                ${exp['難度'] ? `<span class="tag">⭐ ${exp['難度']}</span>` : ''}
+            </div>
+            <div class="meta">
+                <span class="status">🚧 ${exp['Status'] || '準備中'}</span>
+            </div>
+            <a href="experience-detail.html?id=${exp['ID']}" class="btn">
+                查看詳細資訊 View Details →
+            </a>
+        </div>
+    `;
+    
+    return card;
+}
 
         // 點擊標籤篩選
         function filterByRegion(region) {
