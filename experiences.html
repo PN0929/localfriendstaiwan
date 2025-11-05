@@ -14,8 +14,8 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif;
             line-height: 1.6;
-            color: #000;
-            background: #F5F4A2;
+            color: #2D6A4F;
+            background: #F7F5F2;
         }
         
         /* 浮動導覽列 */
@@ -28,8 +28,8 @@
             background: white;
             padding: 1rem;
             border-radius: 30px;
-            box-shadow: 0 4px 20px rgba(132, 132, 245, 0.3);
-            border: 2px solid #8484F5;
+            box-shadow: 0 4px 20px rgba(45, 106, 79, 0.2);
+            border: 2px solid #2D6A4F;
         }
         
         .floating-nav a {
@@ -38,7 +38,7 @@
             height: 50px;
             margin: 0.5rem 0;
             border-radius: 50%;
-            background: linear-gradient(135deg, #8484F5, #7ACAF0);
+            background: linear-gradient(135deg, #2D6A4F, #40916C);
             color: white;
             text-decoration: none;
             display: flex;
@@ -50,6 +50,7 @@
         
         .floating-nav a:hover {
             transform: scale(1.1);
+            background: linear-gradient(135deg, #40916C, #52B788);
         }
         
         /* 回頂按鈕 */
@@ -59,13 +60,13 @@
             bottom: 30px;
             width: 60px;
             height: 60px;
-            background: linear-gradient(135deg, #8484F5, #7ACAF0);
+            background: linear-gradient(135deg, #F4845F, #F4A261);
             color: white;
             border: none;
             border-radius: 50%;
             font-size: 1.5rem;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(132, 132, 245, 0.3);
+            box-shadow: 0 4px 20px rgba(244, 132, 95, 0.4);
             display: none;
             z-index: 999;
             transition: transform 0.3s;
@@ -82,7 +83,7 @@
         }
         
         .header {
-            background: linear-gradient(135deg, #8484F5 0%, #7ACAF0 100%);
+            background: linear-gradient(135deg, #2D6A4F 0%, #40916C 100%);
             color: white;
             padding: 3rem 2rem;
             text-align: center;
@@ -100,15 +101,16 @@
         
         .disclaimer {
             background: white;
-            border-left: 4px solid #8484F5;
+            border-left: 5px solid #E9C46A;
             padding: 1rem 2rem;
             margin: 2rem auto;
             max-width: 1400px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(45, 106, 79, 0.1);
+            border-radius: 8px;
         }
         
         .disclaimer strong {
-            color: #8484F5;
+            color: #2D6A4F;
         }
         
         .container {
@@ -123,8 +125,8 @@
             padding: 2rem;
             border-radius: 15px;
             margin-bottom: 2rem;
-            border: 3px solid #8484F5;
-            box-shadow: 0 4px 20px rgba(132, 132, 245, 0.2);
+            border: 3px solid #2D6A4F;
+            box-shadow: 0 4px 20px rgba(45, 106, 79, 0.15);
         }
         
         .search-box {
@@ -139,19 +141,21 @@
             min-width: 250px;
             padding: 1rem 1.5rem;
             font-size: 1.1rem;
-            border: 2px solid #7ACAF0;
+            border: 2px solid #E9C46A;
             border-radius: 50px;
             outline: none;
             transition: border-color 0.3s;
+            background: #F7F5F2;
         }
         
         .search-input:focus {
-            border-color: #8484F5;
+            border-color: #2D6A4F;
+            background: white;
         }
         
         .search-btn {
             padding: 1rem 2.5rem;
-            background: linear-gradient(135deg, #8484F5, #7ACAF0);
+            background: linear-gradient(135deg, #F4845F, #F4A261);
             color: white;
             border: none;
             border-radius: 50px;
@@ -159,12 +163,12 @@
             font-weight: bold;
             cursor: pointer;
             transition: transform 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 15px rgba(132, 132, 245, 0.3);
+            box-shadow: 0 4px 15px rgba(244, 132, 95, 0.3);
         }
         
         .search-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(132, 132, 245, 0.4);
+            box-shadow: 0 6px 20px rgba(244, 132, 95, 0.4);
         }
         
         .filter-section {
@@ -172,7 +176,7 @@
         }
         
         .filter-section h3 {
-            color: #8484F5;
+            color: #2D6A4F;
             margin-bottom: 1rem;
             font-size: 1.3rem;
             font-weight: bold;
@@ -186,7 +190,7 @@
             display: block;
             margin-bottom: 0.8rem;
             font-weight: 600;
-            color: #000;
+            color: #2D6A4F;
             font-size: 1.1rem;
         }
         
@@ -198,32 +202,32 @@
         
         .filter-btn {
             padding: 0.7rem 1.5rem;
-            background: white;
-            border: 2px solid #7ACAF0;
+            background: #F7F5F2;
+            border: 2px solid #E9C46A;
             border-radius: 25px;
             cursor: pointer;
             transition: all 0.3s;
             font-size: 1rem;
             font-weight: 500;
-            color: #000;
+            color: #2D6A4F;
         }
         
         .filter-btn:hover {
-            background: #7ACAF0;
+            background: #E9C46A;
             color: white;
             transform: translateY(-2px);
         }
         
         .filter-btn.active {
-            background: linear-gradient(135deg, #8484F5, #7ACAF0);
+            background: linear-gradient(135deg, #2D6A4F, #40916C);
             color: white;
-            border-color: #8484F5;
-            box-shadow: 0 4px 15px rgba(132, 132, 245, 0.3);
+            border-color: #2D6A4F;
+            box-shadow: 0 4px 15px rgba(45, 106, 79, 0.3);
         }
         
         .filter-results {
             text-align: center;
-            color: #8484F5;
+            color: #2D6A4F;
             margin: 1.5rem 0;
             font-size: 1.2rem;
             font-weight: bold;
@@ -233,7 +237,7 @@
             text-align: center;
             padding: 3rem;
             font-size: 1.3rem;
-            color: #8484F5;
+            color: #2D6A4F;
             font-weight: bold;
         }
         
@@ -249,22 +253,22 @@
             background: white;
             border-radius: 15px;
             overflow: hidden;
-            border: 3px solid #7ACAF0;
-            box-shadow: 0 4px 15px rgba(122, 202, 240, 0.2);
+            border: 3px solid #E9C46A;
+            box-shadow: 0 4px 15px rgba(233, 196, 106, 0.2);
             transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
             cursor: pointer;
         }
         
         .experience-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 8px 30px rgba(132, 132, 245, 0.3);
-            border-color: #8484F5;
+            box-shadow: 0 8px 30px rgba(233, 196, 106, 0.4);
+            border-color: #F4845F;
         }
         
         .experience-card .image {
             width: 100%;
             height: 250px;
-            background: linear-gradient(135deg, #8484F5 0%, #7ACAF0 100%);
+            background: linear-gradient(135deg, #2D6A4F 0%, #40916C 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -280,7 +284,7 @@
             font-size: 1.4rem;
             font-weight: bold;
             margin-bottom: 0.5rem;
-            color: #8484F5;
+            color: #2D6A4F;
         }
         
         .experience-card .subtitle {
@@ -290,7 +294,7 @@
         }
         
         .experience-card .description {
-            color: #000;
+            color: #555;
             margin-bottom: 1rem;
             line-height: 1.6;
             font-size: 1rem;
@@ -306,9 +310,9 @@
         .experience-card .tag {
             display: inline-block;
             padding: 0.4rem 1rem;
-            background: #F5F4A2;
-            color: #000;
-            border: 2px solid #7ACAF0;
+            background: #F7F5F2;
+            color: #2D6A4F;
+            border: 2px solid #E9C46A;
             border-radius: 20px;
             font-size: 0.9rem;
             cursor: pointer;
@@ -317,7 +321,7 @@
         }
         
         .experience-card .tag:hover {
-            background: #7ACAF0;
+            background: #E9C46A;
             color: white;
             transform: scale(1.05);
         }
@@ -326,8 +330,8 @@
             display: inline-block;
             padding: 0.4rem 1rem;
             background: white;
-            color: #8484F5;
-            border: 2px solid #8484F5;
+            color: #2D6A4F;
+            border: 2px solid #2D6A4F;
             border-radius: 20px;
             font-size: 0.9rem;
             font-weight: bold;
@@ -337,7 +341,7 @@
             display: inline-block;
             width: 100%;
             padding: 1rem;
-            background: linear-gradient(135deg, #8484F5, #7ACAF0);
+            background: linear-gradient(135deg, #F4845F, #F4A261);
             color: white;
             text-decoration: none;
             border-radius: 10px;
@@ -345,16 +349,16 @@
             font-weight: bold;
             font-size: 1.1rem;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(132, 132, 245, 0.3);
+            box-shadow: 0 4px 15px rgba(244, 132, 95, 0.3);
         }
         
         .experience-card .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(132, 132, 245, 0.4);
+            box-shadow: 0 6px 20px rgba(244, 132, 95, 0.4);
         }
         
         .footer {
-            background: linear-gradient(135deg, #8484F5, #7ACAF0);
+            background: linear-gradient(135deg, #2D6A4F, #40916C);
             color: white;
             text-align: center;
             padding: 2rem;
@@ -563,8 +567,8 @@
             } catch (error) {
                 console.error('載入失敗:', error);
                 document.getElementById('loading').innerHTML = `
-                    <p style="color: #8484F5;">載入體驗時發生錯誤 Error loading experiences</p>
-                    <p style="margin-top: 1rem; font-size: 1rem; color: #000;">
+                    <p style="color: #2D6A4F;">載入體驗時發生錯誤 Error loading experiences</p>
+                    <p style="margin-top: 1rem; font-size: 1rem; color: #555;">
                         請確認 Google Sheets 已設為「知道連結的任何人都可以查看」
                     </p>
                 `;
@@ -703,8 +707,8 @@
             if (experiences.length === 0) {
                 container.innerHTML = `
                     <div style="text-align: center; padding: 3rem; grid-column: 1/-1;">
-                        <p style="font-size: 1.5rem; color: #8484F5; font-weight: bold;">沒有符合條件的體驗</p>
-                        <p style="color: #000; margin-top: 1rem;">No experiences match your filters</p>
+                        <p style="font-size: 1.5rem; color: #2D6A4F; font-weight: bold;">沒有符合條件的體驗</p>
+                        <p style="color: #555; margin-top: 1rem;">No experiences match your filters</p>
                     </div>
                 `;
                 return;
