@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>體驗詳情 - Local Friends Taiwan | 台灣在地連線</title>
   <style>
@@ -18,9 +18,11 @@
     .back-to-top:hover{transform:translateY(-5px)}
     .back-to-top.show{display:flex;align-items:center;justify-content:center}
 
-    /* Hero：縮小高度、保留遮罩與原始比例 */
-    .hero-section{position:relative;height:42vh;min-height:220px;max-height:460px;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden;background:#2D6A4F}
+    /* Hero：高度固定、綠色遮罩 */
+    .hero-section{position:relative;height:42vh;min-height:240px;max-height:480px;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden;background:#2D6A4F}
     .hero-overlay{position:absolute;inset:0;background:rgba(45,106,79,.6);z-index:2}
+
+    /* 文字 */
     .hero-content{position:relative;z-index:3;color:#fff;max-width:1000px;padding:1.25rem 2rem}
     .hero-content h1{font-size:2.4rem;font-weight:800;margin-bottom:.4rem;text-shadow:2px 2px 8px rgba(0,0,0,.3);line-height:1.2}
     .hero-content .subtitle{font-size:1.3rem;margin-bottom:.8rem;opacity:.95;text-shadow:1px 1px 4px rgba(0,0,0,.3)}
@@ -29,17 +31,28 @@
     .hero-tag{padding:.6rem 1.1rem;background:rgba(255,255,255,.2);backdrop-filter:blur(10px);border:2px solid rgba(255,255,255,.3);border-radius:30px;color:#fff;font-size:.95rem;font-weight:600}
     .hero-status{padding:.6rem 1.1rem;background:linear-gradient(135deg,#F4845F,#F4A261);border:2px solid rgba(255,255,255,.5);border-radius:30px;color:#fff;font-size:.95rem;font-weight:700;box-shadow:0 4px 15px rgba(244,132,95,.4)}
 
-    /* 影像背景：桌機三張並排、不輪播 */
+    /* 影像背景容器 */
     .hero-media{position:absolute;inset:0;z-index:1}
+
+    /* 桌機：三張並排（不輪播） */
     .hero-grid{width:100%;height:100%;display:grid;grid-template-columns:repeat(3,1fr);gap:0}
     .hero-grid-item{position:relative;background:linear-gradient(135deg,#2D6A4F,#40916C)}
-    .hero-grid-item img{width:100%;height:100%;object-fit:contain;display:block}
+    /* 統一高度 + 智慧置中：用 flex 包覆，依照片方向選擇鋪滿寬或高 */
+    .hero-grid-fit{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+    .hero-grid-fit img{display:block;object-position:center center}
+    .hero-grid-fit img.landscape{width:100%;height:auto}
+    .hero-grid-fit img.portrait{height:100%;width:auto}
+    .hero-grid-fit img.square{height:100%;width:auto}
 
     /* 手機：單張輪播 */
     .hero-carousel{display:none;position:absolute;inset:0}
-    .hero-slide{position:absolute;inset:0;opacity:0;transition:opacity 0.6s ease;background:linear-gradient(135deg,#2D6A4F,#40916C)}
+    .hero-slide{position:absolute;inset:0;opacity:0;transition:opacity .6s ease;background:linear-gradient(135deg,#2D6A4F,#40916C)}
     .hero-slide.active{opacity:1}
-    .hero-slide img{width:100%;height:100%;object-fit:contain;display:block;background:transparent}
+    .hero-slide .fit{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
+    .hero-slide img{display:block;object-position:center center}
+    .hero-slide img.landscape{width:100%;height:auto}
+    .hero-slide img.portrait{height:100%;width:auto}
+    .hero-slide img.square{height:100%;width:auto}
 
     /* 內容與卡片 */
     .container{max-width:1200px;margin:0 auto;padding:3rem 2rem}
@@ -47,6 +60,7 @@
     .content-section h2{font-size:2rem;color:#2D6A4F;margin-bottom:1.2rem;font-weight:800;border-bottom:3px solid #E9C46A;padding-bottom:.5rem}
     .content-section h3{font-size:1.5rem;color:#2D6A4F;margin:2rem 0 1rem;font-weight:700}
     .content-section p{font-size:1.2rem;color:#555;line-height:1.9;margin-bottom:1.2rem}
+
     .info-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;margin-top:1.2rem}
     .info-item{background:#F7F5F2;padding:1.6rem;border-radius:12px;border:2px solid #E9C46A}
     .info-item h4{font-size:1.2rem;color:#2D6A4F;margin-bottom:.8rem;font-weight:800}
@@ -54,9 +68,32 @@
     .info-item a{color:#F4845F;text-decoration:none;font-weight:700;word-break:break-all}
     .info-item a:hover{text-decoration:underline}
 
-    /* 直接渲染的 Google Doc 區塊 */
-    .doc-render{background:#fff;border-radius:12px;box-shadow:0 4px 20px rgba(45,106,79,.12);padding:0}
-    .doc-render-inner{padding:1.25rem}
+    /* Doc 內容：更舒適的版面（提取後的純內容） */
+    .doc-render{padding:0}
+    .doc-render-inner{
+      padding:2rem 2rem;              /* 更大的內距 */
+      max-width:900px; margin:0 auto; /* 舒適行寬 */
+    }
+    .doc-render-inner h1,.doc-render-inner h2,.doc-render-inner h3,.doc-render-inner h4{
+      line-height:1.3; margin:1.2rem 0 .6rem; color:#1f4d39; font-weight:800;
+    }
+    .doc-render-inner p{margin:.8rem 0; color:#2f2f2f; font-size:1.06rem}
+    .doc-render-inner strong{font-weight:800}
+    .doc-render-inner ul,.doc-render-inner ol{margin: .8rem 0 .8rem 1.25rem}
+    .doc-render-inner li{margin:.35rem 0}
+    .doc-render-inner blockquote{
+      border-left:4px solid #E9C46A; background:#FFF9E6; padding:.8rem 1rem; border-radius:8px; color:#2e2e2e; margin:1rem 0;
+    }
+    .doc-render-inner img{
+      max-width:100%; height:auto; display:block; margin:1rem auto; border-radius:8px; box-shadow:0 2px 12px rgba(0,0,0,.06);
+    }
+    .doc-render-inner table{
+      width:100%; border-collapse:collapse; margin:1rem 0; overflow:auto; display:block;
+    }
+    .doc-render-inner th,.doc-render-inner td{
+      border:1px solid #e6e6e6; padding:.6rem .8rem; text-align:left; vertical-align:top;
+    }
+    .doc-render-inner thead th{background:#f7f7f7; font-weight:800}
     .doc-render .loading-line{height:10px;border-radius:6px;background:linear-gradient(90deg,#e9f3ee,#f3faf7,#e9f3ee);background-size:200% 100%;animation:shimmer 1.2s infinite}
     @keyframes shimmer{0%{background-position:0 0}100%{background-position:200% 0}}
 
@@ -121,7 +158,7 @@
     </section>
 
     <div class="container">
-      <!-- 詳細說明（直接拉取 Google Doc 內容渲染） -->
+      <!-- 詳細說明（提取 Google Doc 內容、非 iframe） -->
       <div class="content-section doc-render" id="detailSection">
         <h2>📖 詳細說明 Details</h2>
         <div class="doc-render-inner" id="docRenderInner">
@@ -156,12 +193,9 @@
     const SHEET_ID  = '1GD4gg3sGIfX7KGrJkYCL10wzvwZh5FMWQPGd9NVTQyc';
     const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
 
-    // 你的公開 Doc（備援）
     const FALLBACK_DOC_URL = 'https://docs.google.com/document/d/e/2PACX-1vQj1gYlRDbgpH-IupwfkeS8kSMIvGb9TadFFwGpzj9TJXLYv3kzvhu9BqcpUetG-y7Dpt2M8qJLFkoV/pub';
 
-    let currentSlide = 0;
-    let slideTimer = null;
-    let carouselLinks = [];
+    let currentSlide = 0, slideTimer = null;
 
     async function loadExperience(){
       const id = new URLSearchParams(window.location.search).get('id');
@@ -217,9 +251,8 @@
       renderMap(exp);
     }
 
-    /* ---------------- 顶部圖片：桌機三張並排 / 手機單張輪播 ---------------- */
+    /* ---------------- 頂部圖片：桌機三張並排（智慧置中）、手機單張輪播 ---------------- */
     function getPhotoLinks(exp){
-      // 支援：照片集 / 封面圖連結 / 圖片；分隔支援 , ， \n 空白
       const raw = (exp['照片集'] || exp['封面圖連結'] || exp['圖片'] || '').replace(/，/g, ',');
       return raw.split(/[,\s]+/).map(s=>s.trim()).filter(Boolean);
     }
@@ -229,24 +262,28 @@
       const carousel = document.getElementById('heroCarousel');
       const links = getPhotoLinks(exp);
 
-      // 桌機：三張並排（取前三張，不輪播）
-      grid.innerHTML = (links.length ? links.slice(0,3) : [null,null,null]).map((url,i)=>`
+      /* 桌機：三張並排（取前三張，不輪播） */
+      const gridItems = (links.length? links.slice(0,3) : [null,null,null]).map((url,i)=>`
         <div class="hero-grid-item">
-          ${url ? `<img src="${url}" alt="hero ${i+1}" onerror="this.style.display='none'">`
-                : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#fff;opacity:.9">📷</div>`}
+          <div class="hero-grid-fit">
+            ${url ? `<img src="${url}" alt="hero ${i+1}" onload="classifyOrientation(this)" onerror="this.style.display='none'">`
+                  : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#fff;opacity:.9">📷</div>`}
+          </div>
         </div>`).join('');
+      grid.innerHTML = gridItems;
 
-      // 手機：單張輪播
-      carouselLinks = links.length? links : [];
-      carousel.innerHTML = carouselLinks.length ? carouselLinks.map((url,i)=>`
+      /* 手機：單張輪播 */
+      const mobileItems = (links.length? links : []).map((url,i)=>`
         <div class="hero-slide ${i===0?'active':''}">
-          <img src="${url}" alt="slide ${i+1}" onerror="this.parentElement.innerHTML='<div style=&quot;width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#fff;opacity:.9&quot;>📷</div>'">
-        </div>`).join('') : `<div class="hero-slide active"></div>`;
+          <div class="fit">
+            <img src="${url}" alt="slide ${i+1}" onload="classifyOrientation(this)" onerror="this.parentElement.innerHTML='<div style=&quot;width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#fff;opacity:.9&quot;>📷</div>'">
+          </div>
+        </div>`).join('');
+      carousel.innerHTML = mobileItems || `<div class="hero-slide active"></div>`;
 
-      // 啟用手機輪播（桌機不會看到 carousel）
       startMobileCarousel();
 
-      // 文字區
+      /* 文字 */
       const heroContent = document.getElementById('heroContent');
       heroContent.innerHTML = `
         <h1>${exp['體驗名稱(中)']||''}</h1>
@@ -260,16 +297,27 @@
         </div>`;
     }
 
+    /* 依圖片實際尺寸，標記方向：landscape / portrait / square */
+    function classifyOrientation(img){
+      try{
+        const {naturalWidth:w, naturalHeight:h} = img;
+        if(!w || !h) return;
+        img.classList.remove('landscape','portrait','square');
+        if(Math.abs(w-h) < 4){ img.classList.add('square'); }
+        else if(w > h){ img.classList.add('landscape'); }
+        else{ img.classList.add('portrait'); }
+      }catch(e){}
+    }
+
     function startMobileCarousel(){
       clearInterval(slideTimer);
-      currentSlide = 0;
       const slides = document.querySelectorAll('#heroCarousel .hero-slide');
       if(slides.length<=1) return;
-      // 自動播放（只影響手機視窗；CSS 控制顯示）
+      let idx = 0;
       slideTimer = setInterval(()=>{
-        slides[currentSlide].classList.remove('active');
-        currentSlide = (currentSlide+1)%slides.length;
-        slides[currentSlide].classList.add('active');
+        slides[idx].classList.remove('active');
+        idx = (idx+1)%slides.length;
+        slides[idx].classList.add('active');
       }, 5000);
 
       // 手勢滑動
@@ -280,52 +328,68 @@
         ex=e.changedTouches[0].clientX;
         const dx = ex - sx;
         if(Math.abs(dx)>40){
-          const slides = document.querySelectorAll('#heroCarousel .hero-slide');
-          slides[currentSlide].classList.remove('active');
-          currentSlide = (currentSlide + (dx>0?-1:1) + slides.length) % slides.length;
-          slides[currentSlide].classList.add('active');
+          slides[idx].classList.remove('active');
+          idx = (idx + (dx>0?-1:1) + slides.length) % slides.length;
+          slides[idx].classList.add('active');
           clearInterval(slideTimer);
           startMobileCarousel();
         }
       },{passive:true});
     }
 
-    /* ---------------- 詳細說明：擷取 Google Doc、直接渲染 ---------------- */
+    /* ---------------- 詳細說明：擷取 Google Doc 內容（含圖片） ---------------- */
     async function renderDetailFromDoc(exp){
       const container = document.getElementById('docRenderInner');
-      // 可能的欄位名：詳細說明連結 / Google Doc / Google Doc 連結
       const raw = (exp['詳細說明連結'] || exp['Google Doc'] || exp['Google Doc 連結'] || '').trim();
       const url = raw || FALLBACK_DOC_URL;
-
-      // 試著把一般 /document/d/{id}/edit 轉為 preview 或 export HTML
-      const transformed = toFetchableDocURL(url);
+      const fetchURL = toFetchableDocURL(url);
 
       try{
-        const resp = await fetch(transformed, {mode:'cors'});
+        const resp = await fetch(fetchURL,{mode:'cors'});
         const html = await resp.text();
 
-        // 解析：盡可能拿到主要內容（published 版本常見 #contents）
         const tmp = document.createElement('div');
         tmp.innerHTML = html;
 
+        // 發佈版常見 #contents；否則 fallback body
         let main = tmp.querySelector('#contents') || tmp.querySelector('body') || tmp;
-        // 移除 Google 自帶的外層導航/樣式（盡力清理，保守不過度）
-        main.querySelectorAll('link,style,header,nav').forEach(n=>n.remove());
+
+        // 盡量清掉與我們樣式衝突的元素
+        main.querySelectorAll('link,style,header,nav,script').forEach(n=>n.remove());
 
         container.innerHTML = '';
-        // 包一層，讓圖片/表格在我們的卡片內自適應
         const wrapper = document.createElement('div');
-        wrapper.style.wordBreak = 'break-word';
-        wrapper.style.lineHeight = '1.8';
-        wrapper.style.color = '#2e2e2e';
-        wrapper.style.fontSize = '1.05rem';
-        // 讓圖片不超出
-        wrapper.querySelectorAll?.('img').forEach(img=>{ img.style.maxWidth='100%'; img.style.height='auto'; });
+        wrapper.style.wordBreak='break-word';
+        wrapper.style.lineHeight='1.8';
+        wrapper.style.color='#2f2f2f';
+        wrapper.style.fontSize='1.06rem';
         wrapper.innerHTML = main.innerHTML;
+
+        // 處理圖片：自適應 + lazy
+        wrapper.querySelectorAll('img').forEach(img=>{
+          img.style.maxWidth='100%';
+          img.style.height='auto';
+          img.style.display='block';
+          img.style.margin='1rem auto';
+          img.style.borderRadius='8px';
+          img.style.boxShadow='0 2px 12px rgba(0,0,0,.06)';
+          img.loading='lazy';
+          // 若圖片無法載入，加上替代
+          img.onerror = () => { img.replaceWith(Object.assign(document.createElement('div'),{textContent:'📷 圖片無法載入',style:'text-align:center;color:#888;padding:1rem 0'})); };
+        });
+
+        // 表格可滾動
+        wrapper.querySelectorAll('table').forEach(t=>{
+          const w = document.createElement('div');
+          w.style.overflow='auto';
+          w.style.margin='1rem 0';
+          t.parentNode.insertBefore(w,t);
+          w.appendChild(t);
+        });
+
         container.appendChild(wrapper);
       }catch(err){
         console.warn('Doc fetch blocked (CORS). Fallback to iframe.', err);
-        // CORS 被擋，退回極簡 iframe（無邊框、和背景一致）
         container.innerHTML = `
           <iframe src="${toEmbeddableIframeURL(url)}"
                   style="width:100%;height:900px;border:0;border-radius:12px;background:#fff"
@@ -334,19 +398,16 @@
     }
 
     function toFetchableDocURL(url){
-      // 已發佈到網路：/document/d/e/.../pub
+      // 已發佈到網路
       if(/\/document\/d\/e\/[^/]+\/pub/.test(url)){
-        // 直接取 pub（HTML），可被抓取
         return url.includes('?') ? url : url + '?embedded=true';
       }
-      // 一般 /document/d/{id}/edit → 嘗試 export html（常見需公開可讀才行）
+      // 一般 /edit → export html（需 Doc 設定可公開讀取）
       const m = url.match(/\/document\/d\/([^/]+)/);
       if(m){
         const id = m[1];
-        // 先試 export html
         return `https://docs.google.com/document/d/${id}/export?format=html`;
       }
-      // 其他未知情況：原樣（可能會被擋，交由 try/catch 處理）
       return url;
     }
 
