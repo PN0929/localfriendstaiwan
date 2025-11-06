@@ -1,462 +1,447 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Experiences - Local Friends Taiwan | 台灣在地連線</title>
-    <meta name="description" content="Browse authentic local experiences in Taiwan. Connect with real Taiwanese locals.">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif;
-            line-height: 1.6; color: #2D6A4F; background: #F7F5F2;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Experiences - Local Friends Taiwan | 台灣在地連線</title>
+  <meta name="description" content="Browse authentic local experiences in Taiwan. Connect with real Taiwanese locals.">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft JhengHei",sans-serif;line-height:1.6;color:#2D6A4F;background:#F7F5F2}
 
-        /* 浮動導覽列 */
-        .floating-nav {
-            position: fixed; left: 20px; top: 50%; transform: translateY(-50%); z-index: 1000;
-            background: white; padding: 1rem; border-radius: 30px;
-            box-shadow: 0 4px 20px rgba(45,106,79,.2); border: 2px solid #2D6A4F;
-        }
-        .floating-nav a {
-            display: block; width: 50px; height: 50px; margin: .5rem 0; border-radius: 50%;
-            background: linear-gradient(135deg,#2D6A4F,#40916C); color: #fff; text-decoration: none;
-            display: flex; align-items: center; justify-content: center; font-size: 1.5rem; transition: .3s;
-        }
-        .floating-nav a:hover { transform: scale(1.1); background: linear-gradient(135deg,#40916C,#52B788); }
+    /* 浮動導覽列 */
+    .floating-nav{
+      position:fixed;left:20px;top:50%;transform:translateY(-50%);z-index:1000;
+      background:#fff;padding:1rem;border-radius:30px;box-shadow:0 4px 20px rgba(45,106,79,.2);border:2px solid #2D6A4F
+    }
+    .floating-nav a{
+      display:block;width:50px;height:50px;margin:.5rem 0;border-radius:50%;
+      background:linear-gradient(135deg,#2D6A4F,#40916C);color:#fff;text-decoration:none;
+      display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:.3s
+    }
+    .floating-nav a:hover{transform:scale(1.1);background:linear-gradient(135deg,#40916C,#52B788)}
 
-        /* 回頂按鈕 */
-        .back-to-top {
-            position: fixed; right: 30px; bottom: 30px; width: 60px; height: 60px;
-            background: linear-gradient(135deg,#F4845F,#F4A261); color: #fff; border: none; border-radius: 50%;
-            font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 20px rgba(244,132,95,.4);
-            display: none; z-index: 999; transition: .3s;
-        }
-        .back-to-top:hover { transform: translateY(-5px); }
-        .back-to-top.show { display: flex; align-items: center; justify-content: center; }
+    /* 回頂按鈕 */
+    .back-to-top{
+      position:fixed;right:30px;bottom:30px;width:60px;height:60px;background:linear-gradient(135deg,#F4845F,#F4A261);
+      color:#fff;border:none;border-radius:50%;font-size:1.5rem;cursor:pointer;box-shadow:0 4px 20px rgba(244,132,95,.4);
+      display:none;z-index:999;transition:.3s
+    }
+    .back-to-top:hover{transform:translateY(-5px)}
+    .back-to-top.show{display:flex;align-items:center;justify-content:center}
 
-        /* Hero Section */
-        .header {
-            position: relative;
-            background: linear-gradient(rgba(45,106,79,.75), rgba(45,106,79,.75)), url('images/hero.jpg');
-            background-size: cover; background-position: center; background-attachment: fixed;
-            color: white; padding: 5rem 2rem; text-align: center;
-        }
-        .header h1 {
-            font-size: 3rem; font-weight: bold; margin-bottom: .5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,.3); animation: fadeInUp 1s ease;
-        }
-        .header .subtitle {
-            font-size: 1.5rem; opacity: .95; text-shadow: 1px 1px 2px rgba(0,0,0,.3);
-            animation: fadeInUp 1s ease .2s backwards;
-        }
+    /* Hero + 縮小狀態 */
+    .header{
+      position:relative;
+      background:linear-gradient(rgba(45,106,79,.75),rgba(45,106,79,.75)),url('images/hero.jpg');
+      background-size:cover;background-position:center;background-attachment:fixed;
+      color:#fff;text-align:center;
+      padding:5rem 2rem; /* 大版面 */
+      transition:all .35s ease;
+      z-index:900;
+    }
+    .header-inner{max-width:1200px;margin:0 auto}
+    .header h1{
+      font-size:3rem;font-weight:800;margin-bottom:.5rem;
+      text-shadow:2px 2px 6px rgba(0,0,0,.35);letter-spacing:.3px
+    }
+    .header .subtitle{
+      font-size:1.5rem;opacity:.95;text-shadow:1px 2px 4px rgba(0,0,0,.35)
+    }
 
-        /* 同詳情頁：版心 1200、外框一致 */
-        .disclaimer {
-            background: #fff;
-            max-width: 1200px; margin: 2rem auto; padding: 1.25rem 1.5rem;
-            border-radius: 15px;
-            border: 3px solid #E9C46A;               /* 與詳情頁一致 */
-            box-shadow: 0 4px 20px rgba(233,196,106,.2);
-            position: relative;
-        }
-        .disclaimer::before { /* 保留左側黃條的視覺語彙 */
-            content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; border-radius: 12px 0 0 12px;
-            background: #E9C46A;
-        }
-        .disclaimer strong { color: #2D6A4F; }
+    /* 縮小後：黏頂、一行標題 */
+    .header.shrink{
+      padding:.6rem 2rem;            /* 變薄 */
+      background:linear-gradient(135deg,#2D6A4F,#40916C); /* 固定漸層底色 */
+      background-attachment:initial;
+      position:sticky; top:0;        /* 黏在最上方 */
+      box-shadow:0 6px 18px rgba(0,0,0,.18);
+    }
+    .header .titles-large{opacity:1;transform:translateY(0);transition:opacity .25s ease, transform .25s ease}
+    .header.shrink .titles-large{opacity:0;transform:translateY(-6px);pointer-events:none;height:0;overflow:hidden}
 
-        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; } /* 與詳情頁對齊 */
+    .header .title-compact{
+      display:none;color:#fff;font-weight:800;letter-spacing:.2px;
+      text-shadow:0 2px 8px rgba(0,0,0,.3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+    }
+    .header.shrink .title-compact{display:block;font-size:1.05rem}
 
-        /* 搜尋與篩選區（外框改為 #E9C46A） */
-        .search-filter-section {
-            background: white; padding: 2.5rem; border-radius: 15px; margin-bottom: 2rem;
-            border: 3px solid #E9C46A;                             /* 對齊詳情頁的外框色 */
-            box-shadow: 0 4px 20px rgba(233,196,106,.2);           /* 陰影色系同步 */
-            animation: fadeInUp .8s ease;
-        }
+    /* 版心與區塊（與詳情頁對齊） */
+    .container{max-width:1200px;margin:0 auto;padding:2rem}
+    .search-filter-section{
+      background:#fff;padding:2.5rem;border-radius:15px;margin-bottom:2rem;
+      border:3px solid #E9C46A;box-shadow:0 4px 20px rgba(233,196,106,.2);animation:fadeInUp .8s ease
+    }
 
-        .search-box { display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
-        .search-input {
-            flex: 1; min-width: 250px; padding: 1.2rem 1.8rem; font-size: 1.1rem;
-            border: 2px solid #E9C46A; border-radius: 50px; outline: none; transition: .3s; background: #F7F5F2;
-        }
-        .search-input:focus { border-color: #2D6A4F; background: #fff; box-shadow: 0 0 0 3px rgba(45,106,79,.1); }
-        .search-btn {
-            padding: 1.2rem 3rem; background: linear-gradient(135deg,#F4845F,#F4A261); color: #fff;
-            border: none; border-radius: 50px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: .3s;
-            box-shadow: 0 4px 15px rgba(244,132,95,.3);
-        }
-        .search-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(244,132,95,.4); }
+    /* 純文字公告（不加框） */
+    .notice-text{
+      max-width:1200px;margin:1.5rem auto 0; padding:0 2rem; /* 與容器對齊 */
+      color:#2D6A4F;font-size:1rem;line-height:1.85
+    }
+    .notice-text strong{font-weight:800}
 
-        .filter-section { margin-top: 2rem; }
-        .filter-section h3 { color: #2D6A4F; margin-bottom: 1rem; font-size: 1.4rem; font-weight: bold; }
-        .filter-group { margin-bottom: 1.5rem; }
-        .filter-group label { display: block; margin-bottom: .8rem; font-weight: 600; color: #2D6A4F; font-size: 1.1rem; }
-        .filter-buttons { display: flex; flex-wrap: wrap; gap: .8rem; }
+    .search-box{display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap}
+    .search-input{
+      flex:1;min-width:250px;padding:1.2rem 1.8rem;font-size:1.1rem;border:2px solid #E9C46A;border-radius:50px;
+      outline:none;transition:.3s;background:#F7F5F2
+    }
+    .search-input:focus{border-color:#2D6A4F;background:#fff;box-shadow:0 0 0 3px rgba(45,106,79,.1)}
+    .search-btn{
+      padding:1.2rem 3rem;background:linear-gradient(135deg,#F4845F,#F4A261);color:#fff;border:none;border-radius:50px;
+      font-size:1.1rem;font-weight:800;cursor:pointer;transition:.3s;box-shadow:0 4px 15px rgba(244,132,95,.3)
+    }
+    .search-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(244,132,95,.4)}
 
-        .filter-btn {
-            padding: .8rem 1.8rem; background: #F7F5F2; border: 2px solid #E9C46A; border-radius: 25px;
-            cursor: pointer; transition: .3s; font-size: 1rem; font-weight: 500; color: #2D6A4F; position: relative;
-        }
-        .filter-btn .count { font-size: .85rem; opacity: .7; margin-left: .3rem; }
-        .filter-btn:hover {
-            background: #E9C46A; color: white; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(233,196,106,.3);
-        }
-        .filter-btn.active {
-            background: linear-gradient(135deg,#2D6A4F,#40916C);
-            color: #fff; border-color: #2D6A4F; box-shadow: 0 4px 15px rgba(45,106,79,.3);
-        }
+    .filter-section{margin-top:2rem}
+    .filter-section h3{color:#2D6A4F;margin-bottom:1rem;font-size:1.4rem;font-weight:800}
+    .filter-group{margin-bottom:1.5rem}
+    .filter-group label{display:block;margin-bottom:.8rem;font-weight:700;color:#2D6A4F;font-size:1.1rem}
+    .filter-buttons{display:flex;flex-wrap:wrap;gap:.8rem}
+    .filter-btn{
+      padding:.8rem 1.8rem;background:#F7F5F2;border:2px solid #E9C46A;border-radius:25px;cursor:pointer;transition:.3s;
+      font-size:1rem;font-weight:600;color:#2D6A4F;position:relative
+    }
+    .filter-btn .count{font-size:.85rem;opacity:.7;margin-left:.3rem}
+    .filter-btn:hover{background:#E9C46A;color:#fff;transform:translateY(-2px);box-shadow:0 4px 10px rgba(233,196,106,.3)}
+    .filter-btn.active{background:linear-gradient(135deg,#2D6A4F,#40916C);color:#fff;border-color:#2D6A4F;box-shadow:0 4px 15px rgba(45,106,79,.3)}
 
-        .filter-results { text-align: center; color: #2D6A4F; margin: 1.5rem 0; font-size: 1.3rem; font-weight: bold; }
-        .loading { text-align: center; padding: 4rem; font-size: 1.3rem; color: #2D6A4F; font-weight: bold; }
+    .filter-results{text-align:center;color:#2D6A4F;margin:1.5rem 0;font-size:1.3rem;font-weight:800}
+    .loading{text-align:center;padding:4rem;font-size:1.3rem;color:#2D6A4F;font-weight:800}
 
-        /* 體驗卡片網格 */
-        .experiences-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 2.5rem; margin-top: 2rem;
-        }
+    /* 卡片 */
+    .experiences-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:2.5rem;margin-top:2rem}
+    .experience-card{
+      background:#fff;border-radius:15px;overflow:hidden;border:3px solid #E9C46A;box-shadow:0 4px 15px rgba(233,196,106,.2);
+      transition:all .4s cubic-bezier(.4,0,.2,1);cursor:pointer;opacity:0;transform:translateY(30px);
+      text-decoration:none;color:inherit;display:block
+    }
+    .experience-card.visible{opacity:1;transform:translateY(0)}
+    .experience-card:hover{transform:translateY(-15px) scale(1.02);box-shadow:0 15px 50px rgba(233,196,106,.5);border-color:#F4845F}
 
-        /* 整張卡片可點擊 */
-        .experience-card {
-            background: white; border-radius: 15px; overflow: hidden;
-            border: 3px solid #E9C46A;                             /* 與詳情頁一致 */
-            box-shadow: 0 4px 15px rgba(233,196,106,.2);
-            transition: all .4s cubic-bezier(.4,0,.2,1); cursor: pointer;
-            opacity: 0; transform: translateY(30px); text-decoration: none; color: inherit; display: block;
-        }
-        .experience-card.visible { opacity: 1; transform: translateY(0); }
-        .experience-card:hover { transform: translateY(-15px) scale(1.02); box-shadow: 0 15px 50px rgba(233,196,106,.5); border-color: #F4845F; }
+    .experience-card .image{
+      width:100%;height:280px;background:linear-gradient(135deg,#2D6A4F,#40916C);
+      display:flex;align-items:center;justify-content:center;color:#fff;font-size:4.5rem;overflow:hidden;position:relative
+    }
+    .experience-card .image img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+    .experience-card:hover .image img{transform:scale(1.15)}
+    .experience-card .image::after{
+      content:'';position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(transparent,rgba(0,0,0,.4));opacity:0;transition:opacity .3s
+    }
+    .experience-card:hover .image::after{opacity:1}
+    .experience-card .image::before{
+      content:'點擊查看 Click to View →';position:absolute;bottom:20px;left:50%;transform:translateX(-50%);
+      color:#fff;font-size:1.1rem;font-weight:800;opacity:0;transition:opacity .3s;text-shadow:2px 2px 4px rgba(0,0,0,.5);z-index:2
+    }
+    .experience-card:hover .image::before{opacity:1}
+    .experience-card .content{padding:2rem}
+    .experience-card .title{font-size:1.5rem;font-weight:800;margin-bottom:.5rem;color:#2D6A4F;transition:color .3s}
+    .experience-card:hover .title{color:#F4845F}
+    .experience-card .subtitle{font-size:1rem;color:#666;margin-bottom:1rem}
+    .experience-card .description{color:#555;margin-bottom:1.5rem;line-height:1.7;font-size:1.05rem}
+    .experience-card .meta{display:flex;gap:.8rem;flex-wrap:wrap;margin-bottom:1rem}
+    .experience-card .tag{
+      display:inline-block;padding:.5rem 1.2rem;background:#F7F5F2;color:#2D6A4F;border:2px solid #E9C46A;border-radius:20px;font-size:.95rem;transition:.3s;font-weight:500;pointer-events:none
+    }
+    .experience-card .status{display:inline-block;padding:.5rem 1.2rem;background:#fff;color:#2D6A4F;border:2px solid #2D6A4F;border-radius:20px;font-size:.95rem;font-weight:800}
 
-        .experience-card .image {
-            width: 100%; height: 280px;
-            background: linear-gradient(135deg,#2D6A4F 0%,#40916C 100%);
-            display: flex; align-items: center; justify-content: center; color: white; font-size: 4.5rem;
-            overflow: hidden; position: relative;
-        }
-        .experience-card .image img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
-        .experience-card:hover .image img { transform: scale(1.15); }
-        .experience-card .image::after {
-            content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 50%;
-            background: linear-gradient(transparent, rgba(0,0,0,.4)); opacity: 0; transition: opacity .3s;
-        }
-        .experience-card:hover .image::after { opacity: 1; }
+    .footer{background:linear-gradient(135deg,#2D6A4F,#40916C);color:#fff;text-align:center;padding:2rem;margin-top:4rem}
+    .footer p{font-size:1.1rem}
 
-        .experience-card .image::before {
-            content: '點擊查看 Click to View →'; position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
-            color: #fff; font-size: 1.1rem; font-weight: bold; opacity: 0; transition: opacity .3s;
-            text-shadow: 2px 2px 4px rgba(0,0,0,.5); z-index: 2;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        }
-        .experience-card:hover .image::before { opacity: 1; }
+    /* 動畫 */
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
 
-        .experience-card .content { padding: 2rem; }
-        .experience-card .title { font-size: 1.5rem; font-weight: bold; margin-bottom: .5rem; color: #2D6A4F; transition: color .3s; }
-        .experience-card:hover .title { color: #F4845F; }
-        .experience-card .subtitle { font-size: 1rem; color: #666; margin-bottom: 1rem; }
-        .experience-card .description { color: #555; margin-bottom: 1.5rem; line-height: 1.7; font-size: 1.05rem; }
-
-        .experience-card .meta { display: flex; gap: .8rem; flex-wrap: wrap; margin-bottom: 1rem; }
-        .experience-card .tag {
-            display: inline-block; padding: .5rem 1.2rem; background: #F7F5F2; color: #2D6A4F;
-            border: 2px solid #E9C46A; border-radius: 20px; font-size: .95rem; transition: .3s; font-weight: 500;
-            pointer-events: none;
-        }
-        .experience-card .status {
-            display: inline-block; padding: .5rem 1.2rem; background: #fff; color: #2D6A4F;
-            border: 2px solid #2D6A4F; border-radius: 20px; font-size: .95rem; font-weight: bold;
-        }
-
-        .footer {
-            background: linear-gradient(135deg,#2D6A4F,#40916C); color: white; text-align: center; padding: 2rem; margin-top: 4rem;
-        }
-        .footer p { font-size: 1.1rem; }
-
-        /* 動畫 */
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* 手機版適配 */
-        @media (max-width: 768px) {
-            .floating-nav { left: 10px; padding: .5rem; }
-            .floating-nav a { width: 40px; height: 40px; font-size: 1.2rem; margin: .3rem 0; }
-            .back-to-top { right: 15px; bottom: 15px; width: 50px; height: 50px; font-size: 1.2rem; }
-            .header h1 { font-size: 2rem; }
-            .header .subtitle { font-size: 1.2rem; }
-
-            .container { padding: 1rem; }
-            .search-filter-section { padding: 1.5rem; }
-
-            .search-box { flex-direction: column; }
-            .search-input { width: 100%; }
-            .search-btn { width: 100%; }
-
-            .experiences-grid { grid-template-columns: 1fr; gap: 2rem; }
-            .experience-card .image { height: 220px; font-size: 3.5rem; }
-            .experience-card .title { font-size: 1.3rem; }
-            .experience-card .content { padding: 1.5rem; }
-        }
-    </style>
+    /* 手機適配 */
+    @media (max-width:768px){
+      .floating-nav{left:10px;padding:.5rem}
+      .floating-nav a{width:40px;height:40px;font-size:1.2rem;margin:.3rem 0}
+      .back-to-top{right:15px;bottom:15px;width:50px;height:50px;font-size:1.2rem}
+      .header{padding:3.5rem 1rem}
+      .header h1{font-size:2rem}
+      .header .subtitle{font-size:1.2rem}
+      .container{padding:1rem}
+      .search-filter-section{padding:1.5rem}
+      .search-box{flex-direction:column}
+      .search-input{width:100%}
+      .search-btn{width:100%}
+      .experiences-grid{grid-template-columns:1fr;gap:2rem}
+      .experience-card .image{height:220px;font-size:3.5rem}
+      .experience-card .title{font-size:1.3rem}
+      .experience-card .content{padding:1.5rem}
+      .header.shrink .title-compact{font-size:1rem}
+    }
+  </style>
 </head>
 <body>
-    <!-- 浮動導覽 -->
-    <nav class="floating-nav">
-        <a href="index.html" title="首頁">🏠</a>
-        <a href="experiences.html" title="體驗">🌟</a>
-        <a href="index.html#about" title="關於">ℹ️</a>
-        <a href="index.html#contact" title="聯絡">✉️</a>
-    </nav>
+  <!-- 浮動導覽 -->
+  <nav class="floating-nav">
+    <a href="index.html" title="首頁">🏠</a>
+    <a href="experiences.html" title="體驗">🌟</a>
+    <a href="index.html#about" title="關於">ℹ️</a>
+    <a href="index.html#contact" title="聯絡">✉️</a>
+  </nav>
 
-    <!-- 回頂按鈕 -->
-    <button class="back-to-top" onclick="scrollToTop()">↑</button>
+  <!-- 回頂按鈕 -->
+  <button class="back-to-top" onclick="scrollToTop()">↑</button>
 
-    <header class="header">
+  <!-- Hero / Shrink header -->
+  <header class="header" id="pageHeader">
+    <div class="header-inner">
+      <!-- 大版面標題 -->
+      <div class="titles-large">
         <h1>Authentic Taiwan Experiences</h1>
         <p class="subtitle">真實的台灣體驗</p>
-    </header>
-
-    <div class="disclaimer">
-        <strong>ℹ️ Independent Information Platform</strong><br>
-        We provide curated information and contact details. Please reach out to organizations directly to arrange your visit.
-        We can help with translation and booking assistance if needed.<br>
-        我們提供策展資訊與聯絡方式。請直接聯繫主辦單位安排參訪。如需翻譯或預約協助,我們可以幫忙。
+      </div>
+      <!-- 縮小後的一行標題 -->
+      <div class="title-compact" id="compactTitle">
+        Authentic Taiwan Experiences　｜　真實的台灣體驗
+      </div>
     </div>
+  </header>
 
-    <div class="container">
-        <!-- 搜尋與篩選區 -->
-        <div class="search-filter-section">
-            <!-- 搜尋框 -->
-            <div class="search-box">
-                <input 
-                    type="text" 
-                    class="search-input" 
-                    id="searchInput"
-                    placeholder="🔍 搜尋體驗名稱或關鍵字... Search experiences..."
-                >
-                <button class="search-btn" onclick="performSearch()">搜尋 Search</button>
-            </div>
-            
-            <!-- 篩選器 -->
-            <div class="filter-section">
-                <h3>🔍 篩選體驗 Filter Experiences</h3>
-                
-                <div class="filter-group">
-                    <label>地區 Region:</label>
-                    <div class="filter-buttons" id="regionFilters">
-                        <button class="filter-btn active" data-type="region" data-value="all" onclick="handleFilterClick('region', 'all', this)">全部 All</button>
-                    </div>
-                </div>
-                
-                <div class="filter-group">
-                    <label>分類 Category:</label>
-                    <div class="filter-buttons" id="categoryFilters">
-                        <button class="filter-btn active" data-type="category" data-value="all" onclick="handleFilterClick('category', 'all', this)">全部 All</button>
-                    </div>
-                </div>
-            </div>
+  <!-- 純文字公告（不加框） -->
+  <div class="notice-text">
+    <p><strong>ℹ️ Independent Information Platform</strong><br>
+      We provide curated information and contact details. Please reach out to organizations directly to arrange your visit.
+      We can help with translation and booking assistance if needed.<br>
+      我們提供策展資訊與聯絡方式。請直接聯繫主辦單位安排參訪。如需翻譯或預約協助，我們可以幫忙。
+    </p>
+  </div>
+
+  <div class="container">
+    <!-- 搜尋與篩選區 -->
+    <div class="search-filter-section">
+      <!-- 搜尋框 -->
+      <div class="search-box">
+        <input type="text" class="search-input" id="searchInput" placeholder="🔍 搜尋體驗名稱或關鍵字... Search experiences...">
+        <button class="search-btn" onclick="performSearch()">搜尋 Search</button>
+      </div>
+
+      <!-- 篩選器 -->
+      <div class="filter-section">
+        <h3>🔍 篩選體驗 Filter Experiences</h3>
+
+        <div class="filter-group">
+          <label>地區 Region:</label>
+          <div class="filter-buttons" id="regionFilters">
+            <button class="filter-btn active" data-type="region" data-value="all" onclick="handleFilterClick('region','all',this)">全部 All</button>
+          </div>
         </div>
 
-        <div class="filter-results" id="filterResults"></div>
-
-        <div id="loading" class="loading">載入體驗中... Loading experiences...</div>
-
-        <div id="experiences" class="experiences-grid">
-            <!-- 體驗卡片會在這裡動態生成 -->
+        <div class="filter-group">
+          <label>分類 Category:</label>
+          <div class="filter-buttons" id="categoryFilters">
+            <button class="filter-btn active" data-type="category" data-value="all" onclick="handleFilterClick('category','all',this)">全部 All</button>
+          </div>
         </div>
+      </div>
     </div>
 
-    <footer class="footer">
-        <p><strong>Local Friends Taiwan 台灣在地連線</strong></p>
-        <p style="margin-top: 1rem; opacity: 0.9;">
-            Your local friend in Taiwan | 你在台灣的在地朋友
-        </p>
-    </footer>
+    <div class="filter-results" id="filterResults"></div>
 
-    <script>
-        const SHEET_ID = '1GD4gg3sGIfX7KGrJkYCL10wzvwZh5FMWQPGd9NVTQyc';
-        const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
+    <div id="loading" class="loading">載入體驗中... Loading experiences...</div>
 
-        const categoryEmojis = { '飲食文化':'🍜','社區生活':'🏘️','建築藝術':'🏛️','傳統工藝':'🎨','環境生態':'🌱','農村生活':'🌾','其他':'📍' };
-        const regionEmojis = { '北台灣':'🏙️','中台灣':'🏔️','南臺灣':'🌴','花東':'🌊','離島':'🏝️' };
+    <div id="experiences" class="experiences-grid"><!-- 卡片動態生成 --></div>
+  </div>
 
-        let allExperiences = [];
-        let currentFilters = { region: 'all', category: 'all', searchTerm: '' };
+  <footer class="footer">
+    <p><strong>Local Friends Taiwan 台灣在地連線</strong></p>
+    <p style="margin-top:1rem;opacity:.9;">Your local friend in Taiwan | 你在台灣的在地朋友</p>
+  </footer>
 
-        async function loadExperiences() {
-            try {
-                const response = await fetch(SHEET_URL);
-                const csvText = await response.text();
-                const rows = parseCSV(csvText);
-                const headers = rows[0];
-                const data = rows.slice(1);
-                
-                allExperiences = data.map(row => {
-                    const obj = {};
-                    headers.forEach((header, index) => { obj[header] = row[index] || ''; });
-                    return obj;
-                }).filter(exp => exp['Status'] === '已發布' || exp['Status'] === '草稿');
-                
-                createFilterButtons();
-                displayExperiences(allExperiences);
-            } catch (error) {
-                console.error('載入失敗:', error);
-                document.getElementById('loading').innerHTML = `
-                    <p style="color:#2D6A4F;">載入體驗時發生錯誤 Error loading experiences</p>
-                    <p style="margin-top:1rem;font-size:1rem;color:#555;">請確認 Google Sheets 已設為「知道連結的任何人都可以查看」</p>
-                `;
-            }
-        }
+  <script>
+    const SHEET_ID = '1GD4gg3sGIfX7KGrJkYCL10wzvwZh5FMWQPGd9NVTQyc';
+    const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
 
-        function createFilterButtons() {
-            const regions = [...new Set(allExperiences.map(exp => exp['地區']).filter(r => r))];
-            const regionContainer = document.getElementById('regionFilters');
-            const regionCounts = {};
-            allExperiences.forEach(exp => { if (exp['地區']) regionCounts[exp['地區']] = (regionCounts[exp['地區']] || 0) + 1; });
-            regions.forEach(region => {
-                const btn = document.createElement('button');
-                btn.className = 'filter-btn'; btn.dataset.type = 'region'; btn.dataset.value = region;
-                btn.innerHTML = `${regionEmojis[region] || '📍'} ${region} <span class="count">(${regionCounts[region]})</span>`;
-                btn.onclick = () => handleFilterClick('region', region, btn);
-                regionContainer.appendChild(btn);
-            });
+    const categoryEmojis = {'飲食文化':'🍜','社區生活':'🏘️','建築藝術':'🏛️','傳統工藝':'🎨','環境生態':'🌱','農村生活':'🌾','其他':'📍'};
+    const regionEmojis   = {'北台灣':'🏙️','中台灣':'🏔️','南臺灣':'🌴','花東':'🌊','離島':'🏝️'};
 
-            const categories = [...new Set(allExperiences.map(exp => exp['主要分類']).filter(c => c))];
-            const categoryContainer = document.getElementById('categoryFilters');
-            const categoryCounts = {};
-            allExperiences.forEach(exp => { if (exp['主要分類']) categoryCounts[exp['主要分類']] = (categoryCounts[exp['主要分類']] || 0) + 1; });
-            categories.forEach(category => {
-                const btn = document.createElement('button');
-                btn.className = 'filter-btn'; btn.dataset.type = 'category'; btn.dataset.value = category;
-                btn.innerHTML = `${categoryEmojis[category] || '📍'} ${category} <span class="count">(${categoryCounts[category]})</span>`;
-                btn.onclick = () => handleFilterClick('category', category, btn);
-                categoryContainer.appendChild(btn);
-            });
-        }
+    let allExperiences = [];
+    let currentFilters = { region:'all', category:'all', searchTerm:'' };
 
-        function handleFilterClick(type, value, clickedBtn) {
-            const container = type === 'region' ? document.getElementById('regionFilters') : document.getElementById('categoryFilters');
-            container.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            clickedBtn.classList.add('active');
-            currentFilters[type] = value;
-            filterAndDisplay();
-        }
+    /* 縮小 header 的觸發 */
+    const headerEl = document.getElementById('pageHeader');
+    let shrinkApplied = false;
+    function onScrollHeader(){
+      const threshold = 120; // 捲動超過 120px 開始縮小
+      if(window.scrollY > threshold){
+        if(!shrinkApplied){ headerEl.classList.add('shrink'); shrinkApplied = true; }
+      }else{
+        if(shrinkApplied){ headerEl.classList.remove('shrink'); shrinkApplied = false; }
+      }
+    }
+    window.addEventListener('scroll', onScrollHeader);
 
-        function performSearch() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            currentFilters.searchTerm = searchTerm;
-            filterAndDisplay();
-        }
+    async function loadExperiences(){
+      try{
+        const response = await fetch(SHEET_URL);
+        const csvText = await response.text();
+        const rows = parseCSV(csvText);
+        const headers = rows[0];
+        const data = rows.slice(1);
+        allExperiences = data.map(row=>{
+          const o={}; headers.forEach((h,i)=>o[h]=row[i]||''); return o;
+        }).filter(exp => exp['Status']==='已發布' || exp['Status']==='草稿');
 
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('searchInput').addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') performSearch();
-            });
+        createFilterButtons();
+        displayExperiences(allExperiences);
+      }catch(err){
+        console.error('載入失敗:', err);
+        document.getElementById('loading').innerHTML = `
+          <p style="color:#2D6A4F;">載入體驗時發生錯誤 Error loading experiences</p>
+          <p style="margin-top:1rem;font-size:1rem;color:#555;">請確認 Google Sheets 已設為「知道連結的任何人都可以查看」</p>`;
+      }
+    }
+
+    function createFilterButtons(){
+      const regions = [...new Set(allExperiences.map(exp=>exp['地區']).filter(Boolean))];
+      const regionContainer = document.getElementById('regionFilters');
+      const regionCounts = {};
+      allExperiences.forEach(exp=>{ if(exp['地區']) regionCounts[exp['地區']] = (regionCounts[exp['地區']]||0)+1; });
+      regions.forEach(region=>{
+        const btn = document.createElement('button');
+        btn.className='filter-btn'; btn.dataset.type='region'; btn.dataset.value=region;
+        btn.innerHTML = `${regionEmojis[region]||'📍'} ${region} <span class="count">(${regionCounts[region]||0})</span>`;
+        btn.onclick = ()=>handleFilterClick('region', region, btn);
+        regionContainer.appendChild(btn);
+      });
+
+      const categories = [...new Set(allExperiences.map(exp=>exp['主要分類']).filter(Boolean))];
+      const categoryContainer = document.getElementById('categoryFilters');
+      const categoryCounts = {};
+      allExperiences.forEach(exp=>{ if(exp['主要分類']) categoryCounts[exp['主要分類']] = (categoryCounts[exp['主要分類']]||0)+1; });
+      categories.forEach(category=>{
+        const btn = document.createElement('button');
+        btn.className='filter-btn'; btn.dataset.type='category'; btn.dataset.value=category;
+        btn.innerHTML = `${categoryEmojis[category]||'📍'} ${category} <span class="count">(${categoryCounts[category]||0})</span>`;
+        btn.onclick = ()=>handleFilterClick('category', category, btn);
+        categoryContainer.appendChild(btn);
+      });
+    }
+
+    function handleFilterClick(type,value,clickedBtn){
+      const container = type==='region' ? document.getElementById('regionFilters') : document.getElementById('categoryFilters');
+      container.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+      clickedBtn.classList.add('active');
+      currentFilters[type]=value;
+      filterAndDisplay();
+    }
+
+    function performSearch(){
+      currentFilters.searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      filterAndDisplay();
+    }
+    document.addEventListener('DOMContentLoaded', ()=> {
+      document.getElementById('searchInput').addEventListener('keypress', e=>{
+        if(e.key==='Enter') performSearch();
+      });
+    });
+
+    function filterAndDisplay(){
+      let filtered = allExperiences;
+      if(currentFilters.searchTerm){
+        filtered = filtered.filter(exp=>{
+          const text = `
+            ${exp['體驗名稱(中)']} 
+            ${exp['體驗名稱(英)']} 
+            ${exp['一句話描述(中)']} 
+            ${exp['地區']} 
+            ${exp['主要分類']}
+          `.toLowerCase();
+          return text.includes(currentFilters.searchTerm);
         });
+      }
+      if(currentFilters.region!=='all')   filtered = filtered.filter(exp=>exp['地區']===currentFilters.region);
+      if(currentFilters.category!=='all') filtered = filtered.filter(exp=>exp['主要分類']===currentFilters.category);
 
-        function filterAndDisplay() {
-            let filtered = allExperiences;
+      updateFilterResults(filtered.length);
+      displayExperiences(filtered);
+    }
 
-            if (currentFilters.searchTerm) {
-                filtered = filtered.filter(exp => {
-                    const searchableText = `
-                        ${exp['體驗名稱(中)']} 
-                        ${exp['體驗名稱(英)']} 
-                        ${exp['一句話描述(中)']} 
-                        ${exp['地區']} 
-                        ${exp['主要分類']}
-                    `.toLowerCase();
-                    return searchableText.includes(currentFilters.searchTerm);
-                });
-            }
-            if (currentFilters.region !== 'all') filtered = filtered.filter(exp => exp['地區'] === currentFilters.region);
-            if (currentFilters.category !== 'all') filtered = filtered.filter(exp => exp['主要分類'] === currentFilters.category);
+    function updateFilterResults(count){
+      const div = document.getElementById('filterResults');
+      if(currentFilters.region==='all' && currentFilters.category==='all' && !currentFilters.searchTerm){
+        div.textContent = '';
+      }else{
+        div.textContent = `找到 ${count} 個體驗 Found ${count} experiences`;
+      }
+    }
 
-            updateFilterResults(filtered.length);
-            displayExperiences(filtered);
+    function parseCSV(csv){
+      const lines = csv.split('\n');
+      return lines.map(line=>{
+        const values=[]; let cur=''; let inQ=false;
+        for(let i=0;i<line.length;i++){
+          const ch=line[i];
+          if(ch==='"'){ inQ=!inQ; }
+          else if(ch===',' && !inQ){ values.push(cur.trim()); cur=''; }
+          else{ cur+=ch; }
         }
+        values.push(cur.trim());
+        return values;
+      });
+    }
 
-        function updateFilterResults(count) {
-            const resultsDiv = document.getElementById('filterResults');
-            if (currentFilters.region === 'all' && currentFilters.category === 'all' && !currentFilters.searchTerm) {
-                resultsDiv.textContent = '';
-            } else {
-                resultsDiv.textContent = `找到 ${count} 個體驗 Found ${count} experiences`;
-            }
-        }
+    function displayExperiences(experiences){
+      const container = document.getElementById('experiences');
+      const loading = document.getElementById('loading');
+      loading.style.display='none';
+      container.innerHTML='';
 
-        function parseCSV(csv) {
-            const lines = csv.split('\n');
-            return lines.map(line => {
-                const values = []; let current = ''; let inQuotes = false;
-                for (let i = 0; i < line.length; i++) {
-                    const char = line[i];
-                    if (char === '"') inQuotes = !inQuotes;
-                    else if (char === ',' && !inQuotes) { values.push(current.trim()); current = ''; }
-                    else current += char;
-                }
-                values.push(current.trim());
-                return values;
-            });
-        }
+      if(experiences.length===0){
+        container.innerHTML = `
+          <div style="text-align:center;padding:4rem;grid-column:1/-1;">
+            <p style="font-size:1.8rem;color:#2D6A4F;font-weight:800;margin-bottom:1rem;">沒有符合條件的體驗</p>
+            <p style="color:#555;font-size:1.2rem;">No experiences match your filters</p>
+          </div>`;
+        return;
+      }
 
-        function displayExperiences(experiences) {
-            const container = document.getElementById('experiences');
-            const loading = document.getElementById('loading');
-            loading.style.display = 'none';
-            container.innerHTML = '';
+      experiences.forEach((exp, idx)=>{
+        const card = createExperienceCard(exp);
+        card.style.transitionDelay = `${idx*0.1}s`;
+        container.appendChild(card);
+        setTimeout(()=>card.classList.add('visible'), 100 + idx*100);
+      });
+    }
 
-            if (experiences.length === 0) {
-                container.innerHTML = `
-                    <div style="text-align:center;padding:4rem;grid-column:1/-1;">
-                        <p style="font-size:1.8rem;color:#2D6A4F;font-weight:bold;margin-bottom:1rem;">沒有符合條件的體驗</p>
-                        <p style="color:#555;font-size:1.2rem;">No experiences match your filters</p>
-                    </div>`;
-                return;
-            }
-            experiences.forEach((exp, index) => {
-                const card = createExperienceCard(exp);
-                card.style.transitionDelay = `${index * 0.1}s`;
-                container.appendChild(card);
-                setTimeout(() => { card.classList.add('visible'); }, 100 + index * 100);
-            });
-        }
+    function createExperienceCard(exp){
+      const card = document.createElement('a');
+      card.className='experience-card';
+      card.href=`experience-detail.html?id=${exp['ID']}`;
 
-        function createExperienceCard(exp) {
-            const card = document.createElement('a');
-            card.className = 'experience-card';
-            card.href = `experience-detail.html?id=${exp['ID']}`;
+      const emoji = categoryEmojis[exp['主要分類']] || regionEmojis[exp['地區']] || '📍';
+      const hasImage = exp['卡片圖片'] && exp['卡片圖片'].trim()!=='';      
 
-            const emoji = categoryEmojis[exp['主要分類']] || regionEmojis[exp['地區']] || '📍';
-            const hasImage = exp['卡片圖片'] && exp['卡片圖片'].trim() !== '';
+      card.innerHTML = `
+        <div class="image">
+          ${hasImage
+            ? `<img src="${exp['卡片圖片']}" alt="${exp['體驗名稱(中)']}" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\\'font-size:4.5rem\\'>${emoji}</span>'">`
+            : emoji}
+        </div>
+        <div class="content">
+          <div class="title">${exp['體驗名稱(中)']}</div>
+          ${exp['體驗名稱(英)'] ? `<div class="subtitle">${exp['體驗名稱(英)']}</div>` : ''}
+          <div class="description">${exp['一句話描述(中)'] || '深度文化體驗'}</div>
+          <div class="meta">
+            ${exp['地區'] ? `<span class="tag">📍 ${exp['地區']}</span>` : ''}
+            ${exp['主要分類'] ? `<span class="tag">${exp['主要分類']}</span>` : ''}
+            ${exp['難度'] ? `<span class="tag">⭐ ${exp['難度']}</span>` : ''}
+          </div>
+          <div class="meta">
+            <span class="status">🚧 ${exp['Status'] || '準備中'}</span>
+          </div>
+        </div>`;
+      return card;
+    }
 
-            card.innerHTML = `
-                <div class="image">
-                    ${hasImage
-                        ? `<img src="${exp['卡片圖片']}" alt="${exp['體驗名稱(中)']}" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\\'font-size:4.5rem\\'>${emoji}</span>'">`
-                        : emoji}
-                </div>
-                <div class="content">
-                    <div class="title">${exp['體驗名稱(中)']}</div>
-                    ${exp['體驗名稱(英)'] ? `<div class="subtitle">${exp['體驗名稱(英)']}</div>` : ''}
-                    <div class="description">${exp['一句話描述(中)'] || '深度文化體驗'}</div>
-                    <div class="meta">
-                        ${exp['地區'] ? `<span class="tag">📍 ${exp['地區']}</span>` : ''}
-                        ${exp['主要分類'] ? `<span class="tag">${exp['主要分類']}</span>` : ''}
-                        ${exp['難度'] ? `<span class="tag">⭐ ${exp['難度']}</span>` : ''}
-                    </div>
-                    <div class="meta">
-                        <span class="status">🚧 ${exp['Status'] || '準備中'}</span>
-                    </div>
-                </div>
-            `;
-            return card;
-        }
+    /* 回頂 */
+    function scrollToTop(){ window.scrollTo({top:0,behavior:'smooth'}) }
+    window.addEventListener('scroll', ()=>{
+      const b=document.querySelector('.back-to-top');
+      if(window.pageYOffset>300) b.classList.add('show'); else b.classList.remove('show');
+    });
 
-        window.addEventListener('scroll', function() {
-            const backToTop = document.querySelector('.back-to-top');
-            if (window.pageYOffset > 300) backToTop.classList.add('show'); else backToTop.classList.remove('show');
-        });
-
-        function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
-        window.addEventListener('DOMContentLoaded', loadExperiences);
-    </script>
+    window.addEventListener('DOMContentLoaded', loadExperiences);
+  </script>
 </body>
 </html>
