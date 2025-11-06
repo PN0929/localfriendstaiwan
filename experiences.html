@@ -98,19 +98,19 @@
     .filter-group label{display:block;margin-bottom:.8rem;font-weight:700;color:#2D6A4F;font-size:1.1rem}
     .filter-buttons{display:flex;flex-wrap:wrap;gap:.8rem}
 
-    /* 小籤 + 單行策略 */
+    /* 小籤 + 單行策略（略放大） */
     .experience-card .meta{
-      display:flex;align-items:center;gap:6px;flex-wrap:nowrap;overflow:hidden
+      display:flex;align-items:center;gap:8px;flex-wrap:nowrap;overflow:hidden
     }
     .experience-card .tag{
       display:inline-flex;align-items:center;white-space:nowrap;
-      font-size:0.85rem;font-weight:600;
-      padding:0.2rem 0.55rem;border-radius:6px;border:1.5px solid #E9C46A;
+      font-size:0.9rem;font-weight:600;
+      padding:0.26rem 0.65rem;border-radius:8px;border:1.5px solid #E9C46A;
       background:#F7F5F2;color:#2D6A4F;flex:0 0 auto
     }
     .experience-card .more-tag{
       display:inline-flex;align-items:center;white-space:nowrap;
-      font-size:0.85rem;font-weight:700;padding:0.2rem 0.5rem;border-radius:6px;
+      font-size:0.9rem;font-weight:700;padding:0.26rem 0.6rem;border-radius:8px;
       border:1.5px dashed #E9C46A;background:#FFF7E6;color:#2D6A4F;flex:0 0 auto
     }
 
@@ -184,7 +184,7 @@
 
       .experience-card .tag,
       .experience-card .more-tag{
-        font-size:0.78rem;padding:0.18rem 0.5rem;border-radius:6px
+        font-size:0.82rem;padding:0.22rem 0.55rem;border-radius:8px
       }
     }
   </style>
@@ -216,7 +216,7 @@
     </div>
   </header>
 
-  <!-- 觀測縮放用哨兵（避免抖動） -->
+  <!-- 觀測縮放用哨兵（避免閃動） -->
   <div id="headerSentinel" style="height:1px;"></div>
 
   <!-- 純文字公告（不加框） -->
@@ -277,16 +277,18 @@
     const headerEl = document.getElementById('pageHeader');
     const sentinel = document.getElementById('headerSentinel');
 
-    // 進入縮小的門檻較深（-140px），還原的門檻較淺（-80px）=> Hysteresis
+    // 單一觀測器 + rootMargin：超過 120px 才算「離開」→ 縮小；回到 0px 內恢復
     const shrinkObserver = new IntersectionObserver((entries)=>{
       entries.forEach(entry=>{
-        if(entry.boundingClientRect.top < -140){         // 滾過 140px：縮小
-          headerEl.classList.add('shrink');
-        }else if(entry.boundingClientRect.top > -80){     // 回到 80px 內：還原
+        if(entry.isIntersecting){
+          // 哨兵在視口內（含 rootMargin）：恢復大版
           headerEl.classList.remove('shrink');
+        }else{
+          // 哨兵離開（超過 120px）：縮小
+          headerEl.classList.add('shrink');
         }
       });
-    }, {root:null, threshold:0});
+    }, {root:null, threshold:0, rootMargin:'-120px 0px 0px 0px'});
     shrinkObserver.observe(sentinel);
 
     /* 手機只顯示英文（compact 行） */
@@ -308,9 +310,11 @@
         const rows = parseCSV(csvText);
         const headers = rows[0];
         const data = rows.slice(1);
+
+        // 只保留「已發布」
         allExperiences = data.map(row=>{
           const o={}; headers.forEach((h,i)=>o[h]=row[i]||''); return o;
-        }).filter(exp => exp['Status']==='已發布' || exp['Status']==='草稿');
+        }).filter(exp => exp['Status'] === '已發布');
 
         createFilterButtons();
         displayExperiences(allExperiences);
@@ -461,9 +465,6 @@
             ${exp['主要分類'] ? `<span class="tag">${exp['主要分類']}</span>` : ''}
             ${exp['難度'] ? `<span class="tag">⭐ ${exp['難度']}</span>` : ''}
           </div>
-          <div class="meta">
-            <span class="tag" style="border-color:#2D6A4F;background:#fff">🚧 ${exp['Status'] || '準備中'}</span>
-          </div>
         </div>`;
       return card;
     }
@@ -480,11 +481,11 @@
       const available = metaEl.clientWidth;
       let used = 0;
       let visibleCount = 0;
-      const reserveMore = 48;
+      const reserveMore = 52; // 稍加大，以符合較大的字與 padding
 
       for(let i=0; i<chips.length; i++){
         const ch = chips[i];
-        const w = ch.offsetWidth + 6; // chip 寬 + gap
+        const w = ch.offsetWidth + 8; // chip 寬 + gap (8px)
         if(i < chips.length - 1){
           if(used + w + reserveMore <= available){ used += w; visibleCount++; }
           else{ break; }
