@@ -18,69 +18,66 @@
     .back-to-top:hover{transform:translateY(-5px)}
     .back-to-top.show{display:flex;align-items:center;justify-content:center}
 
-    /* Hero：高度固定 */
+    /* Hero：固定高度 + 上下留白 */
     .hero-section{
       position:relative;height:42vh;min-height:240px;max-height:480px;
       display:flex;align-items:center;justify-content:center;text-align:center;
       overflow:hidden;background:#2D6A4F
     }
 
-    /* 影像背景容器 */
+    /* 影像背景 */
     .hero-media{position:absolute;inset:0;z-index:1}
-
-    /* 桌機：三張並排（不輪播、完全填滿） */
     .hero-grid{width:100%;height:100%;display:grid;grid-template-columns:repeat(3,1fr);gap:0}
     .hero-grid-item{position:relative;background:#2D6A4F}
     .hero-grid-item img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block}
-
-    /* 手機：單張輪播 */
     .hero-carousel{display:none;position:absolute;inset:0}
     .hero-slide{position:absolute;inset:0;opacity:0;transition:opacity .6s ease;background:#2D6A4F}
     .hero-slide.active{opacity:1}
     .hero-slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block}
 
-    /* 漸層疊加：上方較深、往下漸淡（提升文字可讀性） */
+    /* 上深下淺的漸層，提升可讀性 */
     .hero-overlay{
       position:absolute;inset:0;z-index:2;
       background:linear-gradient(
         to bottom,
-        rgba(45,106,79,0.82) 0%,
-        rgba(45,106,79,0.62) 28%,
-        rgba(45,106,79,0.42) 55%,
-        rgba(45,106,79,0.28) 100%
+        rgba(45,106,79,.85) 0%,
+        rgba(45,106,79,.62) 28%,
+        rgba(45,106,79,.42) 55%,
+        rgba(45,106,79,.30) 100%
       );
       pointer-events:none;
     }
 
-    /* Hero 文字：與上、下緣都留空間 */
+    /* Hero 文字：上、下皆留安全距離 */
     .hero-content{
       position:relative;z-index:3;color:#fff;max-width:1100px;
-      padding:1.25rem clamp(22px,5vw,32px);
-      margin-top:clamp(24px,6vh,72px);     /* 與頂端留距 */
-      margin-bottom:clamp(16px,6vh,64px);  /* ✅ 與底部也留距（避免 tag 貼底） */
+      padding: clamp(20px,5vw,28px);          /* 左右安全內距 */
+      padding-top: clamp(28px,7vh,56px);      /* ↑ 上方距離，避免貼齊圖片上緣 */
+      padding-bottom: clamp(28px,7vh,56px);   /* ↑ 下方距離，避免貼齊圖片下緣 */
     }
     .hero-content h1{
-      font-size:3rem;font-weight:900;margin-bottom:.5rem;line-height:1.15;
+      font-size:3rem;font-weight:900;margin-bottom:.55rem;line-height:1.15;
       text-shadow:0 3px 10px rgba(0,0,0,.45),0 8px 24px rgba(0,0,0,.35);letter-spacing:.3px
     }
     .hero-content .subtitle{font-size:1.5rem;margin-bottom:.9rem;opacity:.98;text-shadow:0 2px 8px rgba(0,0,0,.35)}
     .hero-content .description{font-size:1.15rem;margin-bottom:1.2rem;line-height:1.75;opacity:.95;text-shadow:0 2px 8px rgba(0,0,0,.35)}
 
-    /* Tag：單行＋小尺寸，可水平捲動 */
+    /* Tag 列：預設單行、可水平捲動；桌機有空間時自然換行 */
     .hero-tags{
-      display:flex;gap:.5rem;justify-content:center;align-items:center;
-      flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;
-      -webkit-overflow-scrolling:touch;scrollbar-width:none
+      display:flex;gap:.45rem;justify-content:center;align-items:center;
+      flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch;
+      padding-bottom:.25rem; margin:0 auto; max-width:100%;
     }
-    .hero-tags::-webkit-scrollbar{display:none}
+    .hero-tags::-webkit-scrollbar{height:6px}
+    .hero-tags::-webkit-scrollbar-thumb{background:rgba(255,255,255,.35);border-radius:6px}
+
     .hero-tag{
-      padding:.4rem .8rem;
+      padding:.45rem .8rem;
       background:rgba(255,255,255,.22);
       backdrop-filter:blur(8px);
       border:2px solid rgba(255,255,255,.35);
-      border-radius:18px;
-      color:#fff;font-size:.92rem;font-weight:700;
-      white-space:nowrap;
+      border-radius:22px;
+      color:#fff;font-size:.95rem;font-weight:700;white-space:nowrap
     }
 
     /* 內容與卡片 */
@@ -97,12 +94,9 @@
     .info-item a{color:#F4845F;text-decoration:none;font-weight:700;word-break:break-all}
     .info-item a:hover{text-decoration:underline}
 
-    /* Doc 內容呈現 */
+    /* Doc 內容呈現（圖片不超框、表格可橫捲） */
     .doc-render{padding:0}
-    .doc-render-inner{
-      padding:2rem 2rem;max-width:900px;margin:0 auto;
-      overflow-x:hidden; /* 防止奇怪的外溢造成整頁水平捲動 */
-    }
+    .doc-render-inner{padding:2rem 2rem;max-width:900px;margin:0 auto}
     .doc-render-inner h2{font-size:2rem;color:#2D6A4F;margin-bottom:1.2rem;font-weight:800;border-bottom:3px solid #E9C46A;padding-bottom:.5rem}
     .doc-render-inner h1,.doc-render-inner h2 + h3,.doc-render-inner h3,.doc-render-inner h4{line-height:1.3;margin:1.2rem 0 .6rem;color:#1f4d39;font-weight:800}
     .doc-render-inner p{margin:.8rem 0;color:#2f2f2f;font-size:1.06rem}
@@ -111,14 +105,20 @@
     .doc-render-inner li{margin:.35rem 0}
     .doc-render-inner blockquote{border-left:4px solid #E9C46A;background:#FFF9E6;padding:.8rem 1rem;border-radius:8px;color:#2e2e2e;margin:1rem 0}
 
-    /* ✅ 圖片永不超框；圖表（table）可橫向捲動 */
-    .doc-render-inner img{max-width:100% !important;height:auto !important;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
-    .doc-render-inner figure{max-width:100% !important;margin:1rem 0;overflow-x:auto}
-    .doc-render-inner .table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
-    .doc-render-inner table{width:max-content;border-collapse:collapse;margin:1rem 0;display:table}
-    .doc-render-inner thead th,.doc-render-inner th,.doc-render-inner td{border:1px solid #e6e6e6;padding:.6rem .8rem;text-align:left;vertical-align:top;white-space:nowrap}
+    /* 重要：圖片永不超出容器、邊距收斂；figure 同步 */
+    .doc-render-inner img{max-width:100% !important;height:auto !important;display:block;margin:.75rem auto !important;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+    .doc-render-inner figure{max-width:100%;margin:.75rem 0 !important}
+
+    /* 表格外包滾動容器，避免撐爆寬度 */
+    .doc-render-inner table{width:100%;border-collapse:collapse;margin:1rem 0}
+    .doc-render-inner th,.doc-render-inner td{border:1px solid #e6e6e6;padding:.6rem .8rem;text-align:left;vertical-align:top}
     .doc-render-inner thead th{background:#f7f7f7;font-weight:800}
-    .doc-render-inner iframe{max-width:100% !important;width:100% !important;border:0;border-radius:8px;min-height:300px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+
+    /* iframe 同樣不超框 */
+    .doc-render-inner iframe{max-width:100%;width:100% !important;border:0;border-radius:8px;min-height:300px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+
+    /* 只含圖片的段落外距縮小（避免圖片下方大空白） */
+    .doc-render-inner p:has(img){margin:.5rem 0 !important}
 
     .doc-render .loading-line{height:10px;border-radius:6px;background:linear-gradient(90deg,#e9f3ee,#f3faf7,#e9f3ee);background-size:200% 100%;animation:shimmer 1.2s infinite}
     @keyframes shimmer{0%{background-position:0 0}100%{background-position:200% 0}}
@@ -140,21 +140,20 @@
     .footer{background:linear-gradient(135deg,#2D6A4F,#40916C);color:#fff;text-align:center;padding:2rem}
     .loading{text-align:center;padding:5rem 2rem;font-size:1.4rem;color:#2D6A4F;font-weight:800}
 
-    /* 手機：Hero 內容靠左，並保留上/下距 */
+    /* 手機：Hero 內容靠左、字級回縮，並保留上下距離 */
     @media (max-width:768px){
       .floating-nav{left:10px;padding:.5rem}
       .floating-nav a{width:40px;height:40px;font-size:1.2rem;margin:.3rem 0}
 
       .hero-section{
-        height:34vh;min-height:200px;
-        justify-content:flex-start;  /* 手機靠左 */
+        height:34vh;min-height:200px;justify-content:flex-start;
       }
       .hero-content{
-        text-align:left;
-        margin-left:0;
-        padding:1rem clamp(20px,6vw,28px);
-        margin-top:clamp(16px,7vh,64px);   /* 頂部多一點 */
-        margin-bottom:clamp(12px,7vh,56px);/* ✅ 底部也多一點 */
+        text-align:left;margin-left:0;
+        padding-left: clamp(20px,6vw,28px);
+        padding-right: clamp(20px,6vw,28px);
+        padding-top: clamp(22px,7vh,44px);
+        padding-bottom: clamp(22px,7vh,44px);
       }
       .hero-content h1{font-size:2.1rem}
       .hero-content .subtitle{font-size:1.2rem}
@@ -327,7 +326,7 @@
         <h1>${exp['體驗名稱(中)']||''}</h1>
         ${exp['體驗名稱(英)']?`<div class="subtitle">${exp['體驗名稱(英)']}</div>`:''}
         <div class="description">${exp['一句話描述(中)']||''}</div>
-        <div class="hero-tags">
+        <div class="hero-tags" aria-label="Tags">
           ${exp['地區']?`<span class="hero-tag">📍 ${exp['地區']}</span>`:''}
           ${exp['主要分類']?`<span class="hero-tag">${exp['主要分類']}</span>`:''}
           ${exp['難度']?`<span class="hero-tag">⭐ 難度: ${exp['難度']}</span>`:''}
@@ -384,52 +383,30 @@
         const wrapper = document.createElement('div');
         wrapper.innerHTML = main.innerHTML;
 
-        /* ✅ 全面清掉固定寬度，圖片縮小不出框；表格包進可橫捲容器 */
-        // 1) 任何元素：移除 inline width 與過於強制的 max-width
-        wrapper.querySelectorAll('*').forEach(el=>{
-          const styleStr = el.getAttribute('style') || '';
-          if (el.hasAttribute('width')) el.removeAttribute('width');
-          if (/(\b|;) *width *:/.test(styleStr)) el.style.width = '';
-          if (/(\b|;) *max-width *: *\d+(px|pt)/.test(styleStr)) el.style.maxWidth = '';
-          // 保底不出框
-          if (el !== wrapper) el.style.boxSizing = 'border-box';
-        });
-
-        // 2) 圖片：強制自適應
+        // 圖片：不超框 + lazy + 失敗 fallback
         wrapper.querySelectorAll('img').forEach(img=>{
-          img.removeAttribute('height');
-          img.style.maxWidth='100%';
-          img.style.height='auto';
-          img.loading='lazy';
-          img.style.display='block';
-          img.style.margin='1rem auto';
-          img.style.borderRadius='8px';
-          img.style.boxShadow='0 2px 12px rgba(0,0,0,.06)';
-          img.onerror = () => {
-            img.replaceWith(Object.assign(document.createElement('div'),{
-              textContent:'📷 圖片無法載入',
-              style:'text-align:center;color:#888;padding:1rem 0'
-            }));
-          };
+          img.removeAttribute('width'); img.removeAttribute('height');
+          img.style.maxWidth='100%'; img.style.height='auto'; img.loading='lazy';
+          img.style.display='block'; img.style.margin='.75rem auto';
+          img.style.borderRadius='8px'; img.style.boxShadow='0 2px 12px rgba(0,0,0,.06)';
+          img.onerror = () => { img.replaceWith(Object.assign(document.createElement('div'),{textContent:'📷 圖片無法載入',style:'text-align:center;color:#888;padding:1rem 0'})); };
         });
 
-        // 3) 表格：橫向捲動（圖片縮小，圖表可捲動）
+        // 表格：外包可橫向捲動容器
         wrapper.querySelectorAll('table').forEach(t=>{
           const w = document.createElement('div');
-          w.className = 'table-scroll';
-          w.style.overflowX='auto';
-          w.style.webkitOverflowScrolling='touch';
-          w.style.margin='1rem 0';
-          t.parentNode.insertBefore(w,t);
-          w.appendChild(t);
+          w.style.overflow='auto'; w.style.margin='1rem 0';
+          w.style.webkitOverflowScrolling = 'touch';
+          t.parentNode.insertBefore(w,t); w.appendChild(t);
         });
 
-        // 4) 內嵌 iframe 也不外溢
+        // 內嵌框：同樣不超出寬度
         wrapper.querySelectorAll('iframe').forEach(f=>{
-          f.removeAttribute('width');
-          f.style.width='100%';
-          f.style.maxWidth='100%';
+          f.removeAttribute('width'); f.style.width='100%'; f.style.maxWidth='100%';
         });
+
+        // 清理 Google Doc 匯出造成的多餘空白
+        normalizeDocSpacing(wrapper);
 
         inner.appendChild(wrapper);
       }catch(err){
@@ -462,6 +439,50 @@
         return `https://docs.google.com/document/d/${id}/preview?rm=minimal&embedded=true`;
       }
       return url;
+    }
+
+    /* 清理 Google Doc 匯出的多餘空白段落/行 */
+    function normalizeDocSpacing(root) {
+      // A. 移除只有空白/&nbsp;/<br> 的 p（且不含 img/table/iframe）
+      root.querySelectorAll('p').forEach(p => {
+        const text = p.textContent.replace(/\u00A0/g, ' ').trim();
+        const onlyBr = [...p.childNodes].every(n =>
+          n.nodeName === 'BR' ||
+          (n.nodeType === 3 && !n.textContent.trim()) ||
+          (n.nodeType === 1 && n.tagName === 'SPAN' && !n.textContent.trim())
+        );
+        if (!text && !p.querySelector('img,table,iframe') && onlyBr) {
+          p.remove();
+        }
+      });
+
+      // B. 只有圖片的段落：縮小上下外距（兼容不支援 :has() 的瀏覽器）
+      root.querySelectorAll('p').forEach(p => {
+        if (p.children.length === 1 && p.firstElementChild?.tagName === 'IMG' && !p.textContent.trim()) {
+          p.style.marginTop = '.5rem';
+          p.style.marginBottom = '.5rem';
+        }
+      });
+
+      // C. 移除緊跟在圖片後、只有空白/<br> 的段落，避免大空白
+      root.querySelectorAll('img').forEach(img => {
+        let next = img.parentElement?.nextElementSibling;
+        while (next && next.tagName === 'P') {
+          const plain = next.textContent.replace(/\u00A0/g, ' ').trim();
+          const onlyBr = [...next.childNodes].every(n =>
+            n.nodeName === 'BR' ||
+            (n.nodeType === 3 && !n.textContent.trim()) ||
+            (n.nodeType === 1 && n.tagName === 'SPAN' && !n.textContent.trim())
+          );
+          if (!plain && onlyBr) {
+            const toRemove = next;
+            next = next.nextElementSibling;
+            toRemove.remove();
+          } else {
+            break;
+          }
+        }
+      });
     }
 
     /* ---------------- 聯絡資訊 ---------------- */
