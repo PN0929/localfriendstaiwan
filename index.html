@@ -6,20 +6,23 @@
     <title>Local Friends Taiwan - Your local friend in Taiwan | 台灣在地連線</title>
     <meta name="description" content="Connect with real Taiwanese locals for authentic experiences. Not tours, just friends.">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body { overflow-x: hidden; } /* 防右側白邊 */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif;
             line-height: 1.6;
             color: #2D6A4F;
             background: #F7F5F2;
-            overflow-x: hidden;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            word-break: keep-all;          /* 中英文盡量不亂斷 */
+            overflow-wrap: anywhere;       /* 超長字/網址必要時才斷行 */
         }
-        
+        h1, h2 { text-wrap: balance; }     /* 支援的瀏覽器會更好看 */
+
+        img, video { max-width: 100%; height: auto; display: block; } /* 圖片穩定縮放 */
+
         /* 浮動導覽列 */
         .floating-nav {
             position: fixed;
@@ -35,7 +38,6 @@
             opacity: 0;
             animation: fadeInLeft 1s ease forwards 0.5s;
         }
-        
         .floating-nav a {
             display: block;
             width: 50px;
@@ -51,12 +53,8 @@
             font-size: 1.5rem;
             transition: transform 0.3s;
         }
-        
-        .floating-nav a:hover {
-            transform: scale(1.15);
-            background: linear-gradient(135deg, #40916C, #52B788);
-        }
-        
+        .floating-nav a:hover { transform: scale(1.15); background: linear-gradient(135deg, #40916C, #52B788); }
+
         /* 回頂按鈕 */
         .back-to-top {
             position: fixed;
@@ -75,22 +73,13 @@
             z-index: 999;
             transition: transform 0.3s;
         }
-        
-        .back-to-top:hover {
-            transform: translateY(-5px);
-        }
-        
-        .back-to-top.show {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: fadeInUp 0.5s ease;
-        }
-        
+        .back-to-top:hover { transform: translateY(-5px); }
+        .back-to-top.show { display: flex; align-items: center; justify-content: center; animation: fadeInUp 0.5s ease; }
+
         /* Hero Section - 全螢幕背景 */
         .hero {
             position: relative;
-            height: 100vh;
+            min-height: 100svh; /* 更佳於 100vh 的行動裝置適配 */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -103,54 +92,42 @@
             background-position: center;
             background-attachment: fixed;
             color: white;
+            will-change: transform, opacity;
         }
-        
-        .hero-content {
-            max-width: 900px;
-            padding: 2rem;
-            animation: fadeInUp 1s ease;
-        }
-        
+        .hero-content { max-width: 900px; padding: 2rem; animation: fadeInUp 1s ease; }
         .hero h1 {
             font-size: 4rem;
-            margin-bottom: 1rem;
+            margin-bottom: 0.25rem;
             font-weight: bold;
             letter-spacing: 2px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            line-height: 1.15;
         }
-        
         .hero .subtitle {
             font-size: 1.8rem;
-            margin-bottom: 1rem;
+            margin-bottom: 2rem;
             opacity: 0.95;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
-        
-        .hero .tagline {
-            font-size: 1.3rem;
-            margin-bottom: 3rem;
-            opacity: 0.9;
-        }
-        
+        /* .hero .tagline 移除顯示（你要求拿掉） */
+        .hero .tagline { display: none !important; }
+
         .hero .cta-button {
             display: inline-block;
-            padding: 1.3rem 3.5rem;
+            padding: 1.15rem 2rem; /* 手機更好按 */
             background: linear-gradient(135deg, #F4845F, #F4A261);
             color: white;
             text-decoration: none;
-            border-radius: 50px;
+            border-radius: 14px; /* 圓角稍收斂更專業 */
             font-weight: bold;
-            font-size: 1.3rem;
-            transition: all 0.3s;
-            box-shadow: 0 4px 20px rgba(244, 132, 95, 0.4);
+            font-size: 1.05rem;
+            transition: all 0.25s;
+            box-shadow: 0 4px 16px rgba(244, 132, 95, 0.4);
             animation: pulse 2s ease infinite;
+            line-height: 1.2;
         }
-        
-        .hero .cta-button:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(244, 132, 95, 0.6);
-        }
-        
+        .hero .cta-button:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(244, 132, 95, 0.6); }
+
         .scroll-indicator {
             position: absolute;
             bottom: 30px;
@@ -161,7 +138,7 @@
             font-size: 2rem;
             cursor: pointer;
         }
-        
+
         /* 免責聲明 */
         .disclaimer {
             background: white;
@@ -172,365 +149,133 @@
             box-shadow: 0 2px 10px rgba(45, 106, 79, 0.1);
             border-radius: 8px;
         }
-        
-        .disclaimer strong {
-            color: #2D6A4F;
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-        
+        .disclaimer strong { color: #2D6A4F; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+
         /* 開場文案區塊 */
-        .intro-section {
-            background: white;
-            padding: 5rem 2rem;
-            text-align: center;
-        }
-        
+        .intro-section { background: white; padding: 4.5rem 2rem; text-align: center; }
         .intro-section .intro-content {
-            max-width: 900px;
-            margin: 0 auto;
-            opacity: 0;
-            transform: translateY(50px);
-            transition: all 0.8s ease;
+            max-width: 900px; margin: 0 auto; opacity: 0; transform: translateY(50px); transition: all 0.8s ease;
         }
-        
-        .intro-section .intro-content.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .intro-section h2 {
-            font-size: 2.8rem;
-            color: #2D6A4F;
-            margin-bottom: 2rem;
-            font-weight: bold;
-        }
-        
-        .intro-section p {
-            font-size: 1.4rem;
-            color: #333;
-            line-height: 2;
-            margin-bottom: 1.5rem;
-        }
-        
-        .intro-section .highlight {
-            color: #F4845F;
-            font-weight: bold;
-        }
-        
+        .intro-section .intro-content.visible { opacity: 1; transform: translateY(0); }
+        .intro-section h2 { font-size: 2.6rem; color: #2D6A4F; margin-bottom: 1.2rem; font-weight: bold; }
+        .intro-section p { font-size: 1.25rem; color: #333; line-height: 1.9; margin-bottom: 1.1rem; }
+        .intro-section .highlight { color: #F4845F; font-weight: bold; }
+
         /* 價值主張卡片 */
-        .values {
-            padding: 5rem 2rem;
-            background: #F7F5F2;
-        }
-        
-        .values h2 {
-            text-align: center;
-            font-size: 2.5rem;
-            color: #2D6A4F;
-            margin-bottom: 3rem;
-            font-weight: bold;
-        }
-        
+        .values { padding: 4.5rem 2rem; background: #F7F5F2; }
+        .values h2 { text-align: center; font-size: 2.3rem; color: #2D6A4F; margin-bottom: 1.8rem; font-weight: 800; letter-spacing: .2px; }
         .values-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.25rem; max-width: 1100px; margin: 0 auto;
         }
-        
         .value-card {
-            background: white;
-            text-align: center;
-            padding: 3rem 2rem;
-            border-radius: 15px;
-            border: 3px solid #E9C46A;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(233, 196, 106, 0.2);
-            opacity: 0;
-            transform: translateY(50px);
+            background: white; text-align: center; padding: 2rem 1.5rem;
+            border-radius: 14px; border: 2px solid #E9C46A;
+            transition: transform .25s, box-shadow .25s, border-color .25s;
+            box-shadow: 0 4px 12px rgba(233, 196, 106, 0.18);
+            opacity: 0; transform: translateY(36px);
         }
-        
-        .value-card.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        .value-card:hover {
-            transform: translateY(-15px);
-            box-shadow: 0 10px 40px rgba(233, 196, 106, 0.4);
-            border-color: #F4845F;
-        }
-        
-        .value-card .emoji {
-            font-size: 5rem;
-            margin-bottom: 1.5rem;
-            display: block;
-        }
-        
-        .value-card h3 {
-            margin-bottom: 1rem;
-            color: #2D6A4F;
-            font-size: 1.8rem;
-            font-weight: bold;
-        }
-        
-        .value-card p {
-            color: #555;
-            font-size: 1.2rem;
-            line-height: 1.8;
-        }
-        
+        .value-card.visible { opacity: 1; transform: translateY(0); }
+        .value-card:hover { transform: translateY(-8px); box-shadow: 0 10px 28px rgba(233, 196, 106, 0.34); border-color: #F4845F; }
+        .value-card .emoji { font-size: 3rem; margin-bottom: 0.6rem; display: block; }
+        .value-card h3 { margin-bottom: 0.35rem; color: #2D6A4F; font-size: 1.35rem; font-weight: 800; }
+        .value-card p { color: #555; font-size: 1rem; line-height: 1.65; }
+
         /* 圖文交錯區塊 */
         .feature-section {
-            display: flex;
-            align-items: center;
-            gap: 4rem;
-            padding: 5rem 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
+            display: grid; grid-template-columns: 1.1fr 1fr; align-items: center;
+            gap: clamp(1.25rem, 4vw, 3rem); padding: 4.5rem 2rem; max-width: 1200px; margin: 0 auto;
         }
-        
-        .feature-section.reverse {
-            flex-direction: row-reverse;
-            background: white;
-        }
-        
-        .feature-image {
-            flex: 1;
-            opacity: 0;
-            transform: translateX(-50px);
-            transition: all 0.8s ease;
-        }
-        
-        .feature-section.reverse .feature-image {
-            transform: translateX(50px);
-        }
-        
-        .feature-image.visible {
-            opacity: 1;
-            transform: translateX(0);
-        }
-        
+        .feature-section.reverse { grid-template-columns: 1fr 1.1fr; background: white; }
+        .feature-image { opacity: 0; transform: translateY(20px); transition: all 0.8s ease; }
+        .feature-image.visible { opacity: 1; transform: translateY(0); }
         .feature-image img {
-            width: 100%;
-            border-radius: 15px;
-            box-shadow: 0 8px 30px rgba(45, 106, 79, 0.2);
+            width: 100%; border-radius: 14px; box-shadow: 0 8px 28px rgba(45, 106, 79, 0.18);
         }
-        
-        .feature-text {
-            flex: 1;
-            opacity: 0;
-            transform: translateX(50px);
-            transition: all 0.8s ease 0.2s;
-        }
-        
-        .feature-section.reverse .feature-text {
-            transform: translateX(-50px);
-        }
-        
-        .feature-text.visible {
-            opacity: 1;
-            transform: translateX(0);
-        }
-        
-        .feature-text h2 {
-            font-size: 2.5rem;
-            color: #2D6A4F;
-            margin-bottom: 1.5rem;
-            font-weight: bold;
-        }
-        
-        .feature-text p {
-            font-size: 1.3rem;
-            color: #555;
-            line-height: 1.9;
-            margin-bottom: 1rem;
-        }
-        
+        .feature-text { opacity: 0; transform: translateY(20px); transition: all 0.8s ease .1s; }
+        .feature-text.visible { opacity: 1; transform: translateY(0); }
+        .feature-text h2 { font-size: 2.1rem; color: #2D6A4F; margin-bottom: 0.9rem; font-weight: 800; }
+        .feature-text p { font-size: 1.15rem; color: #555; line-height: 1.85; margin-bottom: 0.8rem; }
+
         /* CTA 區塊 */
         .cta-section {
-            position: relative;
-            padding: 8rem 2rem;
-            text-align: center;
-            background: linear-gradient(
-                rgba(45, 106, 79, 0.85),
-                rgba(45, 106, 79, 0.85)
-            ), url('images/hero.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: white;
+            position: relative; padding: 6.5rem 2rem; text-align: center;
+            background: linear-gradient(rgba(45, 106, 79, 0.85), rgba(45, 106, 79, 0.85)), url('images/hero.jpg');
+            background-size: cover; background-position: center; background-attachment: fixed; color: white;
         }
-        
-        .cta-section h2 {
-            font-size: 3rem;
-            margin-bottom: 1.5rem;
-            font-weight: bold;
-        }
-        
-        .cta-section p {
-            font-size: 1.5rem;
-            margin-bottom: 3rem;
-            opacity: 0.95;
-        }
-        
+        .cta-section h2 { font-size: 2.6rem; margin-bottom: 1rem; font-weight: bold; }
+        .cta-section p { font-size: 1.3rem; margin-bottom: 2rem; opacity: 0.95; }
         .cta-section .btn {
-            display: inline-block;
-            padding: 1.3rem 3.5rem;
-            background: linear-gradient(135deg, #F4845F, #F4A261);
-            color: white;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: bold;
-            font-size: 1.4rem;
-            transition: all 0.3s;
-            box-shadow: 0 4px 20px rgba(244, 132, 95, 0.4);
+            display: inline-block; padding: 1.1rem 2rem; background: linear-gradient(135deg, #F4845F, #F4A261);
+            color: white; text-decoration: none; border-radius: 12px; font-weight: bold; font-size: 1.05rem;
+            transition: all 0.25s; box-shadow: 0 4px 16px rgba(244, 132, 95, 0.4);
         }
-        
-        .cta-section .btn:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(244, 132, 95, 0.6);
-        }
-        
+        .cta-section .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(244, 132, 95, 0.6); }
+
         .footer {
             background: linear-gradient(135deg, #2D6A4F, #40916C);
-            color: white;
-            text-align: center;
-            padding: 3rem 2rem;
+            color: white; text-align: center; padding: 3rem 2rem;
         }
-        
-        .footer a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        
-        .footer a:hover {
-            text-decoration: underline;
-        }
-        
+        .footer a { color: white; text-decoration: none; font-weight: bold; }
+        .footer a:hover { text-decoration: underline; }
+
         /* 動畫 */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes fadeInLeft {
-            from {
-                opacity: 0;
-                transform: translate(-50px, -50%);
-            }
-            to {
-                opacity: 1;
-                transform: translate(0, -50%);
-            }
-        }
-        
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px);} to { opacity: 1; transform: translateY(0);} }
+        @keyframes fadeInLeft { from { opacity: 0; transform: translate(-50px, -50%);} to { opacity: 1; transform: translate(0, -50%);} }
         @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateX(-50%) translateY(0);
-            }
-            40% {
-                transform: translateX(-50%) translateY(-10px);
-            }
-            60% {
-                transform: translateX(-50%) translateY(-5px);
-            }
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
         }
-        
         @keyframes pulse {
-            0% {
-                box-shadow: 0 4px 20px rgba(244, 132, 95, 0.4);
-            }
-            50% {
-                box-shadow: 0 4px 30px rgba(244, 132, 95, 0.6);
-            }
-            100% {
-                box-shadow: 0 4px 20px rgba(244, 132, 95, 0.4);
-            }
+            0% { box-shadow: 0 4px 20px rgba(244, 132, 95, 0.4); }
+            50% { box-shadow: 0 4px 30px rgba(244, 132, 95, 0.6); }
+            100% { box-shadow: 0 4px 20px rgba(244, 132, 95, 0.4); }
         }
-        
+
         /* 手機版適配 */
+        @media (max-width: 1024px) {
+            /* 手機/平板停用 fixed 背景，避免卡頓與白邊 */
+            .hero, .cta-section { background-attachment: scroll !important; will-change: auto !important; }
+        }
         @media (max-width: 768px) {
-            .floating-nav {
-                left: 10px;
-                padding: 0.5rem;
-            }
-            
-            .floating-nav a {
-                width: 40px;
-                height: 40px;
-                font-size: 1.2rem;
-            }
-            
-            .back-to-top {
-                right: 15px;
-                bottom: 15px;
-                width: 50px;
-                height: 50px;
-            }
-            
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .hero .subtitle {
-                font-size: 1.3rem;
-            }
-            
-            .hero .tagline {
-                font-size: 1.1rem;
-            }
-            
-            .intro-section h2 {
-                font-size: 2rem;
-            }
-            
-            .intro-section p {
-                font-size: 1.1rem;
-            }
-            
-            .values-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .feature-section {
-                flex-direction: column;
-                gap: 2rem;
-                padding: 3rem 1rem;
-            }
-            
+            .floating-nav { left: 10px; padding: 0.5rem; }
+            .floating-nav a { width: 40px; height: 40px; font-size: 1.2rem; }
+
+            .back-to-top { right: 15px; bottom: 15px; width: 50px; height: 50px; }
+
+            .hero h1 { font-size: 2.4rem; letter-spacing: 1px; }
+            .hero .subtitle { font-size: 1.2rem; margin-bottom: 1.2rem; }
+            .hero .cta-button { font-size: 0.98rem; padding: 0.95rem 1.25rem; border-radius: 12px; }
+
+            .intro-section { padding: 3.2rem 1.25rem; }
+            .intro-section h2 { font-size: 1.7rem; margin-bottom: 0.7rem; }
+            .intro-section p { font-size: 1rem; line-height: 1.75; }
+
+            .values { padding: 3.2rem 1.25rem; }
+            .values h2 { font-size: 1.7rem; margin-bottom: 1.2rem; }
+            .values-grid { grid-template-columns: 1fr; gap: 0.9rem; max-width: 680px; }
+            .value-card { padding: 1.25rem 1rem; border-radius: 12px; }
+            .value-card .emoji { font-size: 2.2rem; margin-bottom: 0.4rem; }
+            .value-card h3 { font-size: 1.15rem; margin-bottom: 0.25rem; }
+            .value-card p { font-size: 0.96rem; line-height: 1.6; }
+
+            /* 圖文區：手機改為單欄，避免圖文錯位 */
+            .feature-section,
             .feature-section.reverse {
-                flex-direction: column;
+                display: block;
+                padding: 2.5rem 1.25rem;
             }
-            
-            .feature-text h2 {
-                font-size: 1.8rem;
-            }
-            
-            .feature-text p {
-                font-size: 1.1rem;
-            }
-            
-            .cta-section h2 {
-                font-size: 2rem;
-            }
-            
-            .cta-section p {
-                font-size: 1.2rem;
-            }
+            .feature-image { margin-bottom: 1rem; }
+            .feature-text h2 { font-size: 1.5rem; }
+            .feature-text p { font-size: 1rem; line-height: 1.75; }
+
+            .cta-section { padding: 4rem 1.25rem; }
+            .cta-section h2 { font-size: 1.7rem; }
+            .cta-section p { font-size: 1.05rem; }
+            .cta-section .btn { font-size: 0.98rem; padding: 0.9rem 1.15rem; border-radius: 12px; }
         }
     </style>
 </head>
@@ -551,8 +296,8 @@
         <div class="hero-content">
             <h1>LOCAL FRIENDS TAIWAN</h1>
             <p class="subtitle">台灣在地連線</p>
-            <p class="tagline">Your local friend in Taiwan<br>當你需要一位台灣在地的朋友</p>
-            <a href="experiences.html" class="cta-button">探索體驗 Explore Experiences</a>
+            <!-- 依你的要求：拿掉 tagline；按鈕文案改為下面這句 -->
+            <a href="experiences.html" class="cta-button">your local friend in Taiwan 找到一位台灣在地的朋友</a>
         </div>
         <div class="scroll-indicator" onclick="document.querySelector('.intro-section').scrollIntoView({behavior: 'smooth'})">
             ↓
@@ -610,7 +355,7 @@
     <!-- 圖文區塊 1 -->
     <section class="feature-section">
         <div class="feature-image">
-            <img src="images/section-1.jpg" alt="Taiwan local experience">
+            <img src="images/section-1.jpg" alt="Taiwan local experience" loading="lazy">
         </div>
         <div class="feature-text">
             <h2>不只是觀光，是生活</h2>
@@ -631,7 +376,7 @@
     <!-- 圖文區塊 2 -->
     <section class="feature-section reverse">
         <div class="feature-image">
-            <img src="images/section-2.jpg" alt="Taiwan culture and tradition">
+            <img src="images/section-2.jpg" alt="Taiwan culture and tradition" loading="lazy">
         </div>
         <div class="feature-text">
             <h2>傳統與現代交織</h2>
@@ -661,9 +406,7 @@
         <p style="font-size: 1.3rem; margin-bottom: 1rem;"><strong>Local Friends Taiwan 台灣在地連線</strong></p>
         <p>Your local friend in Taiwan | 當你需要一位台灣在地的朋友</p>
         <p style="margin-top: 1rem;">
-            <a href="https://github.com/PN0929/meet-taiwan" target="_blank">
-                📂 GitHub Project
-            </a>
+            <a href="https://github.com/PN0929/meet-taiwan" target="_blank">📂 GitHub Project</a>
         </p>
         <p style="margin-top: 1.5rem; opacity: 0.9; font-size: 1rem;">
             © 2025 Local Friends Taiwan. Independent Information Platform.
@@ -672,59 +415,31 @@
 
     <script>
         // 滾動動畫
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
-        };
-
+        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -100px 0px' };
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
         }, observerOptions);
 
         // 觀察所有需要動畫的元素
         document.addEventListener('DOMContentLoaded', () => {
-            const animatedElements = document.querySelectorAll(
-                '.intro-content, .value-card, .feature-image, .feature-text'
-            );
-            
-            animatedElements.forEach((el, index) => {
-                el.style.transitionDelay = `${index * 0.1}s`;
-                observer.observe(el);
-            });
+            const animatedElements = document.querySelectorAll('.intro-content, .value-card, .feature-image, .feature-text');
+            animatedElements.forEach((el, index) => { el.style.transitionDelay = `${index * 0.08}s`; observer.observe(el); });
         });
 
         // 回頂按鈕
         window.addEventListener('scroll', function() {
             const backToTop = document.querySelector('.back-to-top');
-            if (window.pageYOffset > 300) {
-                backToTop.classList.add('show');
-            } else {
-                backToTop.classList.remove('show');
-            }
+            if (window.pageYOffset > 300) backToTop.classList.add('show'); else backToTop.classList.remove('show');
         });
-
-        function scrollToTop() {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        }
+        function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
 
         // 平滑滾動
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
-                e.preventDefault();
                 const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
+                if (!target) return;
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
             });
         });
     </script>
