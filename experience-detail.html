@@ -18,38 +18,12 @@
     .back-to-top:hover{transform:translateY(-5px)}
     .back-to-top.show{display:flex;align-items:center;justify-content:center}
 
-    /* Hero：高度固定、綠色遮罩 */
-    .hero-section{position:relative;height:42vh;min-height:240px;max-height:480px;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden;background:#2D6A4F}
-    .hero-overlay{position:absolute;inset:0;background:rgba(45,106,79,.6);z-index:2}
-
-    /* 文字（加大字級 + 強化陰影） */
-    .hero-content{position:relative;z-index:3;color:#fff;max-width:1100px;padding:1.25rem 2rem}
-    .hero-content h1{
-      font-size:3rem;            /* ↑ 加大 */
-      font-weight:900;
-      margin-bottom:.5rem;
-      line-height:1.15;
-      text-shadow:
-        0 3px 10px rgba(0,0,0,.45),
-        0 8px 24px rgba(0,0,0,.35);  /* ↑ 陰影更明顯 */
-      letter-spacing:.3px;
+    /* Hero：高度固定 */
+    .hero-section{
+      position:relative;height:42vh;min-height:240px;max-height:480px;
+      display:flex;align-items:center;justify-content:center;text-align:center;
+      overflow:hidden;background:#2D6A4F
     }
-    .hero-content .subtitle{
-      font-size:1.5rem;          /* ↑ 加大 */
-      margin-bottom:.9rem;
-      opacity:.98;
-      text-shadow:0 2px 8px rgba(0,0,0,.35);
-    }
-    .hero-content .description{
-      font-size:1.15rem;
-      margin-bottom:1.2rem;
-      line-height:1.75;
-      opacity:.95;
-      text-shadow:0 2px 8px rgba(0,0,0,.35);
-    }
-    .hero-tags{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
-    .hero-tag{padding:.6rem 1.1rem;background:rgba(255,255,255,.22);backdrop-filter:blur(8px);border:2px solid rgba(255,255,255,.35);border-radius:30px;color:#fff;font-size:1rem;font-weight:700}
-    .hero-status{padding:.6rem 1.1rem;background:linear-gradient(135deg,#F4845F,#F4A261);border:2px solid rgba(255,255,255,.5);border-radius:30px;color:#fff;font-size:1rem;font-weight:800;box-shadow:0 4px 15px rgba(244,132,95,.4)}
 
     /* 影像背景容器 */
     .hero-media{position:absolute;inset:0;z-index:1}
@@ -57,21 +31,40 @@
     /* 桌機：三張並排（不輪播、完全填滿） */
     .hero-grid{width:100%;height:100%;display:grid;grid-template-columns:repeat(3,1fr);gap:0}
     .hero-grid-item{position:relative;background:#2D6A4F}
-    .hero-grid-item img{
-      position:absolute;inset:0;width:100%;height:100%;
-      object-fit:cover;            /* 重要：填滿、不留底色 */
-      object-position:center;      /* 以中心為重心 */
-      display:block;
-    }
+    .hero-grid-item img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block}
 
-    /* 手機：單張輪播（也改 cover，避免黑邊） */
+    /* 手機：單張輪播 */
     .hero-carousel{display:none;position:absolute;inset:0}
     .hero-slide{position:absolute;inset:0;opacity:0;transition:opacity .6s ease;background:#2D6A4F}
     .hero-slide.active{opacity:1}
-    .hero-slide img{
-      position:absolute;inset:0;width:100%;height:100%;
-      object-fit:cover; object-position:center; display:block;
+    .hero-slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+
+    /* 漸層疊加：上方較深、往下漸淡（提升文字可讀性） */
+    .hero-overlay{
+      position:absolute;inset:0;z-index:2;
+      background:linear-gradient(
+        to bottom,
+        rgba(45,106,79,0.82) 0%,
+        rgba(45,106,79,0.62) 28%,
+        rgba(45,106,79,0.42) 55%,
+        rgba(45,106,79,0.28) 100%
+      );
+      pointer-events:none;
     }
+
+    /* Hero 文字（保留寬鬆側邊距與陰影） */
+    .hero-content{
+      position:relative;z-index:3;color:#fff;max-width:1100px;
+      padding:1.25rem clamp(22px,5vw,32px);
+    }
+    .hero-content h1{
+      font-size:3rem;font-weight:900;margin-bottom:.5rem;line-height:1.15;
+      text-shadow:0 3px 10px rgba(0,0,0,.45),0 8px 24px rgba(0,0,0,.35);letter-spacing:.3px
+    }
+    .hero-content .subtitle{font-size:1.5rem;margin-bottom:.9rem;opacity:.98;text-shadow:0 2px 8px rgba(0,0,0,.35)}
+    .hero-content .description{font-size:1.15rem;margin-bottom:1.2rem;line-height:1.75;opacity:.95;text-shadow:0 2px 8px rgba(0,0,0,.35)}
+    .hero-tags{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+    .hero-tag{padding:.6rem 1.1rem;background:rgba(255,255,255,.22);backdrop-filter:blur(8px);border:2px solid rgba(255,255,255,.35);border-radius:30px;color:#fff;font-size:1rem;font-weight:700}
 
     /* 內容與卡片 */
     .container{max-width:1200px;margin:0 auto;padding:3rem 2rem}
@@ -87,35 +80,24 @@
     .info-item a{color:#F4845F;text-decoration:none;font-weight:700;word-break:break-all}
     .info-item a:hover{text-decoration:underline}
 
-    /* Doc 內容：把標題與內容放在同一內層，左右完美對齊 */
+    /* Doc 內容呈現 */
     .doc-render{padding:0}
-    .doc-render-inner{
-      padding:2rem 2rem;              /* 更大的內距，避免字貼邊 */
-      max-width:900px; margin:0 auto; /* 舒適行寬 + 置中 */
-    }
-    .doc-render-inner h2{ /* 同 content-section h2，但在內層，以便跟內文對齊 */
-      font-size:2rem;color:#2D6A4F;margin-bottom:1.2rem;font-weight:800;border-bottom:3px solid #E9C46A;padding-bottom:.5rem;
-    }
-    .doc-render-inner h1,.doc-render-inner h2 + h3,.doc-render-inner h3,.doc-render-inner h4{
-      line-height:1.3; margin:1.2rem 0 .6rem; color:#1f4d39; font-weight:800;
-    }
-    .doc-render-inner p{margin:.8rem 0; color:#2f2f2f; font-size:1.06rem}
+    .doc-render-inner{padding:2rem 2rem;max-width:900px;margin:0 auto}
+    .doc-render-inner h2{font-size:2rem;color:#2D6A4F;margin-bottom:1.2rem;font-weight:800;border-bottom:3px solid #E9C46A;padding-bottom:.5rem}
+    .doc-render-inner h1,.doc-render-inner h2 + h3,.doc-render-inner h3,.doc-render-inner h4{line-height:1.3;margin:1.2rem 0 .6rem;color:#1f4d39;font-weight:800}
+    .doc-render-inner p{margin:.8rem 0;color:#2f2f2f;font-size:1.06rem}
     .doc-render-inner strong{font-weight:800}
     .doc-render-inner ul,.doc-render-inner ol{margin:.8rem 0 .8rem 1.25rem}
     .doc-render-inner li{margin:.35rem 0}
-    .doc-render-inner blockquote{
-      border-left:4px solid #E9C46A; background:#FFF9E6; padding:.8rem 1rem; border-radius:8px; color:#2e2e2e; margin:1rem 0;
-    }
-    .doc-render-inner img{
-      max-width:100%; height:auto; display:block; margin:1rem auto; border-radius:8px; box-shadow:0 2px 12px rgba(0,0,0,.06);
-    }
-    .doc-render-inner table{
-      width:100%; border-collapse:collapse; margin:1rem 0; overflow:auto; display:block;
-    }
-    .doc-render-inner th,.doc-render-inner td{
-      border:1px solid #e6e6e6; padding:.6rem .8rem; text-align:left; vertical-align:top;
-    }
-    .doc-render-inner thead th{background:#f7f7f7; font-weight:800}
+    .doc-render-inner blockquote{border-left:4px solid #E9C46A;background:#FFF9E6;padding:.8rem 1rem;border-radius:8px;color:#2e2e2e;margin:1rem 0}
+
+    .doc-render-inner img{max-width:100% !important;height:auto !important;display:block;margin:1rem auto;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+    .doc-render-inner figure{max-width:100%;margin:1rem 0}
+    .doc-render-inner table{width:100%;border-collapse:collapse;margin:1rem 0;overflow:auto;display:block}
+    .doc-render-inner th,.doc-render-inner td{border:1px solid #e6e6e6;padding:.6rem .8rem;text-align:left;vertical-align:top}
+    .doc-render-inner thead th{background:#f7f7f7;font-weight:800}
+    .doc-render-inner iframe{max-width:100%;width:100% !important;border:0;border-radius:8px;min-height:300px;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+
     .doc-render .loading-line{height:10px;border-radius:6px;background:linear-gradient(90deg,#e9f3ee,#f3faf7,#e9f3ee);background-size:200% 100%;animation:shimmer 1.2s infinite}
     @keyframes shimmer{0%{background-position:0 0}100%{background-position:200% 0}}
 
@@ -126,30 +108,46 @@
     .map-container{width:100%;height:450px;border-radius:12px;overflow:hidden;box-shadow:0 4px 15px rgba(45,106,79,.15)}
     .map-container iframe{width:100%;height:100%;border:0}
 
+    /* CTA */
     .cta-section{background:linear-gradient(135deg,#2D6A4F,#40916C);color:#fff;padding:3rem;border-radius:15px;text-align:center;box-shadow:0 4px 20px rgba(45,106,79,.3)}
-    .cta-section h2{font-size:2.2rem;margin-bottom:1rem;font-weight:800}
-    .cta-section p{font-size:1.2rem;margin-bottom:2rem;opacity:.95}
-    .btn{display:inline-block;padding:1.1rem 2.5rem;background:linear-gradient(135deg,#F4845F,#F4A261);color:#fff;text-decoration:none;border-radius:50px;font-weight:800;font-size:1.1rem;transition:.3s;box-shadow:0 4px 15px rgba(244,132,95,.4)}
+    .cta-section h2{font-size:2.2rem;margin-bottom:1rem;font-weight:800;text-wrap:balance}
+    .cta-section p{font-size:1.2rem;margin-bottom:2rem;opacity:.95;text-wrap:balance;word-break:keep-all}
+    .btn{display:inline-block;padding:1rem 1.6rem;background:linear-gradient(135deg,#F4845F,#F4A261);color:#fff;text-decoration:none;border-radius:14px;font-weight:800;font-size:1.05rem;line-height:1.35;transition:.3s;box-shadow:0 4px 15px rgba(244,132,95,.4)}
     .btn:hover{transform:translateY(-3px);box-shadow:0 6px 25px rgba(244,132,95,.6)}
 
     .footer{background:linear-gradient(135deg,#2D6A4F,#40916C);color:#fff;text-align:center;padding:2rem}
     .loading{text-align:center;padding:5rem 2rem;font-size:1.4rem;color:#2D6A4F;font-weight:800}
 
-    /* 手機：顯示輪播、隱藏三圖排版；字體稍回縮 */
+    /* 手機：Hero 內容靠左、凸顯頂部對比 */
     @media (max-width:768px){
       .floating-nav{left:10px;padding:.5rem}
       .floating-nav a{width:40px;height:40px;font-size:1.2rem;margin:.3rem 0}
-      .hero-section{height:34vh;min-height:200px}
+
+      .hero-section{
+        height:34vh;min-height:200px;
+        justify-content:flex-start;           /* ← 手機改為靠左 */
+      }
+      .hero-content{
+        text-align:left;                      /* ← 文字靠左 */
+        margin-left:0;
+        padding:1rem clamp(20px,6vw,28px);    /* ← 更自然的左右內距 */
+      }
       .hero-content h1{font-size:2.1rem}
       .hero-content .subtitle{font-size:1.2rem}
       .hero-content .description{font-size:1rem}
+
       .hero-grid{display:none}
       .hero-carousel{display:block}
+
       .container{padding:2rem 1rem}
       .content-section{padding:2rem 1.4rem}
       .content-section h2{font-size:1.6rem}
       .info-grid{grid-template-columns:1fr}
       .map-container{height:300px}
+
+      .cta-section h2{font-size:1.6rem}
+      .cta-section p{font-size:1.02rem}
+      .btn{padding:.85rem 1.15rem;font-size:.95rem;border-radius:12px}
     }
   </style>
 </head>
@@ -180,7 +178,7 @@
     </section>
 
     <div class="container">
-      <!-- 詳細說明（把 h2 與內容放進同一內層以對齊邊距） -->
+      <!-- 詳細說明 -->
       <div class="content-section doc-render" id="detailSection">
         <div class="doc-render-inner" id="docRenderInner">
           <h2>📖 詳細說明 Details</h2>
@@ -214,10 +212,9 @@
   <script>
     const SHEET_ID  = '1GD4gg3sGIfX7KGrJkYCL10wzvwZh5FMWQPGd9NVTQyc';
     const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
-
     const FALLBACK_DOC_URL = 'https://docs.google.com/document/d/e/2PACX-1vQj1gYlRDbgpH-IupwfkeS8kSMIvGb9TadFFwGpzj9TJXLYv3kzvhu9BqcpUetG-y7Dpt2M8qJLFkoV/pub';
 
-    let currentSlide = 0, slideTimer = null;
+    let slideTimer = null;
 
     async function loadExperience(){
       const id = new URLSearchParams(window.location.search).get('id');
@@ -287,12 +284,11 @@
       /* 桌機：三張並排（不輪播；使用 cover 填滿） */
       const gridItems = (links.length? links.slice(0,3) : [null,null,null]).map((url,i)=>`
         <div class="hero-grid-item">
-          ${url ? `<img src="${url}" alt="hero ${i+1}" onerror="this.style.display='none'">`
-                : ``}
+          ${url ? `<img src="${url}" alt="hero ${i+1}" onerror="this.style.display='none'">` : ``}
         </div>`).join('');
       grid.innerHTML = gridItems;
 
-      /* 手機：單張輪播（cover，避免黑邊） */
+      /* 手機：單張輪播 */
       const mobileItems = (links.length? links : []).map((url,i)=>`
         <div class="hero-slide ${i===0?'active':''}">
           <img src="${url}" alt="slide ${i+1}" onerror="this.parentElement.innerHTML='<div style=&quot;width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#fff;opacity:.9&quot;>📷</div>'">
@@ -301,7 +297,7 @@
 
       startMobileCarousel();
 
-      /* 文字 */
+      /* 文字（無狀態 tag） */
       const heroContent = document.getElementById('heroContent');
       heroContent.innerHTML = `
         <h1>${exp['體驗名稱(中)']||''}</h1>
@@ -311,7 +307,6 @@
           ${exp['地區']?`<span class="hero-tag">📍 ${exp['地區']}</span>`:''}
           ${exp['主要分類']?`<span class="hero-tag">${exp['主要分類']}</span>`:''}
           ${exp['難度']?`<span class="hero-tag">⭐ 難度: ${exp['難度']}</span>`:''}
-          <span class="hero-status">🚧 ${exp['Status']||'準備中'}</span>
         </div>`;
     }
 
@@ -346,7 +341,6 @@
     /* ---------------- 詳細說明：擷取 Google Doc 內容（含圖片） ---------------- */
     async function renderDetailFromDoc(exp){
       const inner = document.getElementById('docRenderInner');
-      // 清掉預設 loading 線條，但保留 h2
       inner.innerHTML = '<h2>📖 詳細說明 Details</h2>';
 
       const raw = (exp['詳細說明連結'] || exp['Google Doc'] || exp['Google Doc 連結'] || '').trim();
@@ -366,25 +360,22 @@
         const wrapper = document.createElement('div');
         wrapper.innerHTML = main.innerHTML;
 
-        // 圖片處理：自適應 + lazy + 圖片失敗 fallback
         wrapper.querySelectorAll('img').forEach(img=>{
-          img.style.maxWidth='100%';
-          img.style.height='auto';
-          img.style.display='block';
-          img.style.margin='1rem auto';
-          img.style.borderRadius='8px';
-          img.style.boxShadow='0 2px 12px rgba(0,0,0,.06)';
-          img.loading='lazy';
+          img.removeAttribute('width'); img.removeAttribute('height');
+          img.style.maxWidth='100%'; img.style.height='auto'; img.loading='lazy';
+          img.style.display='block'; img.style.margin='1rem auto';
+          img.style.borderRadius='8px'; img.style.boxShadow='0 2px 12px rgba(0,0,0,.06)';
           img.onerror = () => { img.replaceWith(Object.assign(document.createElement('div'),{textContent:'📷 圖片無法載入',style:'text-align:center;color:#888;padding:1rem 0'})); };
         });
 
-        // 表格可滾動
         wrapper.querySelectorAll('table').forEach(t=>{
           const w = document.createElement('div');
-          w.style.overflow='auto';
-          w.style.margin='1rem 0';
-          t.parentNode.insertBefore(w,t);
-          w.appendChild(t);
+          w.style.overflow='auto'; w.style.margin='1rem 0';
+          t.parentNode.insertBefore(w,t); w.appendChild(t);
+        });
+
+        wrapper.querySelectorAll('iframe').forEach(f=>{
+          f.removeAttribute('width'); f.style.width='100%'; f.style.maxWidth='100%';
         });
 
         inner.appendChild(wrapper);
@@ -408,7 +399,6 @@
       }
       return url;
     }
-
     function toEmbeddableIframeURL(url){
       if(/\/document\/d\/e\/[^/]+\/pub/.test(url)){
         return url.includes('?') ? url+'&embedded=true' : url+'?embedded=true';
@@ -436,7 +426,7 @@
       if(has) box.innerHTML = html; else box.style.display='none';
     }
 
-    /* ---------------- 地圖：用地址定位 ---------------- */
+    /* ---------------- 地圖 ---------------- */
     function renderMap(exp){
       const box = document.getElementById('mapSection');
       const addr = (exp['地址']||'').trim();
