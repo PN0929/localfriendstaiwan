@@ -5,189 +5,158 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>體驗詳情 - Local Friends Taiwan | 台灣在地連線</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif;
-            line-height: 1.6;
-            color: #2D6A4F;
-            background: #F7F5F2;
+            line-height: 1.6; color: #2D6A4F; background: #F7F5F2;
         }
 
         /* 浮動導覽列 */
         .floating-nav {
-            position: fixed;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 1000;
-            background: white;
-            padding: 1rem;
-            border-radius: 30px;
-            box-shadow: 0 4px 20px rgba(45, 106, 79, 0.2);
-            border: 2px solid #2D6A4F;
+            position: fixed; left: 20px; top: 50%; transform: translateY(-50%);
+            z-index: 1000; background: white; padding: 1rem; border-radius: 30px;
+            box-shadow: 0 4px 20px rgba(45,106,79,.2); border: 2px solid #2D6A4F;
         }
-
-        .floating-nav a {
-            display: block;
-            width: 50px;
-            height: 50px;
-            margin: 0.5rem 0;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #2D6A4F, #40916C);
-            color: white;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            transition: transform 0.3s;
+        .floating-nav a{
+            display:block;width:50px;height:50px;margin:.5rem 0;border-radius:50%;
+            background:linear-gradient(135deg,#2D6A4F,#40916C);color:#fff;text-decoration:none;
+            display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:.3s;
         }
-
-        .floating-nav a:hover {
-            transform: scale(1.1);
-            background: linear-gradient(135deg, #40916C, #52B788);
-        }
+        .floating-nav a:hover{ transform:scale(1.1); background:linear-gradient(135deg,#40916C,#52B788); }
 
         /* 回頂按鈕 */
         .back-to-top {
-            position: fixed;
-            right: 30px;
-            bottom: 30px;
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #F4845F, #F4A261);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            font-size: 1.5rem;
-            cursor: pointer;
-            box-shadow: 0 4px 20px rgba(244, 132, 95, 0.4);
-            display: none;
-            z-index: 999;
-            transition: transform 0.3s;
+            position: fixed; right: 30px; bottom: 30px; width: 60px; height: 60px;
+            background: linear-gradient(135deg,#F4845F,#F4A261); color:#fff; border:none; border-radius:50%;
+            font-size:1.5rem; cursor:pointer; box-shadow:0 4px 20px rgba(244,132,95,.4);
+            display:none; z-index:999; transition: transform .3s;
         }
+        .back-to-top:hover{ transform: translateY(-5px); }
+        .back-to-top.show{ display:flex;align-items:center;justify-content:center; }
 
-        .back-to-top:hover {
-            transform: translateY(-5px);
+        /* Hero Section - 全螢幕照片背景 */
+        .hero-section {
+            position: relative; height: 100vh; display:flex; align-items:center; justify-content:center;
+            text-align:center; overflow:hidden; background: #2D6A4F;
         }
-
-        .back-to-top.show {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* ✅ 新增：照片輪播區 */
-        .photo-gallery {
-            width: 100%;
-            max-width: 1200px;
-            margin: 2rem auto;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 8px 30px rgba(45, 106, 79, 0.2);
-        }
-
-        .photo-gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 0;
-        }
-
-        .photo-gallery-item {
-            width: 100%;
-            position: relative;
-            cursor: pointer;
-            background: linear-gradient(135deg, #2D6A4F, #40916C);
-            overflow: hidden;
-        }
-
-        .photo-gallery-item img {
-            width: 100%;
-            height: auto;
-            aspect-ratio: auto;
-            object-fit: contain;
-            transition: transform 0.5s ease;
+        .hero-background { position:absolute; inset:0; z-index:1; }
+        .hero-slide { position:absolute; inset:0; opacity:0; transition: opacity 1s ease; background: linear-gradient(135deg,#2D6A4F,#40916C); }
+        .hero-slide.active { opacity:1; }
+        /* ✅ 1. 每張圖自動適應原始比例（避免裁切） */
+        .hero-slide img {
+            width: 100%; height: 100%;
+            object-fit: contain;            /* 保留原始比例 */
             display: block;
+            background: transparent;
+        }
+        /* ✅ 3. 綠色遮罩 rgba(45,106,79,0.6) */
+        .hero-overlay { position:absolute; inset:0; background: rgba(45,106,79,0.6); z-index:2; }
+
+        /* Hero 內容 */
+        .hero-content {
+            position: relative; z-index:3; color:#fff; max-width:1000px; padding:2rem; animation: fadeInUp 1s ease;
+        }
+        .hero-content h1 {
+            font-size: 4rem; font-weight: bold; margin-bottom:1rem; text-shadow: 2px 2px 8px rgba(0,0,0,.3); line-height:1.2;
+        }
+        .hero-content .subtitle { font-size:2rem; margin-bottom:1.5rem; opacity:.95; text-shadow:1px 1px 4px rgba(0,0,0,.3); }
+        .hero-content .description { font-size:1.5rem; margin-bottom:2.5rem; line-height:1.8; opacity:.9; text-shadow:1px 1px 4px rgba(0,0,0,.3); }
+        .hero-tags{ display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; margin-bottom:2rem; }
+        .hero-tag{
+            padding:1rem 2rem; background: rgba(255,255,255,.2); backdrop-filter: blur(10px);
+            border:2px solid rgba(255,255,255,.3); border-radius:30px; color:#fff; font-size:1.2rem; font-weight:600;
+            text-shadow:1px 1px 2px rgba(0,0,0,.3);
+        }
+        .hero-status{
+            padding:1rem 2rem; background:linear-gradient(135deg,#F4845F,#F4A261);
+            border:2px solid rgba(255,255,255,.5); border-radius:30px; color:#fff; font-size:1.2rem; font-weight:bold;
+            box-shadow:0 4px 15px rgba(244,132,95,.4);
         }
 
-        .photo-gallery-item:hover img {
-            transform: scale(1.05);
+        /* 輪播控制按鈕（桌機顯示，手機隱藏） */
+        .hero-controls{
+            position:absolute; bottom:30px; left:50%; transform:translateX(-50%); display:flex; gap:1rem; z-index:4;
+        }
+        .hero-control-btn{
+            width:50px; height:50px; background: rgba(255,255,255,.3); backdrop-filter: blur(10px);
+            border:2px solid rgba(255,255,255,.5); border-radius:50%; color:#fff; font-size:1.5rem; cursor:pointer;
+            transition:.3s; display:flex; align-items:center; justify-content:center;
+        }
+        .hero-control-btn:hover{ background: rgba(255,255,255,.5); transform: scale(1.1); }
+
+        /* 滾動指示器 */
+        .scroll-indicator{
+            position:absolute; bottom:80px; left:50%; transform:translateX(-50%);
+            color:#fff; font-size:2rem; cursor:pointer; animation:bounce 2s ease infinite; z-index:4;
         }
 
-        .photo-gallery-item::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(45, 106, 79, 0.6);
-            opacity: 0;
-            transition: opacity 0.3s ease;
+        /* 內容區塊 */
+        .container{ max-width:1200px; margin:0 auto; padding:3rem 2rem; }
+        .content-section{
+            background:#fff; padding:3rem; border-radius:15px; margin-bottom:2rem;
+            border:3px solid #E9C46A; box-shadow:0 4px 20px rgba(233,196,106,.2);
+        }
+        .content-section h2{
+            font-size:2rem; color:#2D6A4F; margin-bottom:1.5rem; font-weight:bold; border-bottom:3px solid #E9C46A; padding-bottom:.5rem;
+        }
+        .content-section h3{ font-size:1.5rem; color:#2D6A4F; margin:2rem 0 1rem; font-weight:bold; }
+        .content-section p{ font-size:1.2rem; color:#555; line-height:1.9; margin-bottom:1.5rem; }
+
+        .info-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:2rem; margin-top:2rem; }
+        .info-item{ background:#F7F5F2; padding:2rem; border-radius:12px; border:2px solid #E9C46A; }
+        .info-item h4{ font-size:1.3rem; color:#2D6A4F; margin-bottom:1rem; font-weight:bold; }
+        .info-item p{ font-size:1.1rem; margin-bottom:.5rem; }
+        .info-item a{ color:#F4845F; text-decoration:none; font-weight:600; word-break:break-all; }
+        .info-item a:hover{ text-decoration:underline; }
+
+        /* 地圖區塊 */
+        .map-section{
+            background:#fff; padding:2rem; border-radius:15px; border:3px solid #E9C46A; box-shadow:0 4px 20px rgba(233,196,106,.2); margin-bottom:2rem;
+        }
+        .map-section h2{ font-size:2rem; color:#2D6A4F; margin-bottom:1rem; font-weight:bold; }
+        .map-address{
+            font-size:1.2rem; color:#555; margin-bottom:1.5rem; padding:1rem; background:#F7F5F2; border-radius:8px; border-left:4px solid #E9C46A;
+        }
+        .map-container{ width:100%; height:450px; border-radius:12px; overflow:hidden; box-shadow:0 4px 15px rgba(45,106,79,.15); }
+        .map-container iframe{ width:100%; height:100%; border:none; }
+
+        .cta-section{
+            background:linear-gradient(135deg,#2D6A4F,#40916C); color:#fff; padding:3rem; border-radius:15px; text-align:center;
+            box-shadow:0 4px 20px rgba(45,106,79,.3);
+        }
+        .cta-section h2{ font-size:2.2rem; margin-bottom:1rem; font-weight:bold; }
+        .cta-section p{ font-size:1.3rem; margin-bottom:2rem; opacity:.95; }
+        .btn{
+            display:inline-block; padding:1.3rem 3rem; background:linear-gradient(135deg,#F4845F,#F4A261); color:#fff; text-decoration:none;
+            border-radius:50px; font-weight:bold; font-size:1.2rem; transition:.3s; box-shadow:0 4px 15px rgba(244,132,95,.4);
+        }
+        .btn:hover{ transform: translateY(-3px); box-shadow:0 6px 25px rgba(244,132,95,.6); }
+
+        .footer{ background:linear-gradient(135deg,#2D6A4F,#40916C); color:#fff; text-align:center; padding:2rem; }
+        .loading{ text-align:center; padding:5rem 2rem; font-size:1.5rem; color:#2D6A4F; font-weight:bold; }
+
+        /* 動畫 */
+        @keyframes fadeInUp{ from{opacity:0; transform:translateY(30px);} to{opacity:1; transform:translateY(0);} }
+        @keyframes bounce{
+            0%,20%,50%,80%,100%{ transform: translateX(-50%) translateY(0); }
+            40%{ transform: translateX(-50%) translateY(-10px); }
+            60%{ transform: translateX(-50%) translateY(-5px); }
         }
 
-        .photo-gallery-item:hover::after {
-            opacity: 1;
-        }
-
-        #photoGallery:empty {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 300px;
-            background: linear-gradient(135deg, #2D6A4F, #40916C);
-            color: white;
-            font-size: 1.5rem;
-            border-radius: 15px;
-        }
-
-        .photo-gallery-grid.single-photo {
-            grid-template-columns: 1fr;
-        }
-
-        .photo-gallery-grid.two-photos {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        @media (max-width: 768px) {
-            .photo-gallery-grid {
-                display: flex;
-                overflow-x: auto;
-                scroll-snap-type: x mandatory;
-            }
-            .photo-gallery-item {
-                flex: 0 0 100%;
-                scroll-snap-align: center;
-            }
-        }
-
-        /* （Hero 區、內容、CTA、Footer 保留） */
-        .hero-section { position: relative; height: 100vh; overflow: hidden; background: #2D6A4F; }
-        .hero-background, .hero-overlay { position: absolute; width: 100%; height: 100%; top: 0; left: 0; }
-        .hero-slide { position: absolute; width: 100%; height: 100%; opacity: 0; transition: opacity 1s ease; }
-        .hero-slide.active { opacity: 1; }
-        .hero-slide img { width: 100%; height: 100%; object-fit: cover; }
-        .hero-overlay { background: rgba(45, 106, 79, 0.7); z-index: 2; }
-        .hero-content { position: relative; z-index: 3; color: white; text-align: center; padding: 2rem; }
-
-        .footer {
-            background: linear-gradient(135deg, #2D6A4F, #40916C);
-            color: white;
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 5rem 2rem;
-            font-size: 1.5rem;
-            color: #2D6A4F;
-            font-weight: bold;
+        /* 手機版適配 + ✅ 4. 手機不顯示按鈕、可滑動 */
+        @media (max-width:768px){
+            .floating-nav{ left:10px; padding:.5rem; }
+            .floating-nav a{ width:40px; height:40px; font-size:1.2rem; margin:.3rem 0; }
+            .hero-content h1{ font-size:2.5rem; }
+            .hero-content .subtitle{ font-size:1.3rem; }
+            .hero-content .description{ font-size:1.1rem; }
+            .hero-tag,.hero-status{ font-size:1rem; padding:.8rem 1.5rem; }
+            .container{ padding:2rem 1rem; }
+            .content-section{ padding:2rem 1.5rem; }
+            .content-section h2{ font-size:1.6rem; }
+            .info-grid{ grid-template-columns:1fr; }
+            .map-container{ height:300px; }
+            .hero-controls{ display:none !important; } /* ✅ 手機隱藏左右按鈕 */
         }
     </style>
 </head>
@@ -200,26 +169,38 @@
         <a href="index.html#contact" title="聯絡">✉️</a>
     </nav>
 
+    <!-- 回頂按鈕 -->
     <button class="back-to-top" onclick="scrollToTop()">↑</button>
 
     <div id="loading" class="loading">載入體驗資訊中... Loading experience details...</div>
 
-    <div id="content" style="display:none;">
-        <!-- ✅ 新增照片展示區 -->
-        <section class="photo-gallery" id="photoGallery"></section>
-
-        <!-- Hero 區 -->
+    <div id="content" style="display: none;">
+        <!-- Hero Section - 全螢幕照片背景 -->
         <section class="hero-section" id="heroSection">
-            <div class="hero-background" id="heroBackground"></div>
+            <div class="hero-background" id="heroBackground"><!-- 照片輪播 --></div>
             <div class="hero-overlay"></div>
-            <div class="hero-content" id="heroContent"></div>
+            <div class="hero-content" id="heroContent"><!-- 文案動態生成 --></div>
+
+            <!-- 桌機左右控制（手機隱藏） -->
+            <div class="hero-controls" id="heroControls" style="display: none;">
+                <button class="hero-control-btn" onclick="changeSlide(-1)">‹</button>
+                <button class="hero-control-btn" onclick="changeSlide(1)">›</button>
+            </div>
+
+            <div class="scroll-indicator" onclick="document.querySelector('.container').scrollIntoView({behavior:'smooth'})">↓</div>
         </section>
 
         <div class="container">
+            <!-- 詳細說明 -->
             <div class="content-section" id="detailSection"></div>
+
+            <!-- 聯絡資訊 -->
             <div class="content-section" id="contactSection"></div>
+
+            <!-- 地圖 -->
             <div class="map-section" id="mapSection"></div>
 
+            <!-- CTA -->
             <div class="cta-section">
                 <h2>準備好開始你的體驗了嗎？</h2>
                 <h2>Ready to Start Your Experience?</h2>
@@ -231,85 +212,234 @@
 
     <footer class="footer">
         <p><strong>Local Friends Taiwan 台灣在地連線</strong></p>
-        <p style="margin-top:1rem;opacity:0.9;">Your local friend in Taiwan | 你在台灣的在地朋友</p>
+        <p style="margin-top: 1rem; opacity: 0.9;">Your local friend in Taiwan | 你在台灣的在地朋友</p>
     </footer>
 
     <script>
         const SHEET_ID = '1GD4gg3sGIfX7KGrJkYCL10wzvwZh5FMWQPGd9NVTQyc';
         const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
 
+        let currentSlide = 0;
+        let slideCount = 0;
+        let slideInterval;
+        let touchStartX = 0, touchEndX = 0;
+
         async function loadExperience() {
             const urlParams = new URLSearchParams(window.location.search);
             const experienceId = urlParams.get('id');
+
             if (!experienceId) {
-                document.getElementById('loading').innerHTML = '❌ 錯誤：找不到體驗 ID';
+                document.getElementById('loading').innerHTML = `
+                    <p>找不到體驗 ID Experience ID not found</p>
+                    <p style="margin-top: 1rem;"><a href="experiences.html" style="color: #F4845F; font-weight: bold;">← 返回體驗列表 Back to Experiences</a></p>
+                `;
                 return;
             }
 
             try {
                 const response = await fetch(SHEET_URL);
-                const csv = await response.text();
-                const rows = parseCSV(csv);
+                const csvText = await response.text();
+                const rows = parseCSV(csvText);
                 const headers = rows[0];
                 const data = rows.slice(1);
-                const exp = data.map(r => Object.fromEntries(headers.map((h,i)=>[h,r[i]||''])))
-                    .find(e => e['ID']?.toLowerCase() === experienceId.toLowerCase());
-                if (!exp) throw new Error('未找到該體驗');
-                displayExperience(exp);
-            } catch(e) {
-                console.error(e);
-                document.getElementById('loading').textContent = '⚠️ 錯誤：無法載入體驗';
+
+                const experience = data.map(row => {
+                    const obj = {};
+                    headers.forEach((header, index) => { obj[header] = row[index] || ''; });
+                    return obj;
+                }).find(exp => (exp['ID'] || '').toLowerCase() === experienceId.toLowerCase());
+
+                if (!experience) {
+                    document.getElementById('loading').innerHTML = `
+                        <p>找不到此體驗 Experience not found</p>
+                        <p style="margin-top: 1rem;"><a href="experiences.html" style="color: #F4845F; font-weight: bold;">← 返回體驗列表 Back to Experiences</a></p>
+                    `;
+                    return;
+                }
+
+                displayExperience(experience);
+
+            } catch (error) {
+                console.error('載入失敗:', error);
+                document.getElementById('loading').innerHTML = `
+                    <p>載入體驗時發生錯誤 Error loading experience</p>
+                    <p style="margin-top: 1rem;"><a href="experiences.html" style="color: #F4845F; font-weight: bold;">← 返回體驗列表 Back to Experiences</a></p>
+                `;
             }
         }
 
         function parseCSV(csv) {
             const lines = csv.split('\n');
             return lines.map(line => {
-                const result = [];
-                let cur = '', inQ = false;
-                for (let c of line) {
-                    if (c === '"') inQ = !inQ;
-                    else if (c === ',' && !inQ) { result.push(cur); cur=''; }
-                    else cur += c;
+                const values = [];
+                let current = '';
+                let inQuotes = false;
+
+                for (let i = 0; i < line.length; i++) {
+                    const char = line[i];
+                    if (char === '"') inQuotes = !inQuotes;
+                    else if (char === ',' && !inQuotes) { values.push(current.trim()); current = ''; }
+                    else { current += char; }
                 }
-                result.push(cur);
-                return result.map(v=>v.trim());
+                values.push(current.trim());
+                return values;
             });
         }
 
         function displayExperience(exp) {
             document.getElementById('loading').style.display = 'none';
             document.getElementById('content').style.display = 'block';
-            document.title = `${exp['體驗名稱(中)']} - Local Friends Taiwan`;
-            displayPhotos(exp);
+
+            document.title = `${exp['體驗名稱(中)']} - Local Friends Taiwan | 台灣在地連線`;
+
+            // 顯示 Hero Section
+            displayHero(exp);
+
+            // 詳細說明
+            const detailSection = document.getElementById('detailSection');
+            let detailHTML = '<h2>📖 詳細說明 Details</h2>';
+
+            if (exp['詳細說明(中)']) detailHTML += formatContent(exp['詳細說明(中)']);
+            if (exp['詳細說明(英)']) detailHTML += `<h3>English Description:</h3>${formatContent(exp['詳細說明(英)'])}`;
+            if (!exp['詳細說明(中)'] && !exp['詳細說明(英)']) detailHTML += '<p>詳細資訊準備中... Details coming soon...</p>';
+
+            // 資訊卡片
+            let infoCards = '';
+            if (exp['適合對象']) infoCards += `<div class="info-item"><h4>👥 適合對象 Who Should Join</h4><p>${exp['適合對象']}</p></div>`;
+            if (exp['建議停留時間']) infoCards += `<div class="info-item"><h4>⏰ 建議停留時間 Duration</h4><p>${exp['建議停留時間']}</p></div>`;
+            if (exp['最佳季節']) infoCards += `<div class="info-item"><h4>🌸 最佳季節 Best Season</h4><p>${exp['最佳季節']}</p></div>`;
+            if (exp['價格範圍']) infoCards += `<div class="info-item"><h4>💰 價格範圍 Price Range</h4><p>${exp['價格範圍']}</p></div>`;
+            if (infoCards) detailHTML += `<div class="info-grid">${infoCards}</div>`;
+            detailSection.innerHTML = detailHTML;
+
+            // 聯絡資訊
+            const contactSection = document.getElementById('contactSection');
+            let contactHTML = '<h2>📞 聯絡資訊 Contact Information</h2><div class="info-grid">';
+            let hasContact = false;
+
+            if (exp['主辦單位']) { contactHTML += `<div class="info-item"><h4>🏢 主辦單位 Organizer</h4><p>${exp['主辦單位']}</p></div>`; hasContact = true; }
+            if (exp['聯絡人']) { contactHTML += `<div class="info-item"><h4>👤 聯絡人 Contact Person</h4><p>${exp['聯絡人']}</p></div>`; hasContact = true; }
+            if (exp['電話']) { contactHTML += `<div class="info-item"><h4>📱 電話 Phone</h4><p><a href="tel:${exp['電話']}">${exp['電話']}</a></p></div>`; hasContact = true; }
+            if (exp['Email']) { contactHTML += `<div class="info-item"><h4>✉️ Email</h4><p><a href="mailto:${exp['Email']}">${exp['Email']}</a></p></div>`; hasContact = true; }
+            if (exp['網站']) { contactHTML += `<div class="info-item"><h4>🌐 網站 Website</h4><p><a href="${exp['網站']}" target="_blank">${exp['網站']}</a></p></div>`; hasContact = true; }
+            if (exp['社群媒體']) { contactHTML += `<div class="info-item"><h4>📱 社群媒體 Social Media</h4><p><a href="${exp['社群媒體']}" target="_blank">${exp['社群媒體']}</a></p></div>`; hasContact = true; }
+            contactHTML += '</div>';
+            if (hasContact) contactSection.innerHTML = contactHTML; else contactSection.style.display = 'none';
+
+            // 地圖
+            displayMap(exp);
         }
 
-        /* ✅ 改良照片展示邏輯 */
-        function displayPhotos(exp) {
-            const container = document.getElementById('photoGallery');
-            const links = (exp['照片集'] || exp['封面圖連結'] || '')
-                .split(',').map(l=>l.trim()).filter(Boolean);
-            if (links.length === 0) {
-                container.innerHTML = '📷 此體驗尚無照片';
+        function displayHero(exp) {
+            const heroBackground = document.getElementById('heroBackground');
+            const heroContent = document.getElementById('heroContent');
+            const heroControls = document.getElementById('heroControls');
+
+            // 讀取照片（最上面三張等）：保留原始比例
+            let photoLinks = (exp['照片集'] || exp['封面圖連結'] || '')
+                .split(',').map(s => s.trim()).filter(Boolean);
+
+            if (photoLinks.length > 0) {
+                slideCount = photoLinks.length;
+                heroBackground.innerHTML = photoLinks.map((link, idx) => `
+                    <div class="hero-slide ${idx === 0 ? 'active' : ''}">
+                        <img src="${link}" alt="${exp['體驗名稱(中)'] || 'experience'} 圖片 ${idx+1}">
+                    </div>
+                `).join('');
+
+                // 桌機才顯示控制鈕；手機不顯示（CSS 也已隱藏）
+                if (photoLinks.length > 1 && window.matchMedia('(min-width: 769px)').matches) {
+                    heroControls.style.display = 'flex';
+                } else {
+                    heroControls.style.display = 'none';
+                }
+
+                startSlideShow(); // 自動輪播（桌機/手機皆可，但手機沒有按鈕）
+                bindTouchSwipe(); // ✅ 手機可滑動
+            } else {
+                // ✅ 5. 沒照片：顯示品牌漸層背景（.hero-slide 背景已是品牌漸層）
+                slideCount = 0;
+                heroBackground.innerHTML = `
+                    <div class="hero-slide active"></div>
+                `;
+                heroControls.style.display = 'none';
+            }
+
+            // Hero 文案
+            heroContent.innerHTML = `
+                <h1>${exp['體驗名稱(中)'] || ''}</h1>
+                ${exp['體驗名稱(英)'] ? `<div class="subtitle">${exp['體驗名稱(英)']}</div>` : ''}
+                <div class="description">${exp['一句話描述(中)'] || '深度台灣在地體驗'}</div>
+                <div class="hero-tags">
+                    ${exp['地區'] ? `<span class="hero-tag">📍 ${exp['地區']}</span>` : ''}
+                    ${exp['主要分類'] ? `<span class="hero-tag">${exp['主要分類']}</span>` : ''}
+                    ${exp['難度'] ? `<span class="hero-tag">⭐ 難度: ${exp['難度']}</span>` : ''}
+                    <span class="hero-status">🚧 ${exp['Status'] || '準備中'}</span>
+                </div>
+            `;
+        }
+
+        function startSlideShow() {
+            clearInterval(slideInterval);
+            if (slideCount <= 1) return;
+            slideInterval = setInterval(() => changeSlide(1), 5000);
+        }
+
+        function changeSlide(direction) {
+            const slides = document.querySelectorAll('.hero-slide');
+            if (!slides.length) return;
+            slides[currentSlide]?.classList.remove('active');
+            currentSlide = (currentSlide + direction + slideCount) % slideCount;
+            slides[currentSlide]?.classList.add('active');
+        }
+
+        /* ✅ 4. 手機滑動手勢 */
+        function bindTouchSwipe() {
+            const hero = document.getElementById('heroSection');
+            hero.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].clientX; }, {passive:true});
+            hero.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].clientX;
+                const dx = touchEndX - touchStartX;
+                if (Math.abs(dx) > 40 && slideCount > 1) {
+                    changeSlide(dx > 0 ? -1 : 1);
+                    startSlideShow(); // 重置自動輪播計時
+                }
+            }, {passive:true});
+        }
+
+        function displayMap(exp) {
+            const mapSection = document.getElementById('mapSection');
+            if (!exp['Google Maps 嵌入連結'] && !exp['地址']) {
+                mapSection.style.display = 'none';
                 return;
             }
-            const gridClass = links.length===1?'single-photo':links.length===2?'two-photos':'';
-            container.innerHTML = `
-                <div class="photo-gallery-grid ${gridClass}">
-                    ${links.map((l,i)=>`
-                        <div class="photo-gallery-item">
-                            <img src="${l}" alt="photo ${i+1}">
-                        </div>`).join('')}
-                </div>`;
+            let mapHTML = '<h2>📍 位置資訊 Location</h2>';
+            if (exp['地址']) mapHTML += `<div class="map-address">📍 ${exp['地址']}</div>`;
+            if (exp['Google Maps 嵌入連結']) {
+                mapHTML += `
+                    <div class="map-container">
+                        <iframe src="${exp['Google Maps 嵌入連結']}" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                `;
+            }
+            mapSection.innerHTML = mapHTML;
         }
 
-        function scrollToTop(){ window.scrollTo({top:0,behavior:'smooth'}); }
+        function formatContent(content) {
+            if (!content) return '<p>準備中...</p>';
+            const paragraphs = content.split('\n').filter(p => p.trim());
+            return paragraphs.map(p => `<p>${p}</p>`).join('');
+        }
 
-        window.addEventListener('scroll',()=>{
-            document.querySelector('.back-to-top').classList.toggle('show',window.pageYOffset>300);
+        window.addEventListener('scroll', () => {
+            const backToTop = document.querySelector('.back-to-top');
+            if (window.pageYOffset > 300) backToTop.classList.add('show');
+            else backToTop.classList.remove('show');
         });
 
-        window.addEventListener('DOMContentLoaded',loadExperience);
+        function scrollToTop(){ window.scrollTo({ top:0, behavior:'smooth' }); }
+
+        window.addEventListener('DOMContentLoaded', loadExperience);
     </script>
 </body>
 </html>
