@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Experience Details - Meet Taiwan</title>
+    <title>體驗詳情 - Local Friends Taiwan | 台灣在地連線</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif;
-            line-height: 1.8;
+            line-height: 1.6;
             color: #2D6A4F;
             background: #F7F5F2;
         }
@@ -82,308 +82,244 @@
             justify-content: center;
         }
         
-        .header {
-            background: linear-gradient(135deg, #2D6A4F 0%, #40916C 100%);
-            color: white;
-            padding: 2rem;
-            text-align: center;
-        }
-        
-        .header h1 {
-            font-size: 2rem;
-            font-weight: bold;
-        }
-        
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 0;
+            padding: 2rem;
         }
         
-        .loading {
-            text-align: center;
-            padding: 4rem 2rem;
-            font-size: 1.3rem;
-            color: #2D6A4F;
-            font-weight: bold;
-        }
-        
-        /* 照片區 - 全寬 */
+        /* 照片輪播區 */
         .photo-gallery {
             width: 100%;
+            max-width: 1200px;
+            margin: 2rem auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(45, 106, 79, 0.2);
+        }
+        
+        .photo-gallery-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 0;
-            background: #000;
-            margin: 0;
         }
         
-        .photo-item {
+        .photo-gallery-item {
             width: 100%;
             height: 400px;
-            background: #e9ecef;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             overflow: hidden;
             position: relative;
+            cursor: pointer;
+            background: linear-gradient(135deg, #2D6A4F, #40916C);
         }
         
-        .photo-item img {
+        .photo-gallery-item img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.5s ease;
         }
         
-        .photo-placeholder {
-            color: #999;
-            font-size: 4rem;
+        .photo-gallery-item:hover img {
+            transform: scale(1.1);
         }
         
-        /* 主要內容區 */
-        .content-wrapper {
+        /* 單張照片時的樣式 */
+        .photo-gallery-grid.single-photo {
+            grid-template-columns: 1fr;
+        }
+        
+        .photo-gallery-grid.single-photo .photo-gallery-item {
+            height: 500px;
+        }
+        
+        /* 兩張照片時的樣式 */
+        .photo-gallery-grid.two-photos {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .header-section {
             background: white;
-            padding: 3rem 2rem;
-            margin: 0 auto;
-            max-width: 1200px;
+            padding: 3rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            border: 3px solid #E9C46A;
+            box-shadow: 0 4px 20px rgba(233, 196, 106, 0.2);
+            animation: fadeInUp 0.8s ease;
         }
         
-        .hero {
-            text-align: center;
-            margin-bottom: 3rem;
-            padding-bottom: 2rem;
-            border-bottom: 3px solid #E9C46A;
-        }
-        
-        .hero-emoji {
-            font-size: 5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .hero h1 {
-            font-size: 3rem;
+        .header-section h1 {
+            font-size: 2.8rem;
             color: #2D6A4F;
             margin-bottom: 0.5rem;
             font-weight: bold;
         }
         
-        .hero .subtitle {
-            font-size: 1.3rem;
+        .header-section .subtitle {
+            font-size: 1.5rem;
             color: #666;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
         }
         
-        .hero .description {
+        .header-section .description {
             font-size: 1.3rem;
-            color: #333;
+            color: #555;
             line-height: 1.8;
-            padding: 1.5rem;
-            background: #F7F5F2;
-            border-radius: 15px;
-            margin-bottom: 1.5rem;
-            border: 2px solid #E9C46A;
+            margin-bottom: 2rem;
         }
         
-        .meta-info {
+        .meta-tags {
             display: flex;
-            justify-content: center;
             gap: 1rem;
             flex-wrap: wrap;
+            margin-bottom: 2rem;
         }
         
-        .meta-tag {
-            padding: 0.7rem 1.5rem;
+        .tag {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
             background: #F7F5F2;
             color: #2D6A4F;
             border: 2px solid #E9C46A;
             border-radius: 25px;
-            font-size: 1rem;
-            font-weight: bold;
+            font-size: 1.1rem;
+            font-weight: 500;
         }
         
-        /* Google Docs 內容區 */
-        .doc-content {
-            margin: 3rem 0;
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            border: 3px solid #2D6A4F;
-            box-shadow: 0 4px 20px rgba(45, 106, 79, 0.15);
-        }
-        
-        .doc-content h2 {
+        .status-badge {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
             background: linear-gradient(135deg, #2D6A4F, #40916C);
             color: white;
-            padding: 1.5rem 2rem;
-            margin: 0;
-            font-size: 1.8rem;
-            font-weight: bold;
-        }
-        
-        .doc-content iframe {
-            width: 100%;
-            min-height: 800px;
-            border: none;
-            background: white;
-        }
-        
-        .doc-link {
-            padding: 1.5rem 2rem;
-            background: #F7F5F2;
-            text-align: center;
-            border-top: 2px solid #E9C46A;
-        }
-        
-        .doc-link a {
-            display: inline-block;
-            padding: 1rem 2.5rem;
-            background: linear-gradient(135deg, #F4845F, #F4A261);
-            color: white;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: bold;
+            border: 2px solid #2D6A4F;
+            border-radius: 25px;
             font-size: 1.1rem;
-            transition: transform 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 15px rgba(244, 132, 95, 0.3);
+            font-weight: bold;
         }
         
-        .doc-link a:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(244, 132, 95, 0.4);
-        }
-        
-        /* Google Maps */
-        .map-section {
-            margin: 3rem 0;
-        }
-        
-        .map-container {
+        .content-section {
             background: white;
+            padding: 3rem;
             border-radius: 15px;
-            overflow: hidden;
+            margin-bottom: 2rem;
             border: 3px solid #E9C46A;
             box-shadow: 0 4px 20px rgba(233, 196, 106, 0.2);
         }
         
-        .map-container h2 {
-            background: linear-gradient(135deg, #2D6A4F, #40916C);
-            color: white;
-            padding: 1.5rem 2rem;
-            margin: 0;
-            font-size: 1.8rem;
+        .content-section h2 {
+            font-size: 2rem;
+            color: #2D6A4F;
+            margin-bottom: 1.5rem;
             font-weight: bold;
+            border-bottom: 3px solid #E9C46A;
+            padding-bottom: 0.5rem;
+        }
+        
+        .content-section h3 {
+            font-size: 1.5rem;
+            color: #2D6A4F;
+            margin: 2rem 0 1rem 0;
+            font-weight: bold;
+        }
+        
+        .content-section p {
+            font-size: 1.2rem;
+            color: #555;
+            line-height: 1.9;
+            margin-bottom: 1.5rem;
+        }
+        
+        .content-section ul, .content-section ol {
+            font-size: 1.2rem;
+            color: #555;
+            line-height: 1.9;
+            margin-bottom: 1.5rem;
+            padding-left: 2rem;
+        }
+        
+        .content-section li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .info-item {
+            background: #F7F5F2;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 2px solid #E9C46A;
+        }
+        
+        .info-item h4 {
+            font-size: 1.3rem;
+            color: #2D6A4F;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+        
+        .info-item p {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .info-item a {
+            color: #F4845F;
+            text-decoration: none;
+            font-weight: 600;
+            word-break: break-all;
+        }
+        
+        .info-item a:hover {
+            text-decoration: underline;
+        }
+        
+        /* 地圖區塊 */
+        .map-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            border: 3px solid #E9C46A;
+            box-shadow: 0 4px 20px rgba(233, 196, 106, 0.2);
+            margin-bottom: 2rem;
+        }
+        
+        .map-section h2 {
+            font-size: 2rem;
+            color: #2D6A4F;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+        
+        .map-address {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #F7F5F2;
+            border-radius: 8px;
+            border-left: 4px solid #E9C46A;
+        }
+        
+        .map-container {
+            width: 100%;
+            height: 450px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(45, 106, 79, 0.15);
         }
         
         .map-container iframe {
             width: 100%;
-            height: 500px;
+            height: 100%;
             border: none;
         }
         
-        .map-info {
-            padding: 1.5rem 2rem;
-            background: #F7F5F2;
-            border-top: 2px solid #E9C46A;
-        }
-        
-        .map-info a {
-            color: #2D6A4F;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-        
-        .map-info a:hover {
-            text-decoration: underline;
-            color: #F4845F;
-        }
-        
-        .map-placeholder {
-            padding: 3rem 2rem;
-            text-align: center;
-            background: #F7F5F2;
-        }
-        
-        /* 聯絡資訊 */
-        .contact-section {
-            margin: 3rem 0;
-        }
-        
-        .contact-box {
-            background: white;
-            border-radius: 15px;
-            padding: 2.5rem;
-            border: 3px solid #2D6A4F;
-            box-shadow: 0 4px 20px rgba(45, 106, 79, 0.15);
-        }
-        
-        .contact-box h2 {
-            color: #2D6A4F;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 3px solid #E9C46A;
-            font-size: 1.8rem;
-            font-weight: bold;
-        }
-        
-        .contact-notice {
-            background: #F7F5F2;
-            border-left: 4px solid #E9C46A;
-            padding: 1.2rem;
-            margin-bottom: 2rem;
-            border-radius: 8px;
-            font-weight: bold;
-            color: #2D6A4F;
-        }
-        
-        .contact-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-        }
-        
-        .contact-item {
-            padding: 1.5rem;
-            background: #F7F5F2;
-            border-radius: 15px;
-            border: 2px solid #E9C46A;
-            transition: transform 0.3s, border-color 0.3s;
-        }
-        
-        .contact-item:hover {
-            transform: translateY(-5px);
-            border-color: #F4845F;
-        }
-        
-        .contact-item .icon {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .contact-item .label {
-            font-weight: bold;
-            color: #2D6A4F;
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
-        }
-        
-        .contact-item a {
-            color: #555;
-            text-decoration: none;
-            word-break: break-all;
-        }
-        
-        .contact-item a:hover {
-            color: #F4845F;
-            text-decoration: underline;
-        }
-        
-        /* 需要協助 */
-        .help-section {
-            margin: 3rem 0;
-        }
-        
-        .help-box {
+        .cta-section {
             background: linear-gradient(135deg, #2D6A4F, #40916C);
             color: white;
             padding: 3rem;
@@ -392,51 +328,34 @@
             box-shadow: 0 4px 20px rgba(45, 106, 79, 0.3);
         }
         
-        .help-box h3 {
-            font-size: 2rem;
+        .cta-section h2 {
+            font-size: 2.2rem;
             margin-bottom: 1rem;
             font-weight: bold;
         }
         
-        .help-box p {
-            margin-bottom: 1.5rem;
+        .cta-section p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
             opacity: 0.95;
-            font-size: 1.2rem;
         }
         
-        .help-box .btn {
+        .btn {
             display: inline-block;
-            padding: 1.2rem 3rem;
-            background: white;
-            color: #2D6A4F;
+            padding: 1.3rem 3rem;
+            background: linear-gradient(135deg, #F4845F, #F4A261);
+            color: white;
             text-decoration: none;
             border-radius: 50px;
             font-weight: bold;
-            transition: transform 0.3s;
             font-size: 1.2rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(244, 132, 95, 0.4);
         }
         
-        .help-box .btn:hover {
+        .btn:hover {
             transform: translateY(-3px);
-            background: #F4845F;
-            color: white;
-        }
-        
-        /* 底部免責聲明 */
-        .disclaimer-footer {
-            padding: 2rem;
-            font-size: 0.9rem;
-            color: #666;
-            text-align: center;
-            line-height: 1.6;
-            background: white;
-            border-radius: 15px;
-            margin: 2rem 0;
-            border: 2px solid #E9C46A;
-        }
-        
-        .disclaimer-footer strong {
-            color: #2D6A4F;
+            box-shadow: 0 6px 25px rgba(244, 132, 95, 0.6);
         }
         
         .footer {
@@ -447,8 +366,23 @@
             margin-top: 4rem;
         }
         
-        .footer p {
-            font-size: 1.1rem;
+        .loading {
+            text-align: center;
+            padding: 5rem 2rem;
+            font-size: 1.5rem;
+            color: #2D6A4F;
+            font-weight: bold;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         /* 手機版適配 */
@@ -462,45 +396,43 @@
                 width: 40px;
                 height: 40px;
                 font-size: 1.2rem;
+                margin: 0.3rem 0;
             }
             
-            .back-to-top {
-                right: 15px;
-                bottom: 15px;
-                width: 50px;
-                height: 50px;
+            .container {
+                padding: 1rem;
             }
             
-            .photo-gallery {
+            .photo-gallery-grid {
                 grid-template-columns: 1fr;
             }
             
-            .photo-item {
-                height: 300px;
+            .photo-gallery-item {
+                height: 250px;
             }
             
-            .hero h1 {
+            .header-section, .content-section {
+                padding: 2rem 1.5rem;
+            }
+            
+            .header-section h1 {
                 font-size: 2rem;
             }
             
-            .hero .description {
-                font-size: 1.1rem;
+            .header-section .subtitle {
+                font-size: 1.2rem;
             }
             
-            .content-wrapper {
-                padding: 2rem 1rem;
+            .content-section h2 {
+                font-size: 1.6rem;
             }
             
-            .doc-content iframe {
-                min-height: 600px;
-            }
-            
-            .map-container iframe {
-                height: 350px;
-            }
-            
-            .contact-grid {
+            .info-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .map-container {
+                height: 300px;
             }
         }
     </style>
@@ -509,7 +441,7 @@
     <!-- 浮動導覽 -->
     <nav class="floating-nav">
         <a href="index.html" title="首頁">🏠</a>
-        <a href="experiences.html" title="體驗">🌟</a>
+        <a href="experiences.html" title="體驗列表">🌟</a>
         <a href="index.html#about" title="關於">ℹ️</a>
         <a href="index.html#contact" title="聯絡">✉️</a>
     </nav>
@@ -517,79 +449,51 @@
     <!-- 回頂按鈕 -->
     <button class="back-to-top" onclick="scrollToTop()">↑</button>
 
-    <header class="header">
-        <h1>Meet Taiwan 遇見台灣</h1>
-    </header>
-
     <div id="loading" class="loading">
-        載入體驗詳情中...<br>Loading experience details...
+        載入體驗資訊中... Loading experience details...
     </div>
 
-    <div id="content" class="container" style="display: none;">
-        <!-- 照片區 - 全寬 -->
+    <div id="content" style="display: none;">
+        <!-- 照片輪播區 -->
         <div class="photo-gallery" id="photoGallery">
-            <div class="photo-item">
-                <span class="photo-placeholder">📷</span>
-            </div>
-            <div class="photo-item">
-                <span class="photo-placeholder">📷</span>
-            </div>
-            <div class="photo-item">
-                <span class="photo-placeholder">📷</span>
-            </div>
+            <!-- 照片會在這裡動態生成 -->
         </div>
 
-        <!-- 主要內容 -->
-        <div class="content-wrapper">
-            <div id="heroSection"></div>
-            
-            <!-- Google Docs 內容 -->
-            <div class="doc-content" id="docContent">
-                <h2>📝 詳細介紹 Detailed Information</h2>
-                <iframe id="docIframe" src="" loading="lazy"></iframe>
-                <div class="doc-link">
-                    <a href="" target="_blank" id="docLink">
-                        📄 在新視窗開啟完整文件 Open Full Document →
-                    </a>
-                </div>
+        <div class="container">
+            <!-- 標題與基本資訊 -->
+            <div class="header-section" id="headerSection">
+                <!-- 內容會動態生成 -->
             </div>
-        </div>
 
-        <!-- Google Maps -->
-        <div class="content-wrapper">
-            <div class="map-section" id="mapSection"></div>
+            <!-- 詳細說明 -->
+            <div class="content-section" id="detailSection">
+                <!-- 內容會動態生成 -->
+            </div>
 
             <!-- 聯絡資訊 -->
-            <div class="contact-section" id="contactSection"></div>
-
-            <!-- 需要協助 -->
-            <div class="help-section">
-                <div class="help-box">
-                    <h3>💬 需要語言或預約協助嗎?</h3>
-                    <p>Need Help with Language or Booking?</p>
-                    <p style="font-size: 1rem;">
-                        如果語言或文化隔閡造成困難,我們很樂意協助您建立連結<br>
-                        We're happy to help you connect if language barriers are challenging
-                    </p>
-                    <a href="mailto:contact@example.com" class="btn">
-                        聯絡我們 Contact Us
-                    </a>
-                </div>
+            <div class="content-section" id="contactSection">
+                <!-- 內容會動態生成 -->
             </div>
 
-            <!-- 底部小免責聲明 -->
-            <div class="disclaimer-footer">
-                <strong>ℹ️ 免責聲明 Disclaimer:</strong><br>
-                本頁面由 Meet Taiwan 獨立整理,我們與此組織無隸屬或代理關係。所有聯絡資訊均為公開資料。<br>
-                This page is independently curated by Meet Taiwan. We are not affiliated with this organization. All contact information is publicly available.
+            <!-- 地圖 -->
+            <div class="map-section" id="mapSection">
+                <!-- 地圖會動態生成 -->
+            </div>
+
+            <!-- CTA -->
+            <div class="cta-section">
+                <h2>準備好開始你的體驗了嗎？</h2>
+                <h2>Ready to Start Your Experience?</h2>
+                <p>直接聯繫主辦單位安排你的專屬體驗<br>Contact the organizer to arrange your unique experience</p>
+                <a href="experiences.html" class="btn">← 瀏覽更多體驗 Browse More Experiences</a>
             </div>
         </div>
     </div>
 
     <footer class="footer">
-        <p><strong>Meet Taiwan 遇見台灣</strong></p>
+        <p><strong>Local Friends Taiwan 台灣在地連線</strong></p>
         <p style="margin-top: 1rem; opacity: 0.9;">
-            Independent Information Platform
+            Your local friend in Taiwan | 你在台灣的在地朋友
         </p>
     </footer>
 
@@ -597,34 +501,15 @@
         const SHEET_ID = '1GD4gg3sGIfX7KGrJkYCL10wzvwZh5FMWQPGd9NVTQyc';
         const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
 
-        const categoryEmojis = {
-            '飲食文化': '🍜',
-            '社區生活': '🏘️',
-            '建築藝術': '🏛️',
-            '傳統工藝': '🎨',
-            '環境生態': '🌱',
-            '農村生活': '🌾',
-            '其他': '📍'
-        };
-
-        const regionEmojis = {
-            '北台灣': '🏙️',
-            '中台灣': '🏔️',
-            '南臺灣': '🌴',
-            '花東': '🌊',
-            '離島': '🏝️'
-        };
-
-        function getExperienceId() {
-            const params = new URLSearchParams(window.location.search);
-            return params.get('id');
-        }
-
         async function loadExperience() {
-            const id = getExperienceId();
+            const urlParams = new URLSearchParams(window.location.search);
+            const experienceId = urlParams.get('id');
             
-            if (!id) {
-                showError('找不到體驗 ID<br>Experience ID not found');
+            if (!experienceId) {
+                document.getElementById('loading').innerHTML = `
+                    <p>找不到體驗 ID Experience ID not found</p>
+                    <p style="margin-top: 1rem;"><a href="experiences.html" style="color: #F4845F; font-weight: bold;">← 返回體驗列表 Back to Experiences</a></p>
+                `;
                 return;
             }
 
@@ -641,192 +526,25 @@
                         obj[header] = row[index] || '';
                     });
                     return obj;
-                }).find(exp => exp['ID'] === id);
+                }).find(exp => exp['ID'] === experienceId);
 
-                if (experience) {
-                    displayExperience(experience);
-                } else {
-                    showError('找不到此體驗<br>Experience not found');
+                if (!experience) {
+                    document.getElementById('loading').innerHTML = `
+                        <p>找不到此體驗 Experience not found</p>
+                        <p style="margin-top: 1rem;"><a href="experiences.html" style="color: #F4845F; font-weight: bold;">← 返回體驗列表 Back to Experiences</a></p>
+                    `;
+                    return;
                 }
+
+                displayExperience(experience);
                 
             } catch (error) {
                 console.error('載入失敗:', error);
-                showError('載入失敗<br>Loading failed');
-            }
-        }
-
-        function displayExperience(exp) {
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('content').style.display = 'block';
-            
-            const emoji = categoryEmojis[exp['主要分類']] || regionEmojis[exp['地區']] || '📍';
-            
-            document.title = `${exp['體驗名稱(中)']} - Meet Taiwan`;
-            
-            displayPhotos(exp);
-            
-            document.getElementById('heroSection').innerHTML = `
-                <div class="hero">
-                    <div class="hero-emoji">${emoji}</div>
-                    <h1>${exp['體驗名稱(中)']}</h1>
-                    ${exp['體驗名稱(英)'] ? `<div class="subtitle">${exp['體驗名稱(英)']}</div>` : ''}
-                    ${exp['一句話描述(中)'] ? `<div class="description">${exp['一句話描述(中)']}</div>` : ''}
-                    <div class="meta-info">
-                        ${exp['地區'] ? `<span class="meta-tag">📍 ${exp['地區']}</span>` : ''}
-                        ${exp['主要分類'] ? `<span class="meta-tag">${exp['主要分類']}</span>` : ''}
-                        ${exp['難度'] ? `<span class="meta-tag">⭐ 難度: ${exp['難度']}</span>` : ''}
-                    </div>
-                </div>
-            `;
-            
-            loadGoogleDoc(exp);
-            displayMap(exp);
-            displayContact(exp);
-        }
-
-        function displayPhotos(exp) {
-            const gallery = document.getElementById('photoGallery');
-            const imageUrls = exp['封面圖連結'] ? exp['封面圖連結'].split(',').map(url => url.trim()) : [];
-            
-            if (imageUrls.length > 0 && imageUrls[0]) {
-                gallery.innerHTML = '';
-                for (let i = 0; i < 3; i++) {
-                    const imageUrl = imageUrls[i];
-                    if (imageUrl) {
-                        gallery.innerHTML += `
-                            <div class="photo-item">
-                                <img src="${imageUrl}" alt="體驗照片 ${i+1}" onerror="this.parentElement.innerHTML='<span class=\'photo-placeholder\'>📷</span>'">
-                            </div>
-                        `;
-                    } else {
-                        gallery.innerHTML += `
-                            <div class="photo-item">
-                                <span class="photo-placeholder">📷</span>
-                            </div>
-                        `;
-                    }
-                }
-            }
-        }
-
-        function loadGoogleDoc(exp) {
-            if (exp['詳細內容Doc']) {
-                let embedUrl = exp['詳細內容Doc'];
-                let fullUrl = exp['詳細內容Doc'];
-                
-                if (embedUrl.includes('/pub')) {
-                    embedUrl = embedUrl.replace('/pub', '/pub?embedded=true');
-                } else if (embedUrl.includes('/edit')) {
-                    const docId = embedUrl.match(/\/d\/([a-zA-Z0-9-_]+)/);
-                    if (docId) {
-                        embedUrl = `https://docs.google.com/document/d/e/2PACX-1vQj1gYlRDbgpH-IupwfkeS8kSMIvGb9TadFFwGpzj9TJXLYv3kzvhu9BqcpUetG-y7Dpt2M8qJLFkoV/pub?embedded=true`;
-                        fullUrl = `https://docs.google.com/document/d/e/2PACX-1vQj1gYlRDbgpH-IupwfkeS8kSMIvGb9TadFFwGpzj9TJXLYv3kzvhu9BqcpUetG-y7Dpt2M8qJLFkoV/pub`;
-                    }
-                }
-                
-                document.getElementById('docIframe').src = embedUrl;
-                document.getElementById('docLink').href = fullUrl;
-            } else {
-                document.getElementById('docContent').style.display = 'none';
-            }
-        }
-
-        function displayMap(exp) {
-            const mapSection = document.getElementById('mapSection');
-            
-            if (exp['地址']) {
-                const embedUrl = `https://www.google.com/maps?q=${encodeURIComponent(exp['地址'])}&output=embed`;
-                
-                mapSection.innerHTML = `
-                    <div class="map-container">
-                        <h2>🗺️ 位置 Location</h2>
-                        <iframe
-                            src="${embedUrl}"
-                            allowfullscreen=""
-                            loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade">
-                        </iframe>
-                        <div class="map-info">
-                            ${exp['Google Maps'] ? `
-                                <p style="margin-bottom: 0.5rem;">
-                                    <a href="${exp['Google Maps']}" target="_blank">
-                                        📍 在 Google Maps 中開啟 Open in Google Maps →
-                                    </a>
-                                </p>
-                            ` : ''}
-                            <p style="margin: 0; color: #555; font-weight: 500;">📮 ${exp['地址']}</p>
-                        </div>
-                    </div>
-                `;
-            } else if (exp['Google Maps']) {
-                mapSection.innerHTML = `
-                    <div class="map-container">
-                        <h2>🗺️ 位置 Location</h2>
-                        <div class="map-placeholder">
-                            <a href="${exp['Google Maps']}" target="_blank" 
-                               style="display: inline-block; padding: 1rem 2rem; background: linear-gradient(135deg, #F4845F, #F4A261); color: white; text-decoration: none; border-radius: 50px; font-size: 1.1rem; font-weight: bold;">
-                                📍 在 Google Maps 中查看 View on Google Maps →
-                            </a>
-                        </div>
-                    </div>
+                document.getElementById('loading').innerHTML = `
+                    <p>載入體驗時發生錯誤 Error loading experience</p>
+                    <p style="margin-top: 1rem;"><a href="experiences.html" style="color: #F4845F; font-weight: bold;">← 返回體驗列表 Back to Experiences</a></p>
                 `;
             }
-        }
-
-        function displayContact(exp) {
-            const contactSection = document.getElementById('contactSection');
-            
-            let hasContact = exp['官方網站'] || exp['Facebook'] || exp['電話'] || exp['Email'];
-            
-            if (!hasContact) {
-                contactSection.innerHTML = '';
-                return;
-            }
-            
-            contactSection.innerHTML = `
-                <div class="contact-box">
-                    <h2>📞 聯絡資訊 Contact Information</h2>
-                    
-                    <div class="contact-notice">
-                        ⚠️ <strong>請直接聯繫主辦單位安排參訪</strong><br>
-                        Please contact the organization directly to arrange your visit
-                    </div>
-                    
-                    <div class="contact-grid">
-                        ${exp['官方網站'] ? `
-                            <div class="contact-item">
-                                <div class="icon">🌐</div>
-                                <div class="label">Website 官網</div>
-                                <a href="${exp['官方網站']}" target="_blank">${exp['官方網站']}</a>
-                            </div>
-                        ` : ''}
-                        
-                        ${exp['Facebook'] ? `
-                            <div class="contact-item">
-                                <div class="icon">📘</div>
-                                <div class="label">Facebook</div>
-                                <a href="${exp['Facebook']}" target="_blank">Facebook Page</a>
-                            </div>
-                        ` : ''}
-                        
-                        ${exp['電話'] ? `
-                            <div class="contact-item">
-                                <div class="icon">📞</div>
-                                <div class="label">Phone 電話</div>
-                                <div style="font-weight: bold; color: #2D6A4F;">${exp['電話']}</div>
-                            </div>
-                        ` : ''}
-                        
-                        ${exp['Email'] ? `
-                            <div class="contact-item">
-                                <div class="icon">📧</div>
-                                <div class="label">Email</div>
-                                <a href="mailto:${exp['Email']}">${exp['Email']}</a>
-                            </div>
-                        ` : ''}
-                    </div>
-                </div>
-            `;
         }
 
         function parseCSV(csv) {
@@ -852,16 +570,177 @@
             });
         }
 
-        function showError(message) {
-            document.getElementById('loading').innerHTML = `
-                <p style="color: #2D6A4F; font-size: 1.5rem; font-weight: bold;">${message}</p>
-                <p style="margin-top: 1rem;">
-                    <a href="experiences.html" style="color: #2D6A4F; text-decoration: none; font-weight: bold;">← 返回所有體驗 Back to All Experiences</a>
-                </p>
+        function displayExperience(exp) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+            
+            // 更新頁面標題
+            document.title = `${exp['體驗名稱(中)']} - Local Friends Taiwan | 台灣在地連線`;
+
+            // 顯示照片
+            displayPhotos(exp);
+
+            // 標題區塊
+            const headerSection = document.getElementById('headerSection');
+            headerSection.innerHTML = `
+                <h1>${exp['體驗名稱(中)']}</h1>
+                ${exp['體驗名稱(英)'] ? `<div class="subtitle">${exp['體驗名稱(英)']}</div>` : ''}
+                <div class="description">${exp['一句話描述(中)'] || ''}</div>
+                <div class="meta-tags">
+                    ${exp['地區'] ? `<span class="tag">📍 ${exp['地區']}</span>` : ''}
+                    ${exp['主要分類'] ? `<span class="tag">${exp['主要分類']}</span>` : ''}
+                    ${exp['難度'] ? `<span class="tag">⭐ 難度: ${exp['難度']}</span>` : ''}
+                    <span class="status-badge">🚧 ${exp['Status'] || '準備中'}</span>
+                </div>
+            `;
+
+            // 詳細說明區塊
+            const detailSection = document.getElementById('detailSection');
+            detailSection.innerHTML = `
+                <h2>📖 詳細說明 Details</h2>
+                ${formatContent(exp['詳細說明(中)'] || '準備中...')}
+                ${exp['詳細說明(英)'] ? `<h3>English Description:</h3>${formatContent(exp['詳細說明(英)'])}` : ''}
+                
+                <div class="info-grid">
+                    ${exp['適合對象'] ? `
+                        <div class="info-item">
+                            <h4>👥 適合對象 Who Should Join</h4>
+                            <p>${exp['適合對象']}</p>
+                        </div>
+                    ` : ''}
+                    ${exp['建議停留時間'] ? `
+                        <div class="info-item">
+                            <h4>⏰ 建議停留時間 Duration</h4>
+                            <p>${exp['建議停留時間']}</p>
+                        </div>
+                    ` : ''}
+                    ${exp['最佳季節'] ? `
+                        <div class="info-item">
+                            <h4>🌸 最佳季節 Best Season</h4>
+                            <p>${exp['最佳季節']}</p>
+                        </div>
+                    ` : ''}
+                    ${exp['價格範圍'] ? `
+                        <div class="info-item">
+                            <h4>💰 價格範圍 Price Range</h4>
+                            <p>${exp['價格範圍']}</p>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+
+            // 聯絡資訊區塊
+            const contactSection = document.getElementById('contactSection');
+            contactSection.innerHTML = `
+                <h2>📞 聯絡資訊 Contact Information</h2>
+                <div class="info-grid">
+                    ${exp['主辦單位'] ? `
+                        <div class="info-item">
+                            <h4>🏢 主辦單位 Organizer</h4>
+                            <p>${exp['主辦單位']}</p>
+                        </div>
+                    ` : ''}
+                    ${exp['聯絡人'] ? `
+                        <div class="info-item">
+                            <h4>👤 聯絡人 Contact Person</h4>
+                            <p>${exp['聯絡人']}</p>
+                        </div>
+                    ` : ''}
+                    ${exp['電話'] ? `
+                        <div class="info-item">
+                            <h4>📱 電話 Phone</h4>
+                            <p><a href="tel:${exp['電話']}">${exp['電話']}</a></p>
+                        </div>
+                    ` : ''}
+                    ${exp['Email'] ? `
+                        <div class="info-item">
+                            <h4>✉️ Email</h4>
+                            <p><a href="mailto:${exp['Email']}">${exp['Email']}</a></p>
+                        </div>
+                    ` : ''}
+                    ${exp['網站'] ? `
+                        <div class="info-item">
+                            <h4>🌐 網站 Website</h4>
+                            <p><a href="${exp['網站']}" target="_blank">${exp['網站']}</a></p>
+                        </div>
+                    ` : ''}
+                    ${exp['社群媒體'] ? `
+                        <div class="info-item">
+                            <h4>📱 社群媒體 Social Media</h4>
+                            <p><a href="${exp['社群媒體']}" target="_blank">${exp['社群媒體']}</a></p>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+
+            // 地圖區塊
+            displayMap(exp);
+        }
+
+        function displayPhotos(exp) {
+            const photoGallery = document.getElementById('photoGallery');
+            
+            // 讀取照片連結 (優先讀取「照片集」,其次「封面圖連結」)
+            const photoLinks = (exp['照片集'] || exp['封面圖連結'] || '').split(',').map(link => link.trim()).filter(link => link);
+            
+            if (photoLinks.length === 0) {
+                photoGallery.style.display = 'none';
+                return;
+            }
+
+            const gridClass = photoLinks.length === 1 ? 'single-photo' : photoLinks.length === 2 ? 'two-photos' : '';
+            
+            photoGallery.innerHTML = `
+                <div class="photo-gallery-grid ${gridClass}">
+                    ${photoLinks.map(link => `
+                        <div class="photo-gallery-item">
+                            <img src="${link}" alt="${exp['體驗名稱(中)']}" onerror="this.parentElement.style.display='none'">
+                        </div>
+                    `).join('')}
+                </div>
             `;
         }
 
-        // 回頂按鈕
+        function displayMap(exp) {
+            const mapSection = document.getElementById('mapSection');
+            
+            if (!exp['Google Maps 嵌入連結'] && !exp['地址']) {
+                mapSection.style.display = 'none';
+                return;
+            }
+
+            let mapHTML = '<h2>📍 位置資訊 Location</h2>';
+            
+            // 顯示地址
+            if (exp['地址']) {
+                mapHTML += `<div class="map-address">📍 ${exp['地址']}</div>`;
+            }
+            
+            // 顯示地圖
+            if (exp['Google Maps 嵌入連結']) {
+                mapHTML += `
+                    <div class="map-container">
+                        <iframe
+                            src="${exp['Google Maps 嵌入連結']}"
+                            allowfullscreen=""
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                `;
+            }
+            
+            mapSection.innerHTML = mapHTML;
+        }
+
+        function formatContent(content) {
+            if (!content) return '<p>準備中...</p>';
+            
+            // 將換行轉換成段落
+            const paragraphs = content.split('\n').filter(p => p.trim());
+            return paragraphs.map(p => `<p>${p}</p>`).join('');
+        }
+
         window.addEventListener('scroll', function() {
             const backToTop = document.querySelector('.back-to-top');
             if (window.pageYOffset > 300) {
