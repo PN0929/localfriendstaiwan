@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trail Notes 探路筆記 - Local Friends Taiwan</title>
+  <meta name="description" content="Local Friends Taiwan 的探路紀錄、幕後故事與旅人心法，紀錄我們實際走訪與合作的在地夥伴。">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{overflow-x:hidden}
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft JhengHei",sans-serif;
+      line-height:1.6;color:#2D6A4F;background:#F7F5F2;
+      text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;
+      word-break:keep-all;overflow-wrap:anywhere;
+    }
+    h1,h2{text-wrap:balance}
+    img{max-width:100%;height:auto;display:block}
+
+    /* 浮動導覽：與首頁一致簡潔版 */
+    .floating-nav{
+      position:fixed;left:20px;top:50%;transform:translateY(-50%);
+      z-index:1000;background:#fff;padding:.75rem;border-radius:26px;
+      box-shadow:0 4px 20px rgba(45,106,79,.18);border:2px solid #2D6A4F;
+      opacity:0;animation:fadeInLeft 1s ease forwards .5s;
+    }
+    .floating-nav a{
+      display:block;width:44px;height:44px;margin:.35rem 0;border-radius:50%;
+      background:linear-gradient(135deg,#2D6A4F,#40916C);color:#fff;
+      text-decoration:none;display:flex;align-items:center;justify-content:center;
+      font-size:1.35rem;transition:.3s;
+    }
+    .floating-nav a:hover{
+      transform:scale(1.15);
+      background:linear-gradient(135deg,#40916C,#52B788);
+      box-shadow:0 4px 14px rgba(64,145,108,.35);
+    }
+
+    /* 回頂 */
+    .back-to-top{
+      position:fixed;right:30px;bottom:30px;width:60px;height:60px;
+      background:linear-gradient(135deg,#F4845F,#F4A261);color:#fff;border:none;
+      border-radius:50%;font-size:1.5rem;cursor:pointer;
+      box-shadow:0 4px 20px rgba(244,132,95,.4);display:none;z-index:999;
+      transition:transform .3s;
+    }
+    .back-to-top:hover{transform:translateY(-5px)}
+    .back-to-top.show{
+      display:flex;align-items:center;justify-content:center;
+      animation:fadeInUp .5s ease;
+    }
+
+    /* 頂部細 Logo Bar */
+    .top-bar{
+      position:sticky;top:0;z-index:900;
+      background:rgba(247,245,242,.98);
+      backdrop-filter:blur(10px);
+      border-bottom:1px solid rgba(45,106,79,.08);
+    }
+    .top-bar-inner{
+      max-width:1200px;margin:0 auto;
+      display:flex;align-items:center;justify-content:space-between;
+      padding:.6rem 1.5rem;
+      font-size:.9rem;color:#2D6A4F;
+    }
+    .brand-small{
+      font-weight:800;letter-spacing:.08em;font-size:.8rem;
+    }
+    .brand-small span{font-weight:500;margin-left:.35rem;font-size:.78rem;opacity:.8}
+    .top-nav-links{
+      display:flex;gap:.8rem;font-size:.8rem;
+    }
+    .top-nav-links a{
+      text-decoration:none;color:#2D6A4F;opacity:.8;
+      padding:.25rem .55rem;border-radius:999px;
+      border:1px solid transparent;transition:.2s;
+    }
+    .top-nav-links a:hover{
+      opacity:1;border-color:#E9C46A;background:#FFF7EB;
+    }
+    .top-nav-links a.active{
+      opacity:1;border-color:#2D6A4F;background:#fff;
+      font-weight:700;
+    }
+
+    /* Hero */
+    .hero{
+      padding:3.2rem 1.5rem 2.5rem;
+      background:linear-gradient(
+        180deg,
+        rgba(45,106,79,0.09),
+        rgba(247,245,242,1)
+      );
+    }
+    .hero-inner{
+      max-width:1200px;margin:0 auto;
+    }
+    .hero-kicker{
+      font-size:.9rem;font-weight:700;color:#2D6A4F;
+      letter-spacing:.16em;text-transform:uppercase;
+      margin-bottom:.4rem;
+    }
+    .hero h1{
+      font-size:2.2rem;font-weight:800;color:#2D6A4F;
+      margin-bottom:.6rem;
+    }
+    .hero p{
+      font-size:1rem;color:#4A4A4A;max-width:720px;
+    }
+
+    /* Filter 區 */
+    .filters{
+      max-width:1200px;margin:0 auto 1.5rem;
+      padding:0 1.5rem;
+    }
+    .filter-label{
+      font-size:.85rem;color:#6b6b6b;margin-bottom:.35rem;
+    }
+    .filter-pills{
+      display:flex;flex-wrap:wrap;gap:.5rem;
+    }
+    .filter-btn{
+      padding:.35rem .9rem;
+      border-radius:999px;
+      border:1px solid #E9C46A;
+      font-size:.8rem;
+      background:#fff;
+      color:#2D6A4F;
+      cursor:pointer;
+      transition:.2s;
+    }
+    .filter-btn.active{
+      background:#2D6A4F;
+      color:#fff;
+      border-color:#2D6A4F;
+      font-weight:700;
+      box-shadow:0 3px 10px rgba(45,106,79,.25);
+    }
+    .filter-btn:hover{
+      background:#FFF7EB;
+      border-color:#F4A261;
+    }
+
+    /* 卡片列表 */
+    .notes-container{
+      max-width:1200px;margin:0 auto 3rem;padding:0 1.5rem 0;
+    }
+    .notes-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:1.5rem;
+    }
+    .note-card{
+      background:#fff;
+      border-radius:16px;
+      border:1px solid #E9C46A;
+      box-shadow:0 4px 14px rgba(233,196,106,.14);
+      overflow:hidden;
+      text-decoration:none;
+      color:#2D6A4F;
+      display:flex;
+      flex-direction:column;
+      transition:.25s;
+      opacity:0;
+      transform:translateY(16px);
+    }
+    .note-card.visible{
+      opacity:1;
+      transform:translateY(0);
+    }
+    .note-cover{
+      position:relative;
+      width:100%;
+      padding-top:60%;
+      overflow:hidden;
+      background:#F7F5F2;
+    }
+    .note-cover img{
+      position:absolute;inset:0;
+      width:100%;height:100%;
+      object-fit:cover;
+      transition:transform .35s;
+    }
+    .note-card:hover .note-cover img{
+      transform:scale(1.06);
+    }
+    .note-body{
+      padding:1.1rem 1rem 0.9rem;
+      display:flex;
+      flex-direction:column;
+      gap:.35rem;
+      flex:1;
+    }
+    .note-meta-top{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.4rem;
+      font-size:.7rem;
+      color:#6b6b6b;
+      align-items:center;
+    }
+    .badge{
+      padding:.25rem .55rem;
+      border-radius:999px;
+      border:1px solid #E9C46A;
+      font-size:.65rem;
+      background:#FFFBF3;
+      color:#8A6B2F;
+    }
+    .note-title{
+      font-size:1.05rem;
+      font-weight:800;
+      color:#2D6A4F;
+      line-height:1.5;
+      margin-top:.1rem;
+    }
+    .note-subtitle{
+      font-size:.86rem;
+      color:#777;
+    }
+    .note-excerpt{
+      font-size:.86rem;
+      color:#555;
+      line-height:1.6;
+      margin-top:.15rem;
+    }
+    .note-tags{
+      display:flex;
+      flex-wrap:wrap;
+      gap:.25rem;
+      margin-top:.25rem;
+      font-size:.65rem;
+    }
+    .note-tag{
+      padding:.18rem .45rem;
+      border-radius:999px;
+      background:#F7F5F2;
+      color:#2D6A4F;
+    }
+    .note-footer{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:.55rem 1rem .8rem;
+      font-size:.72rem;
+      color:#8A8A8A;
+      border-top:1px solid rgba(233,196,106,.4);
+      margin-top:auto;
+    }
+    .note-link{
+      font-weight:700;
+      color:#F4845F;
+    }
+    .note-card:hover{
+      transform:translateY(-4px);
+      box-shadow:0 8px 22px rgba(233,196,106,.26);
+      border-color:#F4A261;
+    }
+
+    .empty-state{
+      padding:3rem 1rem;
+      text-align:center;
+      color:#2D6A4F;
+      font-size:1rem;
+    }
+
+    .footer{
+      background:linear-gradient(135deg,#2D6A4F,#40916C);
+      color:#fff;text-align:center;padding:2.5rem 2rem;margin-top:2rem;
+      font-size:.9rem;
+    }
+    .footer a{color:#fff;text-decoration:none;font-weight:bold}
+    .footer a:hover{text-decoration:underline}
+
+    .loading{
+      text-align:center;padding:3rem 1.5rem;
+      font-size:1rem;color:#2D6A4F;font-weight:700;
+    }
+
+    @keyframes fadeInLeft{
+      from{opacity:0;transform:translate(-50px,-50%);}
+      to{opacity:1;transform:translate(0,-50%);}
+    }
+    @keyframes fadeInUp{
+      from{opacity:0;transform:translateY(20px);}
+      to{opacity:1;transform:translateY(0);}
+    }
+
+    @media(max-width:768px){
+      .floating-nav{
+        left:10px;padding:.5rem;
+      }
+      .floating-nav a{
+        width:38px;height:38px;font-size:1.1rem;margin:.25rem 0;
+      }
+      .top-bar-inner{
+        padding:.5rem .9rem;
+        flex-wrap:wrap;
+        gap:.3rem .6rem;
+      }
+      .hero{
+        padding:2.4rem 1.25rem 1.8rem;
+      }
+      .hero h1{
+        font-size:1.9rem;
+      }
+      .hero p{
+        font-size:.9rem;
+      }
+      .filters{
+        padding:0 1.25rem;
+      }
+      .notes-container{
+        padding:0 1.25rem 2.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 浮動導覽 -->
+  <nav class="floating-nav">
+    <a href="index.html" title="首頁">🏠</a>
+    <a href="experiences.html" title="體驗列表">🌟</a>
+    <a href="notes.html" title="探路筆記">📒</a>
+    <a href="contact.html" title="聯繫我們">✉️</a>
+  </nav>
+
+  <button class="back-to-top" onclick="scrollToTop()">↑</button>
+
+  <!-- 頂部小品牌列 -->
+  <header class="top-bar">
+    <div class="top-bar-inner">
+      <div class="brand-small">
+        LOCAL FRIENDS TAIWAN
+        <span>你的在地朋友・Independent information platform</span>
+      </div>
+      <nav class="top-nav-links">
+        <a href="index.html">Home</a>
+        <a href="experiences.html">Experiences</a>
+        <a href="about.html">About</a>
+        <a href="faq.html">FAQ</a>
+        <a href="hosts.html">Hosts</a>
+        <a href="notes.html" class="active">Trail Notes</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-kicker">TRAIL NOTES ・ 探路筆記</div>
+      <h1>我們真的去過的地方與人</h1>
+      <p>
+        每一篇探路筆記，都是我們親自走訪、對話後留下的紀錄。
+        沒有制式業配，只有願意介紹給朋友的在地夥伴、社區故事與旅人心法。
+      </p>
+    </div>
+  </section>
+
+  <!-- Filters -->
+  <section class="filters">
+    <div class="filter-label">依主題瀏覽：</div>
+    <div class="filter-pills">
+      <button class="filter-btn active" data-filter="all">全部 All</button>
+      <button class="filter-btn" data-filter="Visit">探訪紀錄 Visits</button>
+      <button class="filter-btn" data-filter="Story">幕後故事 Stories</button>
+      <button class="filter-btn" data-filter="Mindset">觀念文 Mindset</button>
+      <button class="filter-btn" data-filter="News">News / Updates</button>
+    </div>
+  </section>
+
+  <!-- Notes List -->
+  <section class="notes-container">
+    <div id="loading" class="loading">載入探路筆記中... Loading trail notes...</div>
+    <div id="notesGrid" class="notes-grid" style="display:none;"></div>
+    <div id="emptyState" class="empty-state" style="display:none;">
+      目前尚未有符合條件的探路筆記，歡迎稍後再來看看。
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p><strong>Local Friends Taiwan 台灣在地連線</strong></p>
+    <p style="margin-top:.4rem;">Your local friend in Taiwan | 你在台灣的在地朋友</p>
+    <p style="margin-top:.4rem;">
+      <a href="https://github.com/PN0929/meet-taiwan" target="_blank">📂 GitHub Project</a>
+    </p>
+    <p style="margin-top:.6rem;opacity:.9;">
+      © 2025 Local Friends Taiwan. Independent information platform.
+    </p>
+  </footer>
+
+  <script>
+    // === 設定你的 Trail Notes 專用 Google Sheet ID ===
+    // 建議欄位：
+    // ID, Title, Subtitle, Category, Location, Host, Tags, Cover, Summary, DocLink, Status, Date
+    const SHEET_ID = 'YOUR_NOTES_SHEET_ID';
+    const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
+
+    let allNotes = [];
+    let currentFilter = 'all';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadNotes();
+
+      // Filter 點擊
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentFilter = btn.dataset.filter;
+          renderNotes();
+        });
+      });
+    });
+
+    async function loadNotes(){
+      const loadingEl = document.getElementById('loading');
+      try{
+        const res = await fetch(SHEET_URL);
+        const text = await res.text();
+        const rows = parseCSV(text);
+        const headers = rows[0];
+        const data = rows.slice(1);
+
+        allNotes = data.map(row => {
+          const o = {};
+          headers.forEach((h,i) => o[h.trim()] = (row[i] || '').trim());
+          return o;
+        }).filter(n => {
+          const status = (n['Status'] || '').toLowerCase();
+          return status === 'published' || status === '已發布' || status === 'public' || status === '';
+        });
+
+        loadingEl.style.display = 'none';
+        document.getElementById('notesGrid').style.display = 'grid';
+        renderNotes();
+      }catch(e){
+        console.error(e);
+        loadingEl.textContent = '無法載入探路筆記，請稍後再試。';
+      }
+    }
+
+    function parseCSV(csv){
+      const lines = csv.split('\n').filter(l => l.trim().length>0);
+      return lines.map(line => {
+        const values = [];
+        let cur = '', inQ = false;
+        for (let i=0;i<line.length;i++){
+          const ch = line[i];
+          if(ch === '"'){
+            if(inQ && line[i+1] === '"'){ cur+='"'; i++; }
+            else inQ = !inQ;
+          }else if(ch === ',' && !inQ){
+            values.push(cur); cur = '';
+          }else{
+            cur += ch;
+          }
+        }
+        values.push(cur);
+        return values;
+      });
+    }
+
+    function renderNotes(){
+      const grid = document.getElementById('notesGrid');
+      const empty = document.getElementById('emptyState');
+      grid.innerHTML = '';
+
+      let list = allNotes;
+      if(currentFilter !== 'all'){
+        list = list.filter(n => (n['Category'] || '').includes(currentFilter));
+      }
+
+      if(!list.length){
+        empty.style.display = 'block';
+        return;
+      }else{
+        empty.style.display = 'none';
+      }
+
+      list.forEach((n,idx) => {
+        const id = n['ID'] || '';
+        const title = n['Title'] || 'Untitled Trail Note';
+        const subtitle = n['Subtitle'] || '';
+        const cover = n['Cover'] || '';
+        const cat = n['Category'] || '';
+        const loc = n['Location'] || '';
+        const host = n['Host'] || '';
+        const date = n['Date'] || '';
+        const tags = (n['Tags'] || '').split(/[,，]/).map(t => t.trim()).filter(Boolean);
+        const summary = n['Summary'] || '';
+
+        const card = document.createElement('a');
+        card.href = id ? `note.html?id=${encodeURIComponent(id)}` : '#';
+        card.className = 'note-card';
+        card.style.transitionDelay = (idx * 0.04) + 's';
+
+        card.innerHTML = `
+          <div class="note-cover">
+            ${cover ? `<img src="${cover}" alt="${title}" loading="lazy" onerror="this.style.display='none';">` : ''}
+          </div>
+          <div class="note-body">
+            <div class="note-meta-top">
+              ${cat ? `<span class="badge">${cat}</span>` : ''}
+              ${loc ? `<span>${loc}</span>` : ''}
+            </div>
+            <div class="note-title">${title}</div>
+            ${subtitle ? `<div class="note-subtitle">${subtitle}</div>` : ''}
+            ${summary ? `<div class="note-excerpt">${summary}</div>` : ''}
+            ${tags.length ? `
+              <div class="note-tags">
+                ${tags.map(t => `<span class="note-tag">#${t}</span>`).join('')}
+              </div>` : ''}
+          </div>
+          <div class="note-footer">
+            <div>${host ? host : ''}</div>
+            <div>
+              ${date ? `<span>${date}</span>` : ''}
+              <span class="note-link">看筆記 →</span>
+            </div>
+          </div>
+        `;
+
+        grid.appendChild(card);
+
+        requestAnimationFrame(() => {
+          card.classList.add('visible');
+        });
+      });
+    }
+
+    // 回頂
+    function scrollToTop(){ window.scrollTo({top:0,behavior:'smooth'}); }
+    window.addEventListener('scroll', () => {
+      const btn = document.querySelector('.back-to-top');
+      if(window.pageYOffset > 300) btn.classList.add('show');
+      else btn.classList.remove('show');
+    });
+  </script>
+</body>
+</html>
