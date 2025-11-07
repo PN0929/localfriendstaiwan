@@ -166,92 +166,81 @@
       animation:fadeInUp .5s ease;
     }
 
-    /* Hero for detail */
+    /* Hero 使用體驗封面圖作為整體背景 */
     .hero{
       position:relative;
-      padding:calc(var(--header-height) + 2.2rem) 1.5rem 1.8rem;
-      background:linear-gradient(
-        135deg,
-        rgba(45,106,79,0.98),
-        rgba(64,145,108,0.96)
-      );
+      padding:calc(var(--header-height) + 2.4rem) 1.5rem 2.4rem;
+      background:
+        linear-gradient(
+          to bottom,
+          rgba(0,0,0,0.60),
+          rgba(0,0,0,0.42),
+          rgba(0,0,0,0.78)
+        );
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
       color:#fff;
       overflow:hidden;
     }
+    .hero::after{
+      /* 底部再加一層深綠，避免文字浮不住 */
+      content:'';
+      position:absolute;
+      inset:auto 0 0 0;
+      height:40%;
+      background:linear-gradient(to bottom,rgba(0,0,0,0),rgba(13,47,32,0.96));
+      pointer-events:none;
+    }
     .hero-inner{
+      position:relative;
       max-width:var(--max-width);
       margin:0 auto;
-      display:grid;
-      grid-template-columns:2.1fr 1.4fr;
-      gap:1.4rem;
-      align-items:stretch;
+      z-index:1;
     }
     .hero-text h1{
       font-size:2.1rem;
       font-weight:800;
-      margin-bottom:.2rem;
-      line-height:1.25;
+      margin-bottom:.25rem;
+      line-height:1.3;
+      text-shadow:0 3px 10px rgba(0,0,0,0.65);
     }
     .hero-text .en-title{
       font-size:.9rem;
       opacity:.96;
-      margin-bottom:.35rem;
+      margin-bottom:.25rem;
       font-weight:600;
+      text-shadow:0 2px 8px rgba(0,0,0,0.6);
     }
     .hero-text .one-line{
-      font-size:.95rem;
-      opacity:.95;
-      line-height:1.7;
+      font-size:.96rem;
+      opacity:.98;
+      line-height:1.8;
+      max-width:720px;
+      text-shadow:0 2px 8px rgba(0,0,0,0.7);
     }
     .hero-tags{
-      margin-top:.6rem;
+      margin-top:.65rem;
       display:flex;
       flex-wrap:wrap;
       gap:.35rem;
       font-size:.75rem;
     }
     .hero-tag{
-      padding:.18rem .6rem;
+      padding:.2rem .65rem;
       border-radius:999px;
-      border:1px solid rgba(255,255,255,0.6);
-      background:rgba(0,0,0,0.16);
+      border:1px solid rgba(255,255,255,0.7);
+      background:rgba(0,0,0,0.35);
       display:inline-flex;
       align-items:center;
-      gap:.18rem;
-    }
-
-    .hero-media{
-      position:relative;
-      border-radius:14px;
-      overflow:hidden;
-      background:#234;
-      box-shadow:0 6px 22px rgba(0,0,0,0.22);
-    }
-    .hero-media-main{
-      position:absolute;
-      inset:0;
-      object-fit:cover;
-      width:100%;
-      height:100%;
-    }
-    .hero-media-fallback{
-      position:absolute;
-      inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      color:#fff;
-      font-size:.9rem;
-      opacity:.7;
+      gap:.2rem;
+      backdrop-filter:blur(4px);
+      text-shadow:0 1px 3px rgba(0,0,0,0.6);
     }
 
     @media (max-width:768px){
       .hero{
-        padding:calc(var(--header-height) + 1.6rem) 1rem 1.4rem;
-      }
-      .hero-inner{
-        grid-template-columns:1fr;
-        gap:0.9rem;
+        padding:calc(var(--header-height) + 1.8rem) 1rem 1.8rem;
       }
       .hero-text h1{
         font-size:1.6rem;
@@ -265,19 +254,16 @@
       .hero-tags{
         font-size:.7rem;
       }
-      .hero-media{
-        height:180px;
-      }
     }
 
     /* Main layout */
     .page{
       max-width:var(--max-width);
       margin:0 auto;
-      padding:1.4rem 1.5rem 3rem;
+      padding:1.6rem 1.5rem 3rem;
     }
     @media (max-width:768px){
-      .page{padding:1.2rem 1rem 2.4rem;}
+      .page{padding:1.4rem 1rem 2.4rem;}
       .back-to-top{
         right:16px;bottom:16px;
         width:48px;height:48px;font-size:1.2rem;
@@ -356,7 +342,7 @@
       font-weight:700;
     }
 
-    /* 表格外層加一層可橫向捲動的容器 */
+    /* 表格外層橫向捲動 */
     .doc-table-wrap{
       width:100%;
       overflow-x:auto;
@@ -517,17 +503,13 @@
   <button class="back-to-top" onclick="scrollToTop()">↑</button>
 
   <!-- Hero -->
-  <section class="hero">
+  <section class="hero" id="hero">
     <div class="hero-inner">
       <div class="hero-text">
         <h1 id="expTitleZh">載入中 Loading...</h1>
         <div class="en-title" id="expTitleEn"></div>
         <div class="one-line" id="expOneLine"></div>
         <div class="hero-tags" id="heroTags"></div>
-      </div>
-      <div class="hero-media">
-        <img id="heroImage" class="hero-media-main" alt="experience cover" style="display:none;">
-        <div class="hero-media-fallback" id="heroFallback">Local Friends Taiwan · Experience</div>
       </div>
     </div>
   </section>
@@ -616,8 +598,11 @@
 
     async function loadExperience(){
       const params = new URLSearchParams(window.location.search);
-      const id = (params.get('id') || '').trim();
-      if(!id){
+      const idParam = (params.get('id') || '').trim();
+      const rowParam = params.get('row');
+      const rowIndexFromUrl = rowParam !== null ? parseInt(rowParam, 10) : NaN;
+
+      if(!idParam && isNaN(rowIndexFromUrl)){
         document.getElementById('expTitleZh').textContent = '找不到體驗 ID / Experience ID not found';
         document.getElementById('docRenderInner').innerHTML =
           '<p>請從體驗列表重新選擇一個體驗。<br>Please go back to the experiences list.</p>';
@@ -631,9 +616,27 @@
         const headers = rows[0];
         const data = rows.slice(1);
 
-        const exp = data.map(r=>{
-          const o={}; headers.forEach((h,i)=>o[h]=r[i]||''); return o;
-        }).find(o=>(o['ID']||'').trim().toLowerCase()===id.toLowerCase());
+        const list = data.map((r, idx)=>{
+          const o={};
+          headers.forEach((h,i)=>o[h]=r[i]||'');
+          o.__rowIndex = idx;
+          return o;
+        });
+
+        let exp = null;
+
+        // 1) 若有 row 參數且有效，優先用 row 精準對應
+        if(!isNaN(rowIndexFromUrl) &&
+           rowIndexFromUrl >= 0 &&
+           rowIndexFromUrl < list.length){
+          exp = list[rowIndexFromUrl];
+        }
+
+        // 2) 若 exp 還沒找到，再用 id 搜尋
+        if(!exp && idParam){
+          const idLower = idParam.toLowerCase();
+          exp = list.find(o => (o['ID']||'').trim().toLowerCase() === idLower);
+        }
 
         if(!exp){
           document.getElementById('expTitleZh').textContent = '找不到此體驗 / Experience not found';
@@ -680,6 +683,7 @@
     }
 
     function renderHero(exp){
+      const hero = document.getElementById('hero');
       const nameZh = (exp['體驗名稱(中)'] || '').trim();
       const nameEn = (exp['體驗名稱(英)'] || '').trim();
       const oneLine = (exp['一句話描述(中)'] || exp['一句話描述(英)'] || '').trim();
@@ -687,30 +691,27 @@
       const cat = (exp['主要分類'] || '').trim();
       const level = (exp['難度'] || '').trim();
 
+      // 設定文字
       document.getElementById('expTitleZh').textContent = nameZh || '未命名體驗 Untitled Experience';
       document.getElementById('expTitleEn').textContent = nameEn || '';
       document.getElementById('expOneLine').textContent = oneLine || '';
 
+      // 設定標籤
       const tagsEl = document.getElementById('heroTags');
       tagsEl.innerHTML = '';
       if(region) tagsEl.innerHTML += `<div class="hero-tag">📍 ${region}</div>`;
       if(cat) tagsEl.innerHTML += `<div class="hero-tag">${cat}</div>`;
       if(level) tagsEl.innerHTML += `<div class="hero-tag">⭐ ${level}</div>`;
 
+      // 背景圖：用第一張照片，外加漸層（上面 CSS 已有漸層，這裡疊圖）
       const links = getPhotoLinks(exp);
-      const heroImg = document.getElementById('heroImage');
-      const fallback = document.getElementById('heroFallback');
       if(links.length){
-        heroImg.src = links[0];
-        heroImg.style.display = 'block';
-        heroImg.onerror = () => {
-          heroImg.style.display='none';
-          fallback.style.display='flex';
-        };
-        fallback.style.display='none';
+        const url = links[0].replace(/"/g,'&quot;');
+        hero.style.backgroundImage =
+          `linear-gradient(to bottom,rgba(0,0,0,0.60),rgba(0,0,0,0.42),rgba(0,0,0,0.78)),url("${url}")`;
       }else{
-        heroImg.style.display='none';
-        fallback.style.display='flex';
+        hero.style.backgroundImage =
+          `linear-gradient(135deg,rgba(45,106,79,0.98),rgba(64,145,108,0.96))`;
       }
     }
 
@@ -736,13 +737,11 @@
         let main = tmp.querySelector('#contents') || tmp.querySelector('body') || tmp;
         if(!main) main = tmp;
 
-        // 移除不需要的全域樣式 / scripts
         main.querySelectorAll('script,style,header,nav,footer,link').forEach(n=>n.remove());
 
         const wrapper = document.createElement('div');
         wrapper.innerHTML = main.innerHTML;
 
-        // 處理圖片
         wrapper.querySelectorAll('img').forEach(img=>{
           img.removeAttribute('width');
           img.removeAttribute('height');
@@ -761,7 +760,6 @@
           };
         });
 
-        // 表格外包層，啟用水平捲動
         wrapper.querySelectorAll('table').forEach(table=>{
           const wrap = document.createElement('div');
           wrap.className = 'doc-table-wrap';
@@ -769,7 +767,6 @@
           wrap.appendChild(table);
         });
 
-        // 內嵌 iframe、embed 寬度修正
         wrapper.querySelectorAll('iframe,embed').forEach(el=>{
           el.removeAttribute('width');
           el.style.width = '100%';
