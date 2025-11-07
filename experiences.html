@@ -1,534 +1,674 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Experiences - Local Friends Taiwan | 台灣在地連線</title>
-  <meta name="description" content="Browse authentic local experiences in Taiwan. Connect with real Taiwanese locals.">
+  <title>Experiences 體驗列表 - Local Friends Taiwan | 台灣在地連線</title>
+  <meta name="description" content="Browse curated local experiences in Taiwan. Real people, real communities, no scripted tours.">
   <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft JhengHei",sans-serif;line-height:1.6;color:#2D6A4F;background:#F7F5F2}
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* 浮動導覽列 */
-    .floating-nav{
-      position:fixed;left:20px;top:50%;transform:translateY(-50%);z-index:1000;
-      background:#fff;padding:1rem;border-radius:30px;box-shadow:0 4px 20px rgba(45,106,79,.2);border:2px solid #2D6A4F
+    :root {
+      --header-height: 56px;
+      --max-width: 1100px;
+      --green: #2D6A4F;
+      --bg: #F7F5F2;
+      --accent: #F4845F;
+      --accent-soft: #E9C46A;
     }
-    .floating-nav a{
-      display:block;width:50px;height:50px;margin:.5rem 0;border-radius:50%;
-      background:linear-gradient(135deg,#2D6A4F,#40916C);color:#fff;text-decoration:none;
-      display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:.3s
+
+    html, body { overflow-x: hidden; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft JhengHei", sans-serif;
+      line-height: 1.7;
+      color: var(--green);
+      background: var(--bg);
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
     }
-    .floating-nav a:hover{transform:scale(1.1);background:linear-gradient(135deg,#40916C,#52B788)}
+    h1, h2, h3 { text-wrap: balance; }
+    img, video { max-width: 100%; height: auto; display: block; }
+
+    /* ===== 共用 Header ===== */
+    .site-header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--header-height);
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      background: rgba(247, 245, 242, 0.98);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(45, 106, 79, 0.06);
+      z-index: 1100;
+    }
+    .brand {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      line-height: 1.2;
+    }
+    .brand a {
+      text-decoration: none;
+      color: var(--green);
+    }
+    .brand-en {
+      font-weight: 700;
+      letter-spacing: 0.11em;
+      font-size: 0.78rem;
+    }
+    .brand-zh {
+      opacity: 0.9;
+      font-size: 0.78rem;
+    }
+
+    .main-nav {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .main-nav a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.4rem 0.9rem;
+      border-radius: 999px;
+      border: 1.4px solid transparent;
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: var(--green);
+      text-decoration: none;
+      white-space: nowrap;
+      transition: all 0.18s;
+    }
+    .main-nav a span.en { margin-right: 0.18rem; }
+    .main-nav a:hover,
+    .main-nav a.active {
+      border-color: var(--accent-soft);
+      background: #FFF7EB;
+      box-shadow: 0 2px 8px rgba(233,196,106,.25);
+      transform: translateY(-1px);
+    }
+
+    .nav-toggle {
+      display: none;
+      margin-left: auto;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 1.4px solid var(--green);
+      background: transparent;
+      color: var(--green);
+      font-size: 1.2rem;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .nav-toggle:hover { background: #E9C46A22; }
+    .nav-toggle.open {
+      background: var(--green);
+      color: #F7F5F2;
+      border-color: var(--green);
+    }
+
+    @media (max-width: 768px) {
+      .site-header {
+        padding: 0 1rem;
+        height: var(--header-height);
+      }
+      .brand-en,
+      .brand-zh {
+        font-size: 0.74rem;
+      }
+
+      .main-nav {
+        position: fixed;
+        top: var(--header-height);
+        left: 0; right: 0;
+        padding: 0.45rem 0.85rem 0.55rem;
+        background: rgba(247, 245, 242, 0.98);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(45,106,79,0.08);
+        display: none;
+        flex-wrap: nowrap;
+        gap: 0.45rem;
+        overflow-x: auto;
+        white-space: nowrap;
+        z-index: 1090;
+      }
+      .main-nav.open { display: flex; }
+      .main-nav::-webkit-scrollbar { height: 3px; }
+      .main-nav::-webkit-scrollbar-thumb {
+        background: rgba(233,196,106,0.9);
+        border-radius: 999px;
+      }
+      .main-nav a {
+        padding: 0.35rem 0.8rem;
+        font-size: 0.8rem;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+      }
+
+      .nav-toggle { display: inline-flex; }
+    }
 
     /* 回頂按鈕 */
-    .back-to-top{
-      position:fixed;right:30px;bottom:30px;width:60px;height:60px;background:linear-gradient(135deg,#F4845F,#F4A261);
-      color:#fff;border:none;border-radius:50%;font-size:1.5rem;cursor:pointer;box-shadow:0 4px 20px rgba(244,132,95,.4);
-      display:none;z-index:999;transition:.3s
+    .back-to-top {
+      position: fixed;
+      right: 30px;
+      bottom: 30px;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, #F4845F, #F4A261);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(244,132,95,0.4);
+      display: none;
+      z-index: 1000;
+      transition: transform 0.3s;
     }
-    .back-to-top:hover{transform:translateY(-5px)}
-    .back-to-top.show{display:flex;align-items:center;justify-content:center}
-
-    /* Hero + 縮小狀態 */
-    .header{
-      position:relative;
-      background:linear-gradient(rgba(45,106,79,.75),rgba(45,106,79,.75)),url('images/hero.jpg');
-      background-size:cover;background-position:center;background-attachment:fixed;
-      color:#fff;text-align:center;
-      padding:5rem 2rem; /* 大版面 */
-      transition:all .35s ease;
-      z-index:900;
-    }
-    .header-inner{max-width:1200px;margin:0 auto}
-    .header h1{
-      font-size:3rem;font-weight:800;margin-bottom:.5rem;
-      text-shadow:2px 2px 6px rgba(0,0,0,.35);letter-spacing:.3px
-    }
-    .header .subtitle{
-      font-size:1.5rem;opacity:.95;text-shadow:1px 2px 4px rgba(0,0,0,.35)
+    .back-to-top:hover { transform: translateY(-5px); }
+    .back-to-top.show {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeInUp 0.5s ease;
     }
 
-    /* 縮小後：黏頂、一行標題 */
-    .header.shrink{
-      padding:.6rem 2rem;
-      background:linear-gradient(135deg,#2D6A4F,#40916C);
-      background-attachment:initial;
-      position:sticky; top:0;
-      box-shadow:0 6px 18px rgba(0,0,0,.18);
+    /* Hero */
+    .hero {
+      padding: calc(var(--header-height) + 2.6rem) 1.5rem 1.2rem;
+      background: linear-gradient(
+        135deg,
+        rgba(45,106,79,0.98),
+        rgba(64,145,108,0.96)
+      );
+      color: #fff;
     }
-    .header .titles-large{opacity:1;transform:translateY(0);transition:opacity .25s ease, transform .25s ease}
-    .header.shrink .titles-large{opacity:0;transform:translateY(-6px);pointer-events:none;height:0;overflow:hidden}
-
-    .header .title-compact{
-      display:none;color:#fff;font-weight:800;letter-spacing:.2px;
-      text-shadow:0 2px 8px rgba(0,0,0,.3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+    .hero-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
     }
-    .header.shrink .title-compact{display:block;font-size:1.05rem}
-
-    /* 版心與區塊（與詳情頁對齊） */
-    .container{max-width:1200px;margin:0 auto;padding:2rem}
-    .search-filter-section{
-      background:#fff;padding:2.5rem;border-radius:15px;margin-bottom:2rem;
-      border:3px solid #E9C46A;box-shadow:0 4px 20px rgba(233,196,106,.2);animation:fadeInUp .8s ease
+    .hero-title {
+      font-size: 2.1rem;
+      font-weight: 800;
+      margin-bottom: 0.3rem;
     }
-
-    /* 純文字公告（不加框） */
-    .notice-text{
-      max-width:1200px;margin:1.5rem auto 0; padding:0 2rem;
-      color:#2D6A4F;font-size:1rem;line-height:1.85
-    }
-    .notice-text strong{font-weight:800}
-
-    .search-box{display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap}
-    .search-input{
-      flex:1;min-width:250px;padding:1.2rem 1.8rem;font-size:1.1rem;border:2px solid #E9C46A;border-radius:50px;
-      outline:none;transition:.3s;background:#F7F5F2
-    }
-    .search-input:focus{border-color:#2D6A4F;background:#fff;box-shadow:0 0 0 3px rgba(45,106,79,.1)}
-    .search-btn{
-      padding:1.2rem 3rem;background:linear-gradient(135deg,#F4845F,#F4A261);color:#fff;border:none;border-radius:50px;
-      font-size:1.1rem;font-weight:800;cursor:pointer;transition:.3s;box-shadow:0 4px 15px rgba(244,132,95,.3)
-    }
-    .search-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(244,132,95,.4)}
-
-    .filter-section{margin-top:2rem}
-    .filter-section h3{color:#2D6A4F;margin-bottom:1rem;font-size:1.4rem;font-weight:800}
-    .filter-group{margin-bottom:1.5rem}
-    .filter-group label{display:block;margin-bottom:.8rem;font-weight:700;color:#2D6A4F;font-size:1.1rem}
-    .filter-buttons{display:flex;flex-wrap:wrap;gap:.8rem}
-
-    /* 小籤 + 單行策略（略放大） */
-    .experience-card .meta{
-      display:flex;align-items:center;gap:8px;flex-wrap:nowrap;overflow:hidden
-    }
-    .experience-card .tag{
-      display:inline-flex;align-items:center;white-space:nowrap;
-      font-size:0.9rem;font-weight:600;
-      padding:0.26rem 0.65rem;border-radius:8px;border:1.5px solid #E9C46A;
-      background:#F7F5F2;color:#2D6A4F;flex:0 0 auto
-    }
-    .experience-card .more-tag{
-      display:inline-flex;align-items:center;white-space:nowrap;
-      font-size:0.9rem;font-weight:700;padding:0.26rem 0.6rem;border-radius:8px;
-      border:1.5px dashed #E9C46A;background:#FFF7E6;color:#2D6A4F;flex:0 0 auto
+    .hero-sub {
+      font-size: 1rem;
+      opacity: 0.96;
+      max-width: 640px;
     }
 
-    .filter-btn{
-      padding:.8rem 1.8rem;background:#F7F5F2;border:2px solid #E9C46A;border-radius:25px;cursor:pointer;transition:.3s;
-      font-size:1rem;font-weight:600;color:#2D6A4F;position:relative
+    /* Filter bar */
+    .filter-bar {
+      max-width: var(--max-width);
+      margin: 0.8rem auto 0;
+      padding: 0.6rem 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+      color: #fdfdfd;
+      font-size: 0.85rem;
+      opacity: 0.96;
     }
-    .filter-btn .count{font-size:.85rem;opacity:.7;margin-left:.3rem}
-    .filter-btn:hover{background:#E9C46A;color:#fff;transform:translateY(-2px);box-shadow:0 4px 10px rgba(233,196,106,.3)}
-    .filter-btn.active{background:linear-gradient(135deg,#2D6A4F,#40916C);color:#fff;border-color:#2D6A4F;box-shadow:0 4px 15px rgba(45,106,79,.3)}
-
-    .filter-results{text-align:center;color:#2D6A4F;margin:1.5rem 0;font-size:1.3rem;font-weight:800}
-    .loading{text-align:center;padding:4rem;font-size:1.3rem;color:#2D6A4F;font-weight:800}
-
-    /* 卡片 */
-    .experiences-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:2.5rem;margin-top:2rem}
-    .experience-card{
-      background:#fff;border-radius:15px;overflow:hidden;border:3px solid #E9C46A;box-shadow:0 4px 15px rgba(233,196,106,.2);
-      transition:all .4s cubic-bezier(.4,0,.2,1);cursor:pointer;opacity:0;transform:translateY(30px);
-      text-decoration:none;color:inherit;display:block
+    .filter-label {
+      font-weight: 700;
     }
-    .experience-card.visible{opacity:1;transform:translateY(0)}
-    .experience-card:hover{transform:translateY(-15px) scale(1.02);box-shadow:0 15px 50px rgba(233,196,106,.5);border-color:#F4845F}
-
-    .experience-card .image{
-      width:100%;height:280px;background:linear-gradient(135deg,#2D6A4F,#40916C);
-      display:flex;align-items:center;justify-content:center;color:#fff;font-size:4.5rem;overflow:hidden;position:relative
+    .filter-select,
+    .search-input {
+      border-radius: 999px;
+      border: none;
+      padding: 0.32rem 0.8rem;
+      font-size: 0.82rem;
+      outline: none;
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      min-width: 80px;
     }
-    .experience-card .image img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
-    .experience-card:hover .image img{transform:scale(1.15)}
-    .experience-card .image::after{
-      content:'';position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(transparent,rgba(0,0,0,.4));opacity:0;transition:opacity .3s
+    .filter-select option { color: #222; }
+    .search-input::placeholder { color: rgba(255,255,255,0.85); }
+
+    /* Cards */
+    .page {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 1.8rem 1.5rem 3rem;
     }
-    .experience-card:hover .image::after{opacity:1}
-    .experience-card .image::before{
-      content:'點擊查看 Click to View →';position:absolute;bottom:20px;left:50%;transform:translateX(-50%);
-      color:#fff;font-size:1.1rem;font-weight:800;opacity:0;transition:opacity .3s;text-shadow:2px 2px 4px rgba(0,0,0,.5);z-index:2
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.4rem;
     }
-    .experience-card:hover .image::before{opacity:1}
-    .experience-card .content{padding:2rem}
-    .experience-card .title{font-size:1.5rem;font-weight:800;margin-bottom:.5rem;color:#2D6A4F;transition:color .3s}
-    .experience-card:hover .title{color:#F4845F}
-    .experience-card .subtitle{font-size:1rem;color:#666;margin-bottom:1rem}
-    .experience-card .description{color:#555;margin-bottom:1.5rem;line-height:1.7;font-size:1.05rem}
 
-    .footer{background:linear-gradient(135deg,#2D6A4F,#40916C);color:#fff;text-align:center;padding:2rem;margin-top:4rem}
-    .footer p{font-size:1.1rem}
+    .exp-card {
+      position: relative;
+      background: #fff;
+      border-radius: 14px;
+      border: 1.5px solid #E5DECF;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.22s;
+      text-decoration: none;
+      color: var(--green);
+    }
+    .exp-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(45,106,79,0.14);
+      border-color: var(--accent-soft);
+    }
 
-    /* 動畫 */
-    @keyframes fadeInUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+    .exp-thumb-wrap {
+      position: relative;
+      width: 100%;
+      padding-top: 62%;
+      overflow: hidden;
+      background: #ddd;
+    }
+    .exp-thumb {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.35s;
+    }
+    .exp-card:hover .exp-thumb {
+      transform: scale(1.04);
+    }
+    .exp-tag-top {
+      position: absolute;
+      left: 0.7rem;
+      bottom: 0.6rem;
+      padding: 0.22rem 0.6rem;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      font-size: 0.7rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.22rem;
+    }
 
-    /* 手機適配（上方僅顯示英文） */
-    @media (max-width:768px){
-      .floating-nav{left:10px;padding:.5rem}
-      .floating-nav a{width:40px;height:40px;font-size:1.2rem;margin:.3rem 0}
-      .back-to-top{right:15px;bottom:15px;width:50px;height:50px;font-size:1.2rem}
-      .header{padding:3.5rem 1rem}
-      .header h1{font-size:2rem}
-      .header .subtitle{display:none}           /* 手機：大標只留英文 */
-      .header.shrink .title-compact{font-size:1rem}
+    .exp-body {
+      padding: 0.85rem 0.95rem 0.95rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .exp-title-zh {
+      font-size: 1.02rem;
+      font-weight: 800;
+      color: var(--green);
+      line-height: 1.35;
+    }
+    .exp-title-en {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #4a7b60;
+      line-height: 1.3;
+    }
+    .exp-desc {
+      font-size: 0.82rem;
+      color: #555;
+      margin-top: 0.15rem;
+      line-height: 1.5;
+    }
+    .exp-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      margin-top: 0.3rem;
+    }
+    .exp-tag {
+      padding: 0.18rem 0.5rem;
+      border-radius: 999px;
+      background: #F7F5F2;
+      border: 1px solid #E9C46A;
+      font-size: 0.7rem;
+      color: #566;
+    }
+    .exp-more {
+      margin-top: auto;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.18rem;
+    }
 
-      .container{padding:1rem}
-      .search-filter-section{padding:1.5rem}
-      .search-box{flex-direction:column}
-      .search-input{width:100%}
-      .search-btn{width:100%}
-      .experiences-grid{grid-template-columns:1fr;gap:2rem}
-      .experience-card .image{height:220px;font-size:3.5rem}
-      .experience-card .title{font-size:1.3rem}
-      .experience-card .content{padding:1.5rem}
+    .empty {
+      margin-top: 2rem;
+      font-size: 0.95rem;
+      color: #777;
+      text-align: center;
+    }
 
-      .experience-card .tag,
-      .experience-card .more-tag{
-        font-size:0.82rem;padding:0.22rem 0.55rem;border-radius:8px
+    .footer {
+      background: linear-gradient(135deg,#2D6A4F,#40916C);
+      color: #fff;
+      text-align: center;
+      padding: 2.4rem 2rem;
+    }
+    .footer a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+    }
+    .footer a:hover { text-decoration: underline; }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      .hero {
+        padding: calc(var(--header-height) + 1.6rem) 1rem 0.8rem;
+      }
+      .hero-title {
+        font-size: 1.7rem;
+      }
+      .hero-sub {
+        font-size: 0.9rem;
+      }
+      .filter-bar {
+        padding: 0.4rem 0;
+        gap: 0.4rem;
+        font-size: 0.8rem;
+      }
+      .filter-select,
+      .search-input {
+        font-size: 0.78rem;
+        padding: 0.26rem 0.7rem;
+      }
+      .page {
+        padding: 1.6rem 1rem 2.4rem;
+      }
+      .back-to-top {
+        right: 16px;
+        bottom: 16px;
+        width: 48px;
+        height: 48px;
+        font-size: 1.2rem;
       }
     }
   </style>
 </head>
 <body>
-  <!-- 浮動導覽 -->
-  <nav class="floating-nav">
-    <a href="index.html" title="首頁">🏠</a>
-    <a href="experiences.html" title="體驗">🌟</a>
-    <a href="index.html#about" title="關於">ℹ️</a>
-    <a href="index.html#contact" title="聯絡">✉️</a>
-  </nav>
-
-  <!-- 回頂按鈕 -->
-  <button class="back-to-top" onclick="scrollToTop()">↑</button>
-
-  <!-- Hero / Shrink header -->
-  <header class="header" id="pageHeader">
-    <div class="header-inner">
-      <div class="titles-large">
-        <h1>Authentic Taiwan Experiences</h1>
-        <p class="subtitle">真實的台灣體驗</p>
-      </div>
-      <div class="title-compact" id="compactTitle">
-        <span class="compact-en">Authentic Taiwan Experiences</span>
-        <span class="compact-sep">　｜　</span>
-        <span class="compact-zh">真實的台灣體驗</span>
-      </div>
+  <!-- Header -->
+  <header class="site-header">
+    <div class="brand">
+      <a href="index.html">
+        <div class="brand-en">LOCAL FRIENDS TAIWAN</div>
+        <div class="brand-zh">台灣在地連線</div>
+      </a>
     </div>
+    <nav class="main-nav" id="mainNav">
+      <a href="experiences.html" class="active"><span class="en">Experiences</span><span class="zh">體驗列表</span></a>
+      <a href="about.html"><span class="en">About</span><span class="zh">關於我們</span></a>
+      <a href="faq.html"><span class="en">FAQ</span><span class="zh">常見問題</span></a>
+      <a href="hosts.html"><span class="en">For Hosts</span><span class="zh">成為在地朋友</span></a>
+      <a href="notes.html"><span class="en">Trail Notes</span><span class="zh">探路筆記</span></a>
+      <a href="contact.html"><span class="en">Contact</span><span class="zh">聯繫我們</span></a>
+    </nav>
+    <button class="nav-toggle" id="navToggle" aria-label="切換導覽選單">☰</button>
   </header>
 
-  <!-- 觀測縮放用哨兵（避免閃動） -->
-  <div id="headerSentinel" style="height:1px;"></div>
+  <!-- Back to top -->
+  <button class="back-to-top" onclick="scrollToTop()">↑</button>
 
-  <!-- 純文字公告（不加框） -->
-  <div class="notice-text">
-    <p><strong>ℹ️ Independent Information Platform</strong><br>
-      We provide curated information and contact details. Please reach out to organizations directly to arrange your visit.
-      We can help with translation and booking assistance if needed.<br>
-      我們提供策展資訊與聯絡方式。請直接聯繫主辦單位安排參訪。如需翻譯或預約協助，我們可以幫忙。
-    </p>
-  </div>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-inner">
+      <h1 class="hero-title">Experiences 體驗列表</h1>
+      <p class="hero-sub">
+        Curated, community-rooted experiences hosted by real people in Taiwan.
+        No packaged tours, no scripts — just local friends sharing their world.
+      </p>
 
-  <div class="container">
-    <!-- 搜尋與篩選區 -->
-    <div class="search-filter-section">
-      <div class="search-box">
-        <input type="text" class="search-input" id="searchInput" placeholder="🔍 搜尋體驗名稱或關鍵字... Search experiences...">
-        <button class="search-btn" onclick="performSearch()">搜尋 Search</button>
-      </div>
-
-      <div class="filter-section">
-        <h3>🔍 篩選體驗 Filter Experiences</h3>
-        <div class="filter-group">
-          <label>地區 Region:</label>
-          <div class="filter-buttons" id="regionFilters">
-            <button class="filter-btn active" data-type="region" data-value="all" onclick="handleFilterClick('region','all',this)">全部 All</button>
-          </div>
-        </div>
-        <div class="filter-group">
-          <label>分類 Category:</label>
-          <div class="filter-buttons" id="categoryFilters">
-            <button class="filter-btn active" data-type="category" data-value="all" onclick="handleFilterClick('category','all',this)">全部 All</button>
-          </div>
-        </div>
+      <div class="filter-bar">
+        <span class="filter-label">Filter / Search：</span>
+        <select id="regionFilter" class="filter-select">
+          <option value="">All Regions</option>
+        </select>
+        <select id="categoryFilter" class="filter-select">
+          <option value="">All Categories</option>
+        </select>
+        <input id="searchInput" class="search-input" type="search"
+               placeholder="Search by name / keyword 搜尋關鍵字">
       </div>
     </div>
+  </section>
 
-    <div class="filter-results" id="filterResults"></div>
-    <div id="loading" class="loading">載入體驗中... Loading experiences...</div>
-    <div id="experiences" class="experiences-grid"></div>
-  </div>
+  <!-- Experiences list -->
+  <main class="page">
+    <div id="cards" class="cards-grid"></div>
+    <div id="emptyState" class="empty" style="display:none;">
+      找不到符合條件的體驗。<br>
+      No experiences match your current filters.
+    </div>
+  </main>
 
+  <!-- Footer -->
   <footer class="footer">
-    <p><strong>Local Friends Taiwan 台灣在地連線</strong></p>
-    <p style="margin-top:1rem;opacity:.9;">Your local friend in Taiwan | 你的台灣在地朋友</p>
+    <p style="font-size:1.2rem;margin-bottom:0.6rem;"><strong>Local Friends Taiwan 台灣在地連線</strong></p>
+    <p>Your local friend in Taiwan | 當你需要一位台灣在地的朋友</p>
+    <p style="margin-top:0.8rem;">
+      <a href="https://github.com/PN0929/meet-taiwan" target="_blank">📂 GitHub Project</a>
+    </p>
+    <p style="margin-top:1.2rem;opacity:0.9;font-size:0.95rem;">
+      © 2025 Local Friends Taiwan. Independent Information Platform.
+    </p>
   </footer>
 
   <script>
-    const SHEET_ID = '1GD4gg3sGIfX7KGrJkYCL10wzvwZh5FMWQPGd9NVTQyc';
+    const SHEET_ID  = '1GD4gg3sGIfX7KGrJkYCL10wzvwZh5FMWQPGd9NVTQyc';
     const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
 
-    const categoryEmojis = {'飲食文化':'🍜','社區生活':'🏘️','建築藝術':'🏛️','傳統工藝':'🎨','環境生態':'🌱','農村生活':'🌾','其他':'📍'};
-    const regionEmojis   = {'北台灣':'🏙️','中台灣':'🏔️','南臺灣':'🌴','花東':'🌊','離島':'🏝️'};
+    let experiences = [];
 
-    let allExperiences = [];
-    let currentFilters = { region:'all', category:'all', searchTerm:'' };
+    // Nav toggle (mobile)
+    document.addEventListener('DOMContentLoaded', () => {
+      const navToggle = document.getElementById('navToggle');
+      const mainNav = document.getElementById('mainNav');
+      if (navToggle && mainNav) {
+        navToggle.addEventListener('click', () => {
+          const isOpen = mainNav.classList.toggle('open');
+          navToggle.classList.toggle('open', isOpen);
+        });
+        mainNav.querySelectorAll('a').forEach(link => {
+          link.addEventListener('click', () => {
+            if (mainNav.classList.contains('open')) {
+              mainNav.classList.remove('open');
+              navToggle.classList.remove('open');
+            }
+          });
+        });
+      }
 
-    /* --- 以 IntersectionObserver 控制縮小（避免閃動） --- */
-    const headerEl = document.getElementById('pageHeader');
-    const sentinel = document.getElementById('headerSentinel');
-
-    // 單一觀測器 + rootMargin：超過 120px 才算「離開」→ 縮小；回到 0px 內恢復
-    const shrinkObserver = new IntersectionObserver((entries)=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting){
-          // 哨兵在視口內（含 rootMargin）：恢復大版
-          headerEl.classList.remove('shrink');
-        }else{
-          // 哨兵離開（超過 120px）：縮小
-          headerEl.classList.add('shrink');
-        }
-      });
-    }, {root:null, threshold:0, rootMargin:'-120px 0px 0px 0px'});
-    shrinkObserver.observe(sentinel);
-
-    /* 手機只顯示英文（compact 行） */
-    function syncCompactLanguage(){
-      const isMobile = window.matchMedia('(max-width: 768px)').matches;
-      const zh = document.querySelector('.compact-zh');
-      const sep = document.querySelector('.compact-sep');
-      if(!zh || !sep) return;
-      if(isMobile){ zh.style.display='none'; sep.style.display='none'; }
-      else{ zh.style.display='inline'; sep.style.display='inline'; }
-    }
-    window.addEventListener('resize', syncCompactLanguage);
-    document.addEventListener('DOMContentLoaded', syncCompactLanguage);
+      loadExperiences();
+    });
 
     async function loadExperiences(){
       try{
-        const response = await fetch(SHEET_URL);
-        const csvText = await response.text();
-        const rows = parseCSV(csvText);
+        const resp = await fetch(SHEET_URL);
+        const txt = await resp.text();
+        const rows = parseCSV(txt);
         const headers = rows[0];
         const data = rows.slice(1);
 
-        // 只保留「已發布」
-        allExperiences = data.map(row=>{
-          const o={}; headers.forEach((h,i)=>o[h]=row[i]||''); return o;
-        }).filter(exp => exp['Status'] === '已發布');
-
-        createFilterButtons();
-        displayExperiences(allExperiences);
-      }catch(err){
-        console.error('載入失敗:', err);
-        document.getElementById('loading').innerHTML = `
-          <p style="color:#2D6A4F;">載入體驗時發生錯誤 Error loading experiences</p>
-          <p style="margin-top:1rem;font-size:1rem;color:#555;">請確認 Google Sheets 已設為「知道連結的任何人都可以查看」</p>`;
-      }
-    }
-
-    function createFilterButtons(){
-      const regions = [...new Set(allExperiences.map(exp=>exp['地區']).filter(Boolean))];
-      const regionContainer = document.getElementById('regionFilters');
-      const regionCounts = {};
-      allExperiences.forEach(exp=>{ if(exp['地區']) regionCounts[exp['地區']] = (regionCounts[exp['地區']]||0)+1; });
-      regions.forEach(region=>{
-        const btn = document.createElement('button');
-        btn.className='filter-btn'; btn.dataset.type='region'; btn.dataset.value=region;
-        btn.innerHTML = `${regionEmojis[region]||'📍'} ${region} <span class="count">(${regionCounts[region]||0})</span>`;
-        btn.onclick = ()=>handleFilterClick('region', region, btn);
-        regionContainer.appendChild(btn);
-      });
-
-      const categories = [...new Set(allExperiences.map(exp=>exp['主要分類']).filter(Boolean))];
-      const categoryContainer = document.getElementById('categoryFilters');
-      const categoryCounts = {};
-      allExperiences.forEach(exp=>{ if(exp['主要分類']) categoryCounts[exp['主要分類']] = (categoryCounts[exp['主要分類']]||0)+1; });
-      categories.forEach(category=>{
-        const btn = document.createElement('button');
-        btn.className='filter-btn'; btn.dataset.type='category'; btn.dataset.value=category;
-        btn.innerHTML = `${categoryEmojis[category]||'📍'} ${category} <span class="count">(${categoryCounts[category]||0})</span>`;
-        btn.onclick = ()=>handleFilterClick('category', category, btn);
-        categoryContainer.appendChild(btn);
-      });
-    }
-
-    function handleFilterClick(type,value,clickedBtn){
-      const container = type==='region' ? document.getElementById('regionFilters') : document.getElementById('categoryFilters');
-      container.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
-      clickedBtn.classList.add('active');
-      currentFilters[type]=value;
-      filterAndDisplay();
-    }
-
-    function performSearch(){
-      currentFilters.searchTerm = document.getElementById('searchInput').value.toLowerCase();
-      filterAndDisplay();
-    }
-    document.addEventListener('DOMContentLoaded', ()=>{
-      document.getElementById('searchInput').addEventListener('keypress', e=>{
-        if(e.key==='Enter') performSearch();
-      });
-    });
-
-    function filterAndDisplay(){
-      let filtered = allExperiences;
-      if(currentFilters.searchTerm){
-        filtered = filtered.filter(exp=>{
-          const text = `
-            ${exp['體驗名稱(中)']} 
-            ${exp['體驗名稱(英)']} 
-            ${exp['一句話描述(中)']} 
-            ${exp['地區']} 
-            ${exp['主要分類']}
-          `.toLowerCase();
-          return text.includes(currentFilters.searchTerm);
+        experiences = data.map(r=>{
+          const o={};
+          headers.forEach((h,i)=>o[h]=r[i]||'');
+          return o;
+        }).filter(o=>{
+          const flag = (o['顯示'] || o['Publish'] || '').toString().trim().toLowerCase();
+          return flag !== 'no' && flag !== 'hide' && flag !== '0';
         });
-      }
-      if(currentFilters.region!=='all')   filtered = filtered.filter(exp=>exp['地區']===currentFilters.region);
-      if(currentFilters.category!=='all') filtered = filtered.filter(exp=>exp['主要分類']===currentFilters.category);
 
-      updateFilterResults(filtered.length);
-      displayExperiences(filtered);
-    }
-
-    function updateFilterResults(count){
-      const div = document.getElementById('filterResults');
-      if(currentFilters.region==='all' && currentFilters.category==='all' && !currentFilters.searchTerm){
-        div.textContent = '';
-      }else{
-        div.textContent = `找到 ${count} 個體驗 Found ${count} experiences`;
+        buildFilters(experiences);
+        renderCards();
+      }catch(err){
+        console.error(err);
+        const cards = document.getElementById('cards');
+        cards.innerHTML = `<div class="empty">⚠️ 無法載入體驗列表 Error loading experiences.</div>`;
       }
     }
 
     function parseCSV(csv){
       const lines = csv.split('\n');
       return lines.map(line=>{
-        const values=[]; let cur=''; let inQ=false;
-        for(let i=0;i<line.length;i++){
-          const ch=line[i];
-          if(ch==='"'){ inQ=!inQ; }
-          else if(ch===',' && !inQ){ values.push(cur.trim()); cur=''; }
-          else{ cur+=ch; }
+        const values=[];
+        let cur=''; let inQ=false;
+        for(const ch of line){
+          if(ch==='"') inQ=!inQ;
+          else if(ch===',' && !inQ){
+            values.push(cur.trim());
+            cur='';
+          }else{
+            cur+=ch;
+          }
         }
         values.push(cur.trim());
         return values;
       });
     }
 
-    function displayExperiences(experiences){
-      const container = document.getElementById('experiences');
-      const loading = document.getElementById('loading');
-      loading.style.display='none';
-      container.innerHTML='';
+    function buildFilters(list){
+      const regionSet = new Set();
+      const catSet = new Set();
+      list.forEach(exp=>{
+        if(exp['地區']) regionSet.add(exp['地區'].trim());
+        if(exp['主要分類']) catSet.add(exp['主要分類'].trim());
+      });
 
-      if(experiences.length===0){
-        container.innerHTML = `
-          <div style="text-align:center;padding:4rem;grid-column:1/-1;">
-            <p style="font-size:1.8rem;color:#2D6A4F;font-weight:800;margin-bottom:1rem;">沒有符合條件的體驗</p>
-            <p style="color:#555;font-size:1.2rem;">No experiences match your filters</p>
-          </div>`;
+      const regionSel = document.getElementById('regionFilter');
+      const catSel = document.getElementById('categoryFilter');
+      regionSet.forEach(v=>{
+        const opt=document.createElement('option');
+        opt.value=v; opt.textContent=v;
+        regionSel.appendChild(opt);
+      });
+      catSet.forEach(v=>{
+        const opt=document.createElement('option');
+        opt.value=v; opt.textContent=v;
+        catSel.appendChild(opt);
+      });
+
+      regionSel.addEventListener('change', renderCards);
+      catSel.addEventListener('change', renderCards);
+      document.getElementById('searchInput').addEventListener('input', renderCards);
+    }
+
+    function getCover(exp){
+      const raw = (exp['封面圖連結'] || exp['照片集'] || exp['圖片'] || '').replace(/，/g, ',');
+      const links = raw.split(/[,\s]+/).map(s=>s.trim()).filter(Boolean);
+      return links[0] || '';
+    }
+
+    function renderCards(){
+      const cards = document.getElementById('cards');
+      const empty = document.getElementById('emptyState');
+      cards.innerHTML = '';
+
+      const region = document.getElementById('regionFilter').value;
+      const cat = document.getElementById('categoryFilter').value;
+      const q = document.getElementById('searchInput').value.trim().toLowerCase();
+
+      const filtered = experiences.filter(exp=>{
+        if(region && (exp['地區']||'').trim() !== region) return false;
+        if(cat && (exp['主要分類']||'').trim() !== cat) return false;
+
+        if(q){
+          const text = [
+            exp['體驗名稱(中)'], exp['體驗名稱(英)'],
+            exp['一句話描述(中)'], exp['一句話描述(英)'],
+            exp['地區'], exp['主要分類'], exp['標籤']
+          ].join(' ').toLowerCase();
+          if(!text.includes(q)) return false;
+        }
+        return true;
+      });
+
+      if(!filtered.length){
+        empty.style.display = 'block';
         return;
       }
+      empty.style.display = 'none';
 
-      experiences.forEach((exp, idx)=>{
-        const card = createExperienceCard(exp);
-        card.style.transitionDelay = `${idx*0.1}s`;
-        container.appendChild(card);
+      filtered.forEach(exp=>{
+        const id = (exp['ID'] || '').trim();
+        const url = id ? `experience-detail.html?id=${encodeURIComponent(id)}` : '#';
+        const cover = getCover(exp);
 
-        // 建立後壓縮標籤成單行 +N
-        setupTagCompression(card);
+        const nameZh = (exp['體驗名稱(中)'] || '').trim();
+        const nameEn = (exp['體驗名稱(英)'] || '').trim();
+        const line = (exp['一句話描述(中)'] || exp['一句話描述(英)'] || '').trim();
+        const regionText = (exp['地區'] || '').trim();
+        const catText = (exp['主要分類'] || '').trim();
 
-        setTimeout(()=>card.classList.add('visible'), 100 + idx*100);
+        const card = document.createElement('a');
+        card.className = 'exp-card';
+        card.href = url;
+
+        card.innerHTML = `
+          <div class="exp-thumb-wrap">
+            ${cover
+              ? `<img src="${cover}" alt="${nameZh || nameEn || 'experience cover'}"
+                       class="exp-thumb"
+                       onerror="this.style.display='none';this.parentElement.style.background='#e5e5e5';">`
+              : ``
+            }
+            ${(regionText || catText)
+              ? `<div class="exp-tag-top">
+                  ${regionText ? `<span>📍 ${regionText}</span>` : ``}
+                  ${!regionText && catText ? `<span>${catText}</span>` : ``}
+                 </div>`
+              : ``}
+          </div>
+          <div class="exp-body">
+            <div class="exp-title-zh">${nameZh || '未命名體驗 Untitled Experience'}</div>
+            ${nameEn ? `<div class="exp-title-en">${nameEn}</div>` : ``}
+            ${line ? `<div class="exp-desc">${line}</div>` : ``}
+            <div class="exp-tags">
+              ${catText ? `<span class="exp-tag">${catText}</span>` : ``}
+              ${exp['標籤']
+                ? exp['標籤'].split(/[,\s、]+/).filter(Boolean).slice(0,3).map(t=>`<span class="exp-tag">${t}</span>`).join('')
+                : ``}
+            </div>
+            ${id
+              ? `<div class="exp-more">View details 查看體驗詳情 →</div>`
+              : ``}
+          </div>
+        `;
+        cards.appendChild(card);
       });
     }
 
-    function createExperienceCard(exp){
-      const card = document.createElement('a');
-      card.className='experience-card';
-      card.href=`experience-detail.html?id=${exp['ID']}`;
-
-      const emoji = categoryEmojis[exp['主要分類']] || regionEmojis[exp['地區']] || '📍';
-      const hasImage = exp['卡片圖片'] && exp['卡片圖片'].trim()!=='';      
-
-      card.innerHTML = `
-        <div class="image">
-          ${hasImage
-            ? `<img src="${exp['卡片圖片']}" alt="${exp['體驗名稱(中)']}" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\\'font-size:4.5rem\\'>${emoji}</span>'">`
-            : emoji}
-        </div>
-        <div class="content">
-          <div class="title">${exp['體驗名稱(中)']}</div>
-          ${exp['體驗名稱(英)'] ? `<div class="subtitle">${exp['體驗名稱(英)']}</div>` : ''}
-          <div class="description">${exp['一句話描述(中)'] || '深度文化體驗'}</div>
-          <div class="meta">
-            ${exp['地區'] ? `<span class="tag">📍 ${exp['地區']}</span>` : ''}
-            ${exp['主要分類'] ? `<span class="tag">${exp['主要分類']}</span>` : ''}
-            ${exp['難度'] ? `<span class="tag">⭐ ${exp['難度']}</span>` : ''}
-          </div>
-        </div>`;
-      return card;
-    }
-
-    /* 量測容器寬度，將放不下的標籤收成 +N */
-    function compressTagsToOneLine(metaEl){
-      if(!metaEl) return;
-      metaEl.querySelectorAll('.more-tag').forEach(n => n.remove());
-      const chips = Array.from(metaEl.querySelectorAll('.tag'));
-      if(chips.length === 0) return;
-
-      chips.forEach(ch => { ch.style.display = 'inline-flex'; });
-
-      const available = metaEl.clientWidth;
-      let used = 0;
-      let visibleCount = 0;
-      const reserveMore = 52; // 稍加大，以符合較大的字與 padding
-
-      for(let i=0; i<chips.length; i++){
-        const ch = chips[i];
-        const w = ch.offsetWidth + 8; // chip 寬 + gap (8px)
-        if(i < chips.length - 1){
-          if(used + w + reserveMore <= available){ used += w; visibleCount++; }
-          else{ break; }
-        }else{
-          if(used + w <= available){ used += w; visibleCount++; }
-        }
-      }
-
-      if(visibleCount >= chips.length) return;
-
-      const hidden = chips.slice(visibleCount);
-      hidden.forEach(ch => ch.style.display = 'none');
-
-      const more = document.createElement('span');
-      more.className = 'more-tag';
-      more.textContent = `+${hidden.length}`;
-      more.title = hidden.map(h => h.textContent.trim()).join('、');
-
-      metaEl.appendChild(more);
-    }
-
-    function setupTagCompression(cardEl){
-      const metaRows = cardEl.querySelectorAll('.meta');
-      metaRows.forEach(m => compressTagsToOneLine(m));
-    }
-
-    // 視窗尺寸改變時重新計算所有卡片的 tag 壓縮
-    window.addEventListener('resize', ()=>{
-      document.querySelectorAll('.experience-card .meta').forEach(m => compressTagsToOneLine(m));
-      syncCompactLanguage();
+    // Back to top
+    window.addEventListener('scroll', () => {
+      const b = document.querySelector('.back-to-top');
+      if (!b) return;
+      if (window.pageYOffset > 300) b.classList.add('show');
+      else b.classList.remove('show');
     });
-
-    /* 回頂 */
-    function scrollToTop(){ window.scrollTo({top:0,behavior:'smooth'}) }
-    window.addEventListener('scroll', ()=>{
-      const b=document.querySelector('.back-to-top');
-      if(window.pageYOffset>300) b.classList.add('show'); else b.classList.remove('show');
-    });
-
-    window.addEventListener('DOMContentLoaded', ()=>{
-      syncCompactLanguage();
-      loadExperiences();
-    });
+    function scrollToTop(){
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   </script>
 </body>
 </html>
