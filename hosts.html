@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>成為在地朋友 For Hosts - Local Friends Taiwan</title>
+  <meta name="description" content="如果你是職人、團隊或社區單位，歡迎成為 Local Friends Taiwan 的在地朋友。">
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{overflow-x:hidden}
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft JhengHei",sans-serif;
+      line-height:1.7;
+      color:#2D6A4F;
+      background:#F7F5F2;
+      -webkit-font-smoothing:antialiased;
+      text-rendering:optimizeLegibility;
+      word-break:keep-all;
+      overflow-wrap:anywhere;
+    }
+
+    .floating-nav{
+      position:fixed;left:20px;top:50%;transform:translateY(-50%);
+      z-index:1000;background:#fff;padding:1rem;border-radius:30px;
+      box-shadow:0 4px 20px rgba(45,106,79,.2);border:2px solid #2D6A4F;
+    }
+    .floating-nav a{
+      display:block;width:50px;height:50px;margin:.5rem 0;border-radius:50%;
+      background:linear-gradient(135deg,#2D6A4F,#40916C);color:#fff;
+      text-decoration:none;display:flex;align-items:center;justify-content:center;
+      font-size:1.5rem;transition:.3s;
+    }
+    .floating-nav a:hover{transform:scale(1.15);background:linear-gradient(135deg,#40916C,#52B788)}
+
+    .hero{
+      padding:5.3rem 1.5rem 3rem;
+      text-align:center;
+      background:linear-gradient(135deg,#2D6A4F,#40916C);
+      color:#fff;
+    }
+    .hero h1{font-size:2.5rem;font-weight:800;margin-bottom:.4rem}
+    .hero p{font-size:1.02rem;opacity:.95;max-width:760px;margin:0 auto}
+
+    .container{
+      max-width:1000px;
+      margin:0 auto;
+      padding:3rem 1.8rem 4rem;
+    }
+
+    .block{
+      background:#fff;
+      border-radius:16px;
+      border:2px solid #E9C46A;
+      box-shadow:0 4px 18px rgba(233,196,106,.16);
+      padding:2rem 1.8rem;
+      margin-bottom:1.6rem;
+    }
+
+    .block h2{
+      font-size:1.7rem;
+      font-weight:800;
+      margin-bottom:.8rem;
+      color:#2D6A4F;
+    }
+    .block p{
+      font-size:.98rem;
+      color:#444;
+      margin-bottom:.6rem;
+    }
+    .block ul{
+      margin:.3rem 0 .8rem 1.2rem;
+      font-size:.96rem;
+      color:#444;
+    }
+    .block li{margin:.2rem 0}
+
+    .pill{
+      display:inline-block;
+      padding:.25rem .85rem;
+      border-radius:999px;
+      background:#F7F5F2;
+      border:1px solid #E9C46A;
+      font-size:.78rem;
+      color:#2D6A4F;
+      margin:.1rem .3rem .2rem 0;
+    }
+
+    .cta{
+      margin-top:.8rem;
+      font-size:.96rem;
+    }
+    .cta a{
+      color:#F4845F;
+      font-weight:600;
+      text-decoration:none;
+    }
+    .cta a:hover{text-decoration:underline}
+
+    .footer{
+      background:linear-gradient(135deg,#2D6A4F,#40916C);
+      color:#fff;
+      text-align:center;
+      padding:2.2rem 1.5rem;
+      font-size:.95rem;
+      margin-top:1rem;
+    }
+
+    @media(max-width:768px){
+      .floating-nav{
+        left:10px;
+        padding:.5rem;
+      }
+      .floating-nav a{
+        width:40px;height:40px;font-size:1.2rem;margin:.3rem 0;
+      }
+      .hero{
+        padding:4.1rem 1.4rem 2.5rem;
+      }
+      .hero h1{font-size:2.1rem}
+      .hero p{font-size:.96rem}
+      .container{
+        padding:2.5rem 1.2rem 3.2rem;
+      }
+      .block{
+        padding:1.6rem 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="floating-nav">
+    <a href="index.html" title="首頁">🏠</a>
+    <a href="experiences.html" title="體驗">🌟</a>
+    <a href="about.html" title="關於我們">ℹ️</a>
+    <a href="faq.html" title="常見問題">❓</a>
+    <a href="hosts.html" title="成為在地朋友">👥</a>
+    <a href="contact.html" title="聯繫我們">✉️</a>
+  </nav>
+
+  <section class="hero">
+    <h1>成為在地朋友 For Hosts</h1>
+    <p>如果你相信真實交流、願意好好對待來訪的每個人，也關心自己的社區，我們很想認識你。</p>
+  </section>
+
+  <main class="container">
+    <section class="block">
+      <h2>我們在找什麼樣的夥伴？</h2>
+      <p>你可能是：</p>
+      <ul>
+        <li>長期經營空間的店家、工作室、書店、咖啡館、獨立劇場。</li>
+        <li>社區組織、合作社、文化協會、永續行動團隊。</li>
+        <li>專注在工藝、飲食、農事、生態、藝術等領域的職人。</li>
+      </ul>
+      <p>我們不追求「完美包裝」，而是：</p>
+      <span class="pill">真實分享</span>
+      <span class="pill">尊重勞動</span>
+      <span class="pill">互相學習</span>
+      <span class="pill">在地連結</span>
+      <span class="pill">多元友善</span>
+    </section>
+
+    <section class="block">
+      <h2>我們可以提供什麼？</h2>
+      <ul>
+        <li>將你的空間與行動，以清楚誠實的方式介紹給對的旅人。</li>
+        <li>協助中英文資訊整理，避免誤解與過度期待。</li>
+        <li>當你不確定怎麼設計體驗時，一起討論更尊重自身節奏的做法。</li>
+        <li>在遇到國際訪客時，成為翻譯與溝通的伙伴（依實際情況協調）。</li>
+      </ul>
+    </section>
+
+    <section class="block">
+      <h2>你可以期待我們的合作方式</h2>
+      <ul>
+        <li>不強迫你接單、不要求「KPI」。你有權說不。</li>
+        <li>我們鼓勵你設定合理費用，保障自己的時間與工作。</li>
+        <li>若發現價值觀不合或有爭議，我們會坦白溝通，也可能選擇暫停合作。</li>
+      </ul>
+      <p class="cta">
+        想聊聊你的空間或提案嗎？請透過
+        <a href="contact.html">聯繫我們 Contact Page</a>
+        告訴我們你是誰、在哪裡、正在做什麼，我們會與你約時間深入了解。
+      </p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p><strong>Local Friends Taiwan 台灣在地連線</strong></p>
+    <p style="margin-top:.4rem;">Your local friend in Taiwan | 當你需要一位台灣在地的朋友</p>
+    <p style="margin-top:.8rem;opacity:.9;">© 2025 Local Friends Taiwan. Independent Information Platform.</p>
+  </footer>
+</body>
+</html>
