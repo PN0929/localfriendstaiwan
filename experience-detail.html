@@ -280,7 +280,7 @@
       font-size:.97rem;
       color:#333;
       line-height:1.85;
-      overflow-x:hidden; /* 關鍵：避免內容橫向溢出框線 */
+      overflow-x:hidden; /* 防止內容橫向溢出 */
     }
     .doc-render-inner h1,
     .doc-render-inner h2,
@@ -600,9 +600,10 @@
         const data = rows.slice(1);
 
         const list = data.map((r, idx)=>{
-          const o={};
-          headers.forEach((h,i)=>o[h]=r[i]||'';
-          );
+          const o = {};
+          headers.forEach((h,i) => {
+            o[h] = r[i] || '';
+          });
           o.__rowIndex = idx;
           return o;
         });
@@ -704,7 +705,7 @@
         <div class="loading-line" style="width:50%"></div>
       `;
 
-      // 依此列的 Doc 欄位，不共用其他列
+      // 只用此列自己的 Doc 欄位
       let raw = '';
       for(const key of DOC_COLS){
         if(exp[key] && String(exp[key]).trim()){
@@ -735,38 +736,41 @@
 
         if(!main) main = tmp;
 
-        // 移除不需要的標籤
         main.querySelectorAll('script,style,header,nav,footer,link,meta').forEach(n=>n.remove());
 
         const wrapper = document.createElement('div');
         wrapper.innerHTML = main.innerHTML;
 
-        // 移除多餘 inline style / class，避免被 Google Docs 版面撐出怪高度
+        // 清理多餘 style/class，避免 Google Docs 格線撐出怪版
         wrapper.querySelectorAll('*').forEach(el => {
           const tag = el.tagName.toLowerCase();
-          if (tag === 'img') {
-            // 交給下面專門處理
-            return;
-          }
+          if (tag === 'img') return;
+
           if (['table','thead','tbody','tr','th','td'].includes(tag)) {
-            // 保留基本 table 結構，移除寬高相關 style
             el.removeAttribute('class');
             const style = el.getAttribute('style') || '';
             if (style) {
               const cleaned = style
                 .split(';')
                 .map(s => s.trim())
-                .filter(s => s && !/^width:/i.test(s) && !/^height:/i.test(s) && !/^margin(-.*)?:/i.test(s) && !/^padding(-.*)?:/i.test(s))
+                .filter(s =>
+                  s &&
+                  !/^width:/i.test(s) &&
+                  !/^height:/i.test(s) &&
+                  !/^margin(-.*)?:/i.test(s) &&
+                  !/^padding(-.*)?:/i.test(s)
+                )
                 .join('; ');
               if (cleaned) el.setAttribute('style', cleaned); else el.removeAttribute('style');
             }
             return;
           }
+
           el.removeAttribute('style');
           el.removeAttribute('class');
         });
 
-        // 處理圖片：縮進框內 & 不留巨量空白
+        // 圖片統一樣式
         wrapper.querySelectorAll('img').forEach(img=>{
           img.removeAttribute('width');
           img.removeAttribute('height');
@@ -787,7 +791,7 @@
           };
         });
 
-        // 表格加上可滾動外框
+        // 表格包一層可滾動容器
         wrapper.querySelectorAll('table').forEach(table=>{
           table.removeAttribute('width');
           table.style.width = '100%';
@@ -804,7 +808,7 @@
           el.style.maxWidth = '100%';
         });
 
-        // 移除只剩空白或 &nbsp; 的段落 / div，避免圖片下大塊空白
+        // 移除只含空白或 &nbsp; 的 p/div，避免圖片下方一大塊空白
         wrapper.querySelectorAll('p,div').forEach(el => {
           if (el.querySelector('img,table,iframe,embed')) return;
           const text = (el.textContent || '').replace(/\s|\u00A0/g,'');
@@ -825,14 +829,12 @@
     }
 
     function toFetchableDocURL(url){
-      // 若已是發佈版本
       if(/\/document\/d\/e\/[^/]+\/pub/.test(url)){
         return url.includes('?') ? url : url + '?embedded=true';
       }
       const m = url.match(/\/document\/d\/([^/]+)/);
       if(m){
         const id = m[1];
-        // 使用 export html，內容較乾淨
         return `https://docs.google.com/document/d/${id}/export?format=html`;
       }
       return url;
