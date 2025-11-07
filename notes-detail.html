@@ -182,7 +182,7 @@
       animation: fadeInUp 0.5s ease;
     }
 
-    /* Hero for Note Detail - 對齊 notes.html 與 about.html 的風格 */
+    /* Hero for Note Detail */
     .hero-note {
       padding: calc(3.2rem + var(--header-height)) 1.5rem 1.8rem;
       background: #ffffff;
@@ -206,10 +206,15 @@
       margin-bottom: 0.2rem;
       line-height: 1.35;
     }
-    .hero-meta {
+    .hero-subtitle-zh {
       font-size: 0.9rem;
       color: #7a8b80;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.3rem;
+    }
+    .hero-meta {
+      font-size: 0.88rem;
+      color: #7a8b80;
+      margin-bottom: 0.2rem;
     }
     .hero-back {
       font-size: 0.86rem;
@@ -226,7 +231,7 @@
       border-color: var(--green);
     }
 
-    /* Note content wrapper - 卡片風格對齊 notes.html */
+    /* Note content wrapper */
     .note-wrapper {
       max-width: var(--max-width);
       margin: 0 auto;
@@ -253,12 +258,44 @@
       display: block;
     }
 
+    .note-badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 0.4rem;
+    }
+    .note-badge {
+      padding: 0.16rem 0.6rem;
+      font-size: 0.75rem;
+      border-radius: 999px;
+      background: #F7F5F2;
+      border: 1px solid #E9C46A;
+      color: #566;
+    }
+
+    .note-related {
+      margin-top: 0.8rem;
+      font-size: 0.86rem;
+      color: #6a7b70;
+    }
+    .note-related a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(244,132,95,0.4);
+      padding-bottom: 1px;
+    }
+    .note-related a:hover {
+      color: var(--green);
+      border-color: var(--green);
+    }
+
     .note-content {
       font-size: 0.98rem;
       color: #444;
+      margin-top: 0.4rem;
     }
 
-    /* Google Doc 內容樣式微調，讓它貼合本站 */
+    /* 內文樣式微調 */
     .note-content h1,
     .note-content h2,
     .note-content h3,
@@ -295,21 +332,6 @@
       border-radius: 10px;
     }
 
-    .note-badge-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-      margin-bottom: 0.4rem;
-    }
-    .note-badge {
-      padding: 0.16rem 0.6rem;
-      font-size: 0.75rem;
-      border-radius: 999px;
-      background: #F7F5F2;
-      border: 1px solid #E9C46A;
-      color: #566;
-    }
-
     .note-error {
       font-size: 0.95rem;
       color: #777;
@@ -317,7 +339,7 @@
       padding: 2rem 0 0;
     }
 
-    /* 進場動畫（與 about / hosts / notes 對齊） */
+    /* 進場動畫 */
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(26px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -387,6 +409,7 @@
     <div class="hero-inner">
       <div class="hero-kicker">TRAIL NOTES · 探路筆記</div>
       <h1 id="noteTitle" class="hero-title">Loading…</h1>
+      <div id="noteTitleZh" class="hero-subtitle-zh" style="display:none;"></div>
       <div id="noteMeta" class="hero-meta"></div>
       <div class="hero-back">
         <a href="notes.html">← Back to Trail Notes 返回探路筆記列表</a>
@@ -402,6 +425,7 @@
       </div>
 
       <div class="note-badge-row" id="badgeRow" style="display:none;"></div>
+      <div id="relatedExp" class="note-related" style="display:none;"></div>
 
       <article id="noteContent" class="note-content">
         Loading content…
@@ -424,8 +448,8 @@
     const SHEET_ID = '1icnZhegrhiUdaWz_BgQK0CQ_oueDhPhZgnl3opy9PJs';
     const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
 
-    // Nav toggle (mobile)
     document.addEventListener('DOMContentLoaded', () => {
+      // Nav toggle (mobile)
       const navToggle = document.getElementById('navToggle');
       const mainNav = document.getElementById('mainNav');
       if (navToggle && mainNav) {
@@ -465,12 +489,14 @@
       const id = (params.get('id') || '').trim();
 
       const noteTitleEl = document.getElementById('noteTitle');
+      const noteTitleZhEl = document.getElementById('noteTitleZh');
       const noteMetaEl = document.getElementById('noteMeta');
       const noteContentEl = document.getElementById('noteContent');
       const noteErrorEl = document.getElementById('noteError');
       const coverWrap = document.getElementById('coverWrap');
       const coverImg = document.getElementById('noteCover');
       const badgeRow = document.getElementById('badgeRow');
+      const relatedEl = document.getElementById('relatedExp');
 
       if (!id) {
         noteTitleEl.textContent = 'Note not found';
@@ -502,35 +528,63 @@
           return;
         }
 
-        // 僅顯示 Status 已發佈/已發布/published
         if (!isPublished(note)) {
           noteTitleEl.textContent = 'Note not available';
           noteContentEl.textContent = '這篇探路筆記目前尚未公開或已下架。';
           return;
         }
 
-        const titleEn = note['Title EN'] || note['Title'] || '';
-        const titleZh = note['Title ZH'] || note['標題'] || '';
+        // ---- 讀取欄位（依你提供的命名）----
+        const titleEn = note['Title_en'] || note['Title EN'] || note['Title'] || '';
+        const titleZh = note['Title_zh'] || note['Title ZH'] || note['標題'] || '';
         const type = note['Type'] || note['類型'] || '';
         const date = note['Date'] || note['日期'] || '';
         const cover = (note['Cover'] || note['Cover Image'] || '').trim();
-        const docUrlRaw = (note['Doc URL'] || note['DocUrl'] || note['Doc'] || '').trim();
+        const docUrlRaw = (note['Doc_URL'] || note['Doc URL'] || note['DocUrl'] || note['Doc'] || '').trim();
+        const tagsRaw = note['Tags'] || '';
+        const relatedId = note['Related_experience_id'] || note['Related_experience_ID'] || '';
 
-        // Hero title & meta
+        // ---- Hero 標題 ----
         noteTitleEl.textContent = titleEn || titleZh || 'Trail Note';
-        let metaParts = [];
-        if (type) metaParts.push(type);
-        if (date) metaParts.push(date);
-        if (titleZh && titleEn) metaParts.push(`「${titleZh}」`);
-        noteMetaEl.textContent = metaParts.join(' ・ ');
-
-        // Badges
-        if (type) {
-          badgeRow.style.display = 'flex';
-          badgeRow.innerHTML = `<div class="note-badge">${type}</div>`;
+        if (titleZh) {
+          noteTitleZhEl.style.display = 'block';
+          noteTitleZhEl.textContent = titleZh;
         }
 
-        // Cover image
+        // ---- Meta ----
+        const metaParts = [];
+        if (type) metaParts.push(type);
+        if (date) metaParts.push(date);
+        noteMetaEl.textContent = metaParts.join(' ・ ');
+
+        // ---- Badges: Type + Tags ----
+        const badges = [];
+        if (type) badges.push({ label: type });
+        if (tagsRaw) {
+          tagsRaw.split(/[,\s、]+/)
+            .map(t => t.trim())
+            .filter(Boolean)
+            .forEach(t => badges.push({ label: t }));
+        }
+
+        if (badges.length) {
+          badgeRow.style.display = 'flex';
+          badgeRow.innerHTML = badges
+            .map(b => `<span class="note-badge">${b.label}</span>`)
+            .join('');
+        }
+
+        // ---- Related experience link ----
+        if (relatedId) {
+          relatedEl.style.display = 'block';
+          relatedEl.innerHTML = `
+            Related experience：<a href="experience-detail.html?id=${encodeURIComponent(relatedId)}">
+              View linked experience 查看對應體驗 →
+            </a>
+          `;
+        }
+
+        // ---- Cover image ----
         if (cover) {
           coverWrap.style.display = 'block';
           coverImg.src = cover;
@@ -540,7 +594,7 @@
           };
         }
 
-        // 載入 Google Doc 內容
+        // ---- 載入 Google Doc 內容 ----
         if (docUrlRaw) {
           const docUrl = buildDocEmbedUrl(docUrlRaw);
           try {
@@ -606,9 +660,8 @@
     }
 
     function buildDocEmbedUrl(url) {
-      // 已是 /pub 或 ?embedded=1 之類就直接用
+      // 已是 /pub or embedded 就直接用
       if (/\/pub(\?|$)/.test(url) || /embedded=true/.test(url)) return url;
-
       const m = url.match(/\/document\/d\/([a-zA-Z0-9_-]+)/);
       if (m && m[1]) {
         return `https://docs.google.com/document/d/${m[1]}/pub?embedded=true`;
@@ -622,14 +675,11 @@
         const doc = parser.parseFromString(html, 'text/html');
         let node = doc.querySelector('body');
 
-        // Google Docs publish 內容通常在 <div id="contents"> 或 <div class="doc-content"> 等
         const specific = doc.querySelector('#contents') || doc.querySelector('.doc-content');
         if (specific) node = specific;
 
-        // 移除 script / style
         node.querySelectorAll('script,style').forEach(el => el.remove());
 
-        // 移除過度 inline 樣式，保留基本結構
         node.querySelectorAll('*').forEach(el => {
           el.removeAttribute('style');
           el.removeAttribute('id');
