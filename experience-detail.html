@@ -280,6 +280,7 @@
       font-size:.97rem;
       color:#333;
       line-height:1.85;
+      overflow-x:hidden; /* 關鍵：避免內容橫向溢出框線 */
     }
     .doc-render-inner h1,
     .doc-render-inner h2,
@@ -298,19 +299,19 @@
     .doc-render-inner img{
       max-width:100% !important;
       height:auto !important;
-      display:block;
-      margin:.6rem auto;
+      display:block !important;
+      margin:.6rem auto !important;
       border-radius:8px;
       box-shadow:0 2px 10px rgba(0,0,0,0.06);
     }
     .doc-render-inner figure{
       max-width:100%;
-      margin:.6rem 0;
+      margin:.6rem auto;
     }
 
     .doc-render-inner table{
       border-collapse:collapse;
-      width:100%;
+      width:100% !important;
       margin:.6rem 0;
     }
     .doc-render-inner th,
@@ -600,7 +601,8 @@
 
         const list = data.map((r, idx)=>{
           const o={};
-          headers.forEach((h,i)=>o[h]=r[i]||'');
+          headers.forEach((h,i)=>o[h]=r[i]||'';
+          );
           o.__rowIndex = idx;
           return o;
         });
@@ -702,7 +704,7 @@
         <div class="loading-line" style="width:50%"></div>
       `;
 
-      // ✅ 每一列用自己的 Doc 欄位，不再共用 fallback
+      // 依此列的 Doc 欄位，不共用其他列
       let raw = '';
       for(const key of DOC_COLS){
         if(exp[key] && String(exp[key]).trim()){
@@ -726,20 +728,53 @@
         const tmp = document.createElement('div');
         tmp.innerHTML = html;
 
-        let main = tmp.querySelector('#contents') || tmp.querySelector('body') || tmp;
+        let main = tmp.querySelector('#contents') ||
+                   tmp.querySelector('.doc-content') ||
+                   tmp.querySelector('body') ||
+                   tmp;
+
         if(!main) main = tmp;
 
-        main.querySelectorAll('script,style,header,nav,footer,link').forEach(n=>n.remove());
+        // 移除不需要的標籤
+        main.querySelectorAll('script,style,header,nav,footer,link,meta').forEach(n=>n.remove());
 
         const wrapper = document.createElement('div');
         wrapper.innerHTML = main.innerHTML;
 
+        // 移除多餘 inline style / class，避免被 Google Docs 版面撐出怪高度
+        wrapper.querySelectorAll('*').forEach(el => {
+          const tag = el.tagName.toLowerCase();
+          if (tag === 'img') {
+            // 交給下面專門處理
+            return;
+          }
+          if (['table','thead','tbody','tr','th','td'].includes(tag)) {
+            // 保留基本 table 結構，移除寬高相關 style
+            el.removeAttribute('class');
+            const style = el.getAttribute('style') || '';
+            if (style) {
+              const cleaned = style
+                .split(';')
+                .map(s => s.trim())
+                .filter(s => s && !/^width:/i.test(s) && !/^height:/i.test(s) && !/^margin(-.*)?:/i.test(s) && !/^padding(-.*)?:/i.test(s))
+                .join('; ');
+              if (cleaned) el.setAttribute('style', cleaned); else el.removeAttribute('style');
+            }
+            return;
+          }
+          el.removeAttribute('style');
+          el.removeAttribute('class');
+        });
+
+        // 處理圖片：縮進框內 & 不留巨量空白
         wrapper.querySelectorAll('img').forEach(img=>{
           img.removeAttribute('width');
           img.removeAttribute('height');
+          img.removeAttribute('style');
+          img.removeAttribute('class');
+          img.loading = 'lazy';
           img.style.maxWidth = '100%';
           img.style.height = 'auto';
-          img.loading = 'lazy';
           img.style.display = 'block';
           img.style.margin = '.6rem auto';
           img.style.borderRadius = '8px';
@@ -752,26 +787,37 @@
           };
         });
 
+        // 表格加上可滾動外框
         wrapper.querySelectorAll('table').forEach(table=>{
+          table.removeAttribute('width');
+          table.style.width = '100%';
           const wrap = document.createElement('div');
           wrap.className = 'doc-table-wrap';
           table.parentNode.insertBefore(wrap, table);
           wrap.appendChild(table);
         });
 
+        // iframe / embed 寬度修正
         wrapper.querySelectorAll('iframe,embed').forEach(el=>{
           el.removeAttribute('width');
           el.style.width = '100%';
           el.style.maxWidth = '100%';
         });
 
+        // 移除只剩空白或 &nbsp; 的段落 / div，避免圖片下大塊空白
+        wrapper.querySelectorAll('p,div').forEach(el => {
+          if (el.querySelector('img,table,iframe,embed')) return;
+          const text = (el.textContent || '').replace(/\s|\u00A0/g,'');
+          if (!text) el.remove();
+        });
+
         inner.innerHTML = '';
         inner.appendChild(wrapper);
       }catch(err){
-        console.warn('Doc fetch blocked, use embed iframe', err);
+        console.warn('Doc fetch blocked, using iframe fallback', err);
         inner.innerHTML = `
           <iframe src="${toEmbeddableIframeURL(raw)}"
-                  style="width:100%;height:900px;border:0;border-radius:10px;background:#fff"
+                  style="width:100%;min-height:480px;height:80vh;border:0;border-radius:10px;background:#fff;overflow:auto;"
                   loading="lazy"
                   referrerpolicy="no-referrer-when-downgrade"></iframe>
         `;
@@ -779,16 +825,19 @@
     }
 
     function toFetchableDocURL(url){
+      // 若已是發佈版本
       if(/\/document\/d\/e\/[^/]+\/pub/.test(url)){
         return url.includes('?') ? url : url + '?embedded=true';
       }
       const m = url.match(/\/document\/d\/([^/]+)/);
       if(m){
         const id = m[1];
+        // 使用 export html，內容較乾淨
         return `https://docs.google.com/document/d/${id}/export?format=html`;
       }
       return url;
     }
+
     function toEmbeddableIframeURL(url){
       if(/\/document\/d\/e\/[^/]+\/pub/.test(url)){
         return url.includes('?') ? url+'&embedded=true' : url+'?embedded=true';
@@ -796,7 +845,7 @@
       const m = url.match(/\/document\/d\/([^/]+)/);
       if(m){
         const id = m[1];
-        return `https://docs.google.com/document/d/${id}/preview?rm=minimal&embedded=true`;
+        return `https://docs.google.com/document/d/${id}/pub?embedded=true`;
       }
       return url;
     }
@@ -813,7 +862,7 @@
         item.className = 'info-item';
         item.innerHTML = `<h3>${label}</h3>`;
         if(isLink){
-          item.innerHTML += `<a href="${prefix || ''}${value}">${value}</a>`;
+          item.innerHTML += `<a href="${prefix || ''}${value}" target="_blank" rel="noopener">${value}</a>`;
         }else{
           item.innerHTML += `<div>${value}</div>`;
         }
